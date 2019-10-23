@@ -1,5 +1,5 @@
 {
-    "name": "TFG_GII_Analisis_Comercial_Urbano",
+    "name": "TFG_GII_Analisis_Comercial_Urbano/TFG_GII_Analisis_Comercial_Urbano",
     "description":"Análisis comercial urbano utilizando series temporales de compras de tarjetas de crédito",
     "type": "project",
     "license": "MIT",
@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "symfony/debug-pack": "*",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.13",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
         "symfony/web-server-bundle": "4.3.*"

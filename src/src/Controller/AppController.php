@@ -18,7 +18,7 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/sacar_datos", name="datos")
+     * @Route("/extract_data", name="datos")
      */
     public function data()
     {
@@ -47,7 +47,10 @@ class AppController extends AbstractController
                 echo "Error en la consulta get_merchants: ".$statusCode = $response->getStatusCode();
                 
             }else{
-                $decodedResponse = $response->toArray();
+                $decodedResponse = $response->toArray();//As array
+                var_dump(json_decode($response->getContent())->data[0]-Z);
+                $response->getContent();//As JSON
+                
             }
 
         }

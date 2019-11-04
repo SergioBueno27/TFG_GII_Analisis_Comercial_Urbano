@@ -27,10 +27,12 @@ class AppController extends AbstractController
         //Este código proviene de BBVA tras registrarme en la página
         $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
         
-        $client = HttpClient::create();
-
         $entityManager = $this->getDoctrine()->getManager();
         $conn=$entityManager->getConnection();
+
+        $client = HttpClient::create();
+
+        
 
         $response = $client->request('POST', 'https://connect.bbva.com/token?grant_type=client_credentials',[
             'headers' => [

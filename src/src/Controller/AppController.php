@@ -11,6 +11,9 @@ use App\Entity\SubCategory;
 
 class AppController extends AbstractController
 {
+    //Este código proviene de BBVA tras registrarme en la página
+    private $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
+
     /**
      * @Route("/home", name="home")
      */
@@ -24,22 +27,18 @@ class AppController extends AbstractController
      */
     public function data()
     {
-        //Este código proviene de BBVA tras registrarme en la página
-        $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
-        
+        //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
+
+        //Conexión con la base de datos
         $conn=$entityManager->getConnection();
 
+        //Cliente HTTP para peticiones a la API BBVA
         $client = HttpClient::create();
 
-        
+        //Recojo el token inicial para las posteriores consultas
+        $response = $this->getToken($client);
 
-        $response = $client->request('POST', 'https://connect.bbva.com/token?grant_type=client_credentials',[
-            'headers' => [
-                'Content_Type' => 'application/json',
-                'Authorization' => 'Basic '.$code
-            ]
-        ]);
         if($statusCode = $response->getStatusCode() != 200){
             echo "Error en la consulta post_token: ".$statusCode = $response->getStatusCode();
             
@@ -47,12 +46,10 @@ class AppController extends AbstractController
             $decodedResponse = $response->toArray();
             $tokenType=$decodedResponse['token_type'];
             $accessToken=$decodedResponse['access_token'];
-            $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
-                'headers' => [
-                    'Authorization'=> $tokenType.' '.$decodedResponse['access_token'],
-                    'Accept' => 'application/json'
-                ]
-            ]);
+
+            //Recojo los mercaderes con sus categorías y subcategorías
+            $response = $this->getMerchants($client,$tokenType,$accessToken);
+
             if($statusCode = $response->getStatusCode() != 200){
                 echo "Error en la consulta get_merchants: ".$statusCode = $response->getStatusCode();
                 
@@ -75,29 +72,52 @@ class AppController extends AbstractController
                 $sql = 'ALTER TABLE category AUTO_INCREMENT=1;';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-
-                //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos
-                $categorias=json_decode($response->getContent())->data[0];
-                foreach($categorias->categories as $actualCategory){
-                    $category = new Category();
-                    $category->setCode($actualCategory->code);
-                    $category->setDescription($actualCategory->description);
-                    $entityManager->persist($category);
-                    foreach($actualCategory->subcategories as $actualSubCategory){
-                        $subCategory = new SubCategory();
-                        $subCategory->setCode($actualSubCategory->code);
-                        $subCategory->setDescription($actualSubCategory->description);
-                        $subCategory->setCategory($category);
-                        $entityManager->persist($subCategory);
-                    }
-                }
-                $entityManager->flush();
-                var_dump($categorias->categories);
-
                 
+                $this->sendMerchants($response,$entityManager);
             }
 
         }
         return $this->render('base.html.twig');
+    }
+
+    private function getToken($client){
+
+        $response = $client->request('POST', 'https://connect.bbva.com/token?grant_type=client_credentials',[
+            'headers' => [
+                'Content_Type' => 'application/json',
+                'Authorization' => 'Basic '.$this->code
+            ]
+        ]);
+        return $response;
+    }
+
+    private function getMerchants($client,$tokenType,$accessToken){
+        $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
+            'headers' => [
+                'Authorization'=> $tokenType.' '.$accessToken,
+                'Accept' => 'application/json'
+            ]
+        ]);
+        return $response;
+    }
+
+    private function sendMerchants($response,$entityManager){
+        //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos
+        $categorias=json_decode($response->getContent())->data[0];
+        foreach($categorias->categories as $actualCategory){
+            $category = new Category();
+            $category->setCode($actualCategory->code);
+            $category->setDescription($actualCategory->description);
+            $entityManager->persist($category);
+            foreach($actualCategory->subcategories as $actualSubCategory){
+                $subCategory = new SubCategory();
+                $subCategory->setCode($actualSubCategory->code);
+                $subCategory->setDescription($actualSubCategory->description);
+                $subCategory->setCategory($category);
+                $entityManager->persist($subCategory);
+            }
+        }
+        $entityManager->flush();
+        var_dump($categorias->categories);
     }
 }

@@ -23,9 +23,9 @@ class AppController extends AbstractController
     }
 
     /**
-     * @Route("/extract_data", name="datos")
+     * @Route("/extract_merchants", name="merchantData")
      */
-    public function data()
+    public function dataMerchants()
     {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
@@ -119,5 +119,12 @@ class AppController extends AbstractController
         }
         $entityManager->flush();
         var_dump($categorias->categories);
+    }
+
+     /**
+     * @Route("/extract_data", name="basicData")
+     */
+    public function dataBasic(){
+        return $this->render('base.html.twig');
     }
 }

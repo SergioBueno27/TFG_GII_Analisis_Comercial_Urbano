@@ -50,4 +50,124 @@ class Zipcode
     private $region;
 
 
+
+    /**
+     * Get the value of id
+     *
+     * @return  int
+     */ 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @param  int  $id
+     *
+     * @return  self
+     */ 
+    public function setId(int $id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of zipcode
+     *
+     * @return  int|null
+     */ 
+    public function getZipcode()
+    {
+        return $this->zipcode;
+    }
+
+    /**
+     * Set the value of zipcode
+     *
+     * @param  int|null  $zipcode
+     *
+     * @return  self
+     */ 
+    public function setZipcode($zipcode)
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of locality
+     *
+     * @return  int|null
+     */ 
+    public function getLocality()
+    {
+        return $this->locality;
+    }
+
+    /**
+     * Set the value of locality
+     *
+     * @param  int|null  $locality
+     *
+     * @return  self
+     */ 
+    public function setLocality($locality)
+    {
+        $this->locality = $locality;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of subregion
+     *
+     * @return  int|null
+     */ 
+    public function getSubregion()
+    {
+        return $this->subregion;
+    }
+
+    /**
+     * Set the value of subregion
+     *
+     * @param  int|null  $subregion
+     *
+     * @return  self
+     */ 
+    public function setSubregion($subregion)
+    {
+        $this->subregion = $subregion;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of region
+     *
+     * @return  int|null
+     */ 
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * Set the value of region
+     *
+     * @param  int|null  $region
+     *
+     * @return  self
+     */ 
+    public function setRegion($region)
+    {
+        $this->region = $region;
+
+        return $this;
+    }
 }

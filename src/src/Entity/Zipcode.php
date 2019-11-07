@@ -1,53 +1,39 @@
 <?php
 
 namespace App\Entity;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Zipcode
- *
- * @ORM\Table(name="zipcode")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ZipcodeRepository")
  */
 class Zipcode
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="zipcode", type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
     private $zipcode;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="locality", type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
     private $locality;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="subregion", type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
     private $subregion;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="region", type="integer", nullable=true)
+     * @ORM\Column(type="integer")
      */
     private $region;
 
@@ -56,134 +42,60 @@ class Zipcode
      */
     private $basicData;
 
-    public function __construct()
-    {
-        $this->basicData = new ArrayCollection();
-    }
-
-
-
-    /**
-     * Get the value of id
-     *
-     * @return  int
-     */ 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set the value of id
-     *
-     * @param  int  $id
-     *
-     * @return  self
-     */ 
-    public function setId(int $id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of zipcode
-     *
-     * @return  int|null
-     */ 
-    public function getZipcode()
+    public function getZipcode(): ?int
     {
         return $this->zipcode;
     }
 
-    /**
-     * Set the value of zipcode
-     *
-     * @param  int|null  $zipcode
-     *
-     * @return  self
-     */ 
-    public function setZipcode($zipcode)
+    public function setZipcode(int $zipcode): self
     {
         $this->zipcode = $zipcode;
 
         return $this;
     }
 
-    /**
-     * Get the value of locality
-     *
-     * @return  int|null
-     */ 
-    public function getLocality()
+    public function getLocality(): ?int
     {
         return $this->locality;
     }
 
-    /**
-     * Set the value of locality
-     *
-     * @param  int|null  $locality
-     *
-     * @return  self
-     */ 
-    public function setLocality($locality)
+    public function setLocality(int $locality): self
     {
         $this->locality = $locality;
 
         return $this;
     }
 
-    /**
-     * Get the value of subregion
-     *
-     * @return  int|null
-     */ 
-    public function getSubregion()
+    public function getSubregion(): ?int
     {
         return $this->subregion;
     }
 
-    /**
-     * Set the value of subregion
-     *
-     * @param  int|null  $subregion
-     *
-     * @return  self
-     */ 
-    public function setSubregion($subregion)
+    public function setSubregion(int $subregion): self
     {
         $this->subregion = $subregion;
 
         return $this;
     }
 
-    /**
-     * Get the value of region
-     *
-     * @return  int|null
-     */ 
-    public function getRegion()
+    public function getRegion(): ?int
     {
         return $this->region;
     }
 
-    /**
-     * Set the value of region
-     *
-     * @param  int|null  $region
-     *
-     * @return  self
-     */ 
-    public function setRegion($region)
+    public function setRegion(int $region): self
     {
         $this->region = $region;
 
         return $this;
     }
 
-    /**
+        /**
      * @return Collection|BasicData[]
      */
     public function getBasicData(): Collection

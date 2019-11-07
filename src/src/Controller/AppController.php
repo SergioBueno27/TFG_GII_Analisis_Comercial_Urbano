@@ -157,11 +157,11 @@ class AppController extends AbstractController
     }
 
     private function getBasicData($client,$tokenType,$accessToken){
-        $zipcodes = $this->getDoctrine()
+        $Zipcode = $this->getDoctrine()
         ->getRepository(Zipcode::class)
         ->findAll();
 
-        var_dump($zipcodes);
+        var_dump($Zipcode);
         // $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
         //     'headers' => [
         //         'Authorization'=> $tokenType.' '.$accessToken,

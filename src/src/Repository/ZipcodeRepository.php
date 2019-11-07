@@ -18,6 +18,11 @@ class ZipcodeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Zipcode::class);
     }
+    //Cambio la función para que haga la recogida de códigos postales en orden
+    public function findAll()
+    {
+        return $this->findBy(array(), array('zipcode' => 'ASC'));
+    }
 
     // /**
     //  * @return Zipcode[] Returns an array of Zipcode objects

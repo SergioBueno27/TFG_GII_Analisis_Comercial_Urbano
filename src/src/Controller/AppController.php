@@ -8,6 +8,7 @@ use Symfony\Component\HttpClient\HttpClient;
 
 use App\Entity\Category;
 use App\Entity\SubCategory;
+use App\Entity\Zipcode;
 
 class AppController extends AbstractController
 {
@@ -157,11 +158,11 @@ class AppController extends AbstractController
     }
 
     private function getBasicData($client,$tokenType,$accessToken){
-        $Zipcode = $this->getDoctrine()
+        $zipcode = $this->getDoctrine()
         ->getRepository(Zipcode::class)
         ->findAll();
 
-        var_dump($Zipcode);
+        var_dump($zipcode);
         // $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
         //     'headers' => [
         //         'Authorization'=> $tokenType.' '.$accessToken,

@@ -2,9 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="shortcut icon" href="{{ asset('/icon/favicon.ico') }}"/>
+        <link rel="icon" href="{{ asset('/icon/favicon.ico') }}"/>
         <title>{% block title %}Análisis Comercial Urbano{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}<link rel="stylesheet" href="{{ asset('/css/main.css') }}">{% endblock %}
     </head>
     <body>
         {% if app.user %}
@@ -16,7 +16,7 @@
         </div>
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('merchantData')}}">Extraer datos de mercaderes</a>
-            <a href="{{ path('merchantData')}}">Extraer datos básicos</a>
+            <a href="{{ path('basicData')}}">Extraer datos básicos</a>
         {% endif %}
         {% endif %}
         {% block body %}{% endblock %}

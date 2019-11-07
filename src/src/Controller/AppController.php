@@ -125,6 +125,19 @@ class AppController extends AbstractController
      * @Route("/extract_data", name="basicData")
      */
     public function dataBasic(){
+        //Entity manager necesario para gestionar las peticiones
+        $entityManager = $this->getDoctrine()->getManager();
+
+        //Conexión con la base de datos
+        $conn=$entityManager->getConnection();
+
+        //Cliente HTTP para peticiones a la API BBVA
+        $client = HttpClient::create();
+
+        //Recojo el token inicial para las posteriores consultas
+        $response = $this->getToken($client);
+
+        
         return $this->render('base.html.twig');
     }
 }

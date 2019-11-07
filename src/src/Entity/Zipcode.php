@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,6 +50,16 @@ class Zipcode
      * @ORM\Column(name="region", type="integer", nullable=true)
      */
     private $region;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BasicData", mappedBy="zipcode", orphanRemoval=true)
+     */
+    private $basicData;
+
+    public function __construct()
+    {
+        $this->basicData = new ArrayCollection();
+    }
 
 
 
@@ -167,6 +179,37 @@ class Zipcode
     public function setRegion($region)
     {
         $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BasicData[]
+     */
+    public function getBasicData(): Collection
+    {
+        return $this->basicData;
+    }
+
+    public function addBasicData(BasicData $basicData): self
+    {
+        if (!$this->basicData->contains($basicData)) {
+            $this->basicData[] = $basicData;
+            $basicData->setZipcode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBasicData(BasicData $basicData): self
+    {
+        if ($this->basicData->contains($basicData)) {
+            $this->basicData->removeElement($basicData);
+            // set the owning side to null (unless already changed)
+            if ($basicData->getZipcode() === $this) {
+                $basicData->setZipcode(null);
+            }
+        }
 
         return $this;
     }

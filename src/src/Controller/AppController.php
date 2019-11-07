@@ -52,7 +52,7 @@ class AppController extends AbstractController
 
             if($statusCode = $response->getStatusCode() != 200){
                 echo "Error en la consulta get_merchants: ".$statusCode = $response->getStatusCode();
-                
+
             }else{
 
                 //Primero elimino todo el contenido actual en base de datos para volver a rellenar
@@ -137,7 +137,36 @@ class AppController extends AbstractController
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
 
-        
+    
+        if($statusCode = $response->getStatusCode() != 200){
+            echo "Error en la consulta post_token: ".$statusCode = $response->getStatusCode();
+            
+        }else{
+            // //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            // $sql = 'DELETE FROM basic_data';
+            // $stmt = $conn->prepare($sql);
+            // $stmt->execute();
+
+            $decodedResponse = $response->toArray();
+            $tokenType=$decodedResponse['token_type'];
+            $accessToken=$decodedResponse['access_token'];
+
+            $this->getBasicData($client,$tokenType,$accessToken);
+        }
         return $this->render('base.html.twig');
+    }
+
+    private function getBasicData($client,$tokenType,$accessToken){
+        $zipcodes = $this->getDoctrine()
+        ->getRepository(Zipcode::class)
+        ->findAll();
+
+        var_dump($zipcodes);
+        // $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
+        //     'headers' => [
+        //         'Authorization'=> $tokenType.' '.$accessToken,
+        //         'Accept' => 'application/json'
+        //     ]
+        // ]);
     }
 }

@@ -28,5 +28,4 @@ class MigrationVersions
      */
     private $executedAt;
 
-
 }

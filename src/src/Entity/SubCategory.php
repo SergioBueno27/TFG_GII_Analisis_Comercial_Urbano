@@ -45,7 +45,7 @@ class SubCategory
      * Get the value of id
      *
      * @return  int
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -57,7 +57,7 @@ class SubCategory
      * @param  int  $id
      *
      * @return  self
-     */ 
+     */
     public function setId(int $id)
     {
         $this->id = $id;
@@ -69,7 +69,7 @@ class SubCategory
      * Get the value of code
      *
      * @return  string
-     */ 
+     */
     public function getCode()
     {
         return $this->code;
@@ -81,7 +81,7 @@ class SubCategory
      * @param  string  $code
      *
      * @return  self
-     */ 
+     */
     public function setCode(string $code)
     {
         $this->code = $code;
@@ -93,7 +93,7 @@ class SubCategory
      * Get the value of description
      *
      * @return  string
-     */ 
+     */
     public function getDescription()
     {
         return $this->description;
@@ -105,7 +105,7 @@ class SubCategory
      * @param  string  $description
      *
      * @return  self
-     */ 
+     */
     public function setDescription(string $description)
     {
         $this->description = $description;

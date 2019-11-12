@@ -2,13 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpClient\HttpClient;
-
 use App\Entity\Category;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
@@ -32,7 +31,7 @@ class AppController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         //Conexión con la base de datos
-        $conn=$entityManager->getConnection();
+        $conn = $entityManager->getConnection();
 
         //Cliente HTTP para peticiones a la API BBVA
         $client = HttpClient::create();
@@ -40,21 +39,21 @@ class AppController extends AbstractController
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
 
-        if($statusCode = $response->getStatusCode() != 200){
-            echo "Error en la consulta post_token: ".$statusCode = $response->getStatusCode();
-            
-        }else{
+        if ($statusCode = $response->getStatusCode() != 200) {
+            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+
+        } else {
             $decodedResponse = $response->toArray();
-            $tokenType=$decodedResponse['token_type'];
-            $accessToken=$decodedResponse['access_token'];
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
 
             //Recojo los mercaderes con sus categorías y subcategorías
-            $response = $this->getMerchants($client,$tokenType,$accessToken);
+            $response = $this->getMerchants($client, $tokenType, $accessToken);
 
-            if($statusCode = $response->getStatusCode() != 200){
-                echo "Error en la consulta get_merchants: ".$statusCode = $response->getStatusCode();
+            if ($statusCode = $response->getStatusCode() != 200) {
+                echo "Error en la consulta get_merchants: " . $statusCode = $response->getStatusCode();
 
-            }else{
+            } else {
 
                 //Primero elimino todo el contenido actual en base de datos para volver a rellenar
                 $sql = 'DELETE FROM sub_category';
@@ -73,44 +72,47 @@ class AppController extends AbstractController
                 $sql = 'ALTER TABLE category AUTO_INCREMENT=1;';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-                
-                $this->sendMerchants($response,$entityManager);
+
+                $this->sendMerchants($response, $entityManager);
             }
 
         }
         return $this->render('base.html.twig');
     }
 
-    private function getToken($client){
+    private function getToken($client)
+    {
 
-        $response = $client->request('POST', 'https://connect.bbva.com/token?grant_type=client_credentials',[
+        $response = $client->request('POST', 'https://connect.bbva.com/token?grant_type=client_credentials', [
             'headers' => [
                 'Content_Type' => 'application/json',
-                'Authorization' => 'Basic '.$this->code
-            ]
+                'Authorization' => 'Basic ' . $this->code,
+            ],
         ]);
         return $response;
     }
 
-    private function getMerchants($client,$tokenType,$accessToken){
-        $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
+    private function getMerchants($client, $tokenType, $accessToken)
+    {
+        $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories', [
             'headers' => [
-                'Authorization'=> $tokenType.' '.$accessToken,
-                'Accept' => 'application/json'
-            ]
+                'Authorization' => $tokenType . ' ' . $accessToken,
+                'Accept' => 'application/json',
+            ],
         ]);
         return $response;
     }
 
-    private function sendMerchants($response,$entityManager){
+    private function sendMerchants($response, $entityManager)
+    {
         //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos
-        $categorias=json_decode($response->getContent())->data[0];
-        foreach($categorias->categories as $actualCategory){
+        $categorias = json_decode($response->getContent())->data[0];
+        foreach ($categorias->categories as $actualCategory) {
             $category = new Category();
             $category->setCode($actualCategory->code);
             $category->setDescription($actualCategory->description);
             $entityManager->persist($category);
-            foreach($actualCategory->subcategories as $actualSubCategory){
+            foreach ($actualCategory->subcategories as $actualSubCategory) {
                 $subCategory = new SubCategory();
                 $subCategory->setCode($actualSubCategory->code);
                 $subCategory->setDescription($actualSubCategory->description);
@@ -122,15 +124,16 @@ class AppController extends AbstractController
         var_dump($categorias->categories);
     }
 
-     /**
+    /**
      * @Route("/extract_data", name="basicData")
      */
-    public function dataBasic(){
+    public function dataBasic()
+    {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
 
         //Conexión con la base de datos
-        $conn=$entityManager->getConnection();
+        $conn = $entityManager->getConnection();
 
         //Cliente HTTP para peticiones a la API BBVA
         $client = HttpClient::create();
@@ -138,36 +141,45 @@ class AppController extends AbstractController
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
 
-    
-        if($statusCode = $response->getStatusCode() != 200){
-            echo "Error en la consulta post_token: ".$statusCode = $response->getStatusCode();
-            
-        }else{
+        if ($statusCode = $response->getStatusCode() != 200) {
+            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+
+        } else {
             // //Primero elimino todo el contenido actual en base de datos para volver a rellenar
             // $sql = 'DELETE FROM basic_data';
             // $stmt = $conn->prepare($sql);
             // $stmt->execute();
 
             $decodedResponse = $response->toArray();
-            $tokenType=$decodedResponse['token_type'];
-            $accessToken=$decodedResponse['access_token'];
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
 
-            $this->getBasicData($client,$tokenType,$accessToken);
+            $this->getBasicData($client, $tokenType, $accessToken);
         }
         return $this->render('base.html.twig');
     }
 
-    private function getBasicData($client,$tokenType,$accessToken){
-        $zipcode = $this->getDoctrine()
-        ->getRepository(Zipcode::class)
-        ->findAll();
+    private function getBasicData($client, $tokenType, $accessToken)
+    {
+        $zipcodes = $this->getDoctrine()
+            ->getRepository(Zipcode::class)
+            ->findAll();
+        foreach ($zipcodes as $zipcode) {
+            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/28001/basic_stats?min_date=201501&max_date=201512", [
+                'headers' => [
+                    'Authorization' => $tokenType . ' ' . $accessToken,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            if ($statusCode = $response->getStatusCode() != 200) {
+                echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
 
-        var_dump($zipcode);
-        // $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories',[
-        //     'headers' => [
-        //         'Authorization'=> $tokenType.' '.$accessToken,
-        //         'Accept' => 'application/json'
-        //     ]
-        // ]);
+            } else {
+                $decodedResponse = $response->toArray();
+                var_dump($decodedResponse);
+
+            }
+        break;
+        }
     }
 }

@@ -27,7 +27,7 @@ class BasicData
     private $cards;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",length=6)
      */
     private $date;
 

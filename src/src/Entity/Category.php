@@ -42,9 +42,15 @@ class Category
      */
     private $subCategories;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="categoryId", orphanRemoval=true)
+     */
+    private $categoryData;
+
     public function __construct()
     {
         $this->subCategories = new ArrayCollection();
+        $this->categoryData = new ArrayCollection();
     }
 
     /**
@@ -144,6 +150,37 @@ class Category
             // set the owning side to null (unless already changed)
             if ($subCategory->getCategory() === $this) {
                 $subCategory->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CategoryData[]
+     */
+    public function getCategoryData(): Collection
+    {
+        return $this->categoryData;
+    }
+
+    public function addCategoryData(CategoryData $categoryData): self
+    {
+        if (!$this->categoryData->contains($categoryData)) {
+            $this->categoryData[] = $categoryData;
+            $categoryData->setCategoryId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryData(CategoryData $categoryData): self
+    {
+        if ($this->categoryData->contains($categoryData)) {
+            $this->categoryData->removeElement($categoryData);
+            // set the owning side to null (unless already changed)
+            if ($categoryData->getCategoryId() === $this) {
+                $categoryData->setCategoryId(null);
             }
         }
 

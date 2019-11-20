@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,6 +42,16 @@ class Zipcode
      * @ORM\OneToMany(targetEntity="App\Entity\BasicData", mappedBy="zipcode", orphanRemoval=true)
      */
     private $basicData;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="zipcode", orphanRemoval=true)
+     */
+    private $categoryData;
+
+    public function __construct()
+    {
+        $this->categoryData = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +131,37 @@ class Zipcode
             // set the owning side to null (unless already changed)
             if ($basicData->getZipcode() === $this) {
                 $basicData->setZipcode(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CategoryData[]
+     */
+    public function getCategoryData(): Collection
+    {
+        return $this->categoryData;
+    }
+
+    public function addCategoryData(CategoryData $categoryData): self
+    {
+        if (!$this->categoryData->contains($categoryData)) {
+            $this->categoryData[] = $categoryData;
+            $categoryData->setZipcode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryData(CategoryData $categoryData): self
+    {
+        if ($this->categoryData->contains($categoryData)) {
+            $this->categoryData->removeElement($categoryData);
+            // set the owning side to null (unless already changed)
+            if ($categoryData->getZipcode() === $this) {
+                $categoryData->setZipcode(null);
             }
         }
 

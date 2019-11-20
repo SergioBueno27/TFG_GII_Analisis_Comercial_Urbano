@@ -27,7 +27,7 @@ class BasicData
     private $cards;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string")
      */
     private $date;
 
@@ -111,12 +111,12 @@ class BasicData
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate()
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(string $date)
     {
         $this->date = $date;
 

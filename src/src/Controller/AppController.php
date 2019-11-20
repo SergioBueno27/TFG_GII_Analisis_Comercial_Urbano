@@ -2,15 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\BasicData;
 use App\Entity\Category;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
-
+set_time_limit(0);
 class AppController extends AbstractController
 {
+    
     //Este código proviene de BBVA tras registrarme en la página
     private $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
 
@@ -105,7 +107,13 @@ class AppController extends AbstractController
 
     private function sendMerchants($response, $entityManager)
     {
-        //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos
+        //Primero añado la categoría "filtered" que emplea más adelante como categoría filtered en caso que contega información sensibleç
+        $category = new Category();
+        $category->setCode('filtered');
+        $category->setDescription('Filtered data by BBVA');
+        $entityManager->persist($category);
+        $entityManager->flush();
+        //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos 
         $categorias = json_decode($response->getContent())->data[0];
         foreach ($categorias->categories as $actualCategory) {
             $category = new Category();
@@ -121,7 +129,6 @@ class AppController extends AbstractController
             }
         }
         $entityManager->flush();
-        var_dump($categorias->categories);
     }
 
     /**
@@ -145,27 +152,30 @@ class AppController extends AbstractController
             echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
 
         } else {
-            // //Primero elimino todo el contenido actual en base de datos para volver a rellenar
-            // $sql = 'DELETE FROM basic_data';
-            // $stmt = $conn->prepare($sql);
-            // $stmt->execute();
+            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            $sql = 'DELETE FROM basic_data';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
 
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];
 
-            $this->getBasicData($client, $tokenType, $accessToken);
+            $this->getBasicData($client, $tokenType, $accessToken, $entityManager);
         }
         return $this->render('base.html.twig');
     }
 
-    private function getBasicData($client, $tokenType, $accessToken)
+    private function getBasicData($client, $tokenType, $accessToken, $entityManager)
     {
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
         foreach ($zipcodes as $zipcode) {
-            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/28001/basic_stats?min_date=201501&max_date=201512", [
+            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -176,10 +186,74 @@ class AppController extends AbstractController
 
             } else {
                 $decodedResponse = $response->toArray();
-                var_dump($decodedResponse);
-
+                $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
+                
             }
-        break;
         }
+        //Una vez que he persistido todos los datos los integro en la base de datos
+        $entityManager->flush();
     }
+
+    private function sendBasicData($decodedResponse, $zipcode, $entityManager)
+    {
+        foreach ($decodedResponse['data'] as $actualData) {
+            if (sizeof($actualData) != 1){
+                $basicData = new BasicData();
+                $basicData->setAvg($actualData['avg']);
+                $basicData->setCards($actualData['cards']);
+                $basicData->setDate($actualData['date']);
+                $basicData->setMax($actualData['max']);
+                $basicData->setMerchants($actualData['merchants']);
+                $basicData->setMin($actualData['min']);
+                $basicData->setPeakTxsDay($actualData['peak_txs_day']);
+                $basicData->setPeakTxsHour($actualData['peak_txs_hour']);
+                $basicData->setStd($actualData['std']);
+                $basicData->setTxs($actualData['txs']);
+                $basicData->setValleyTxsDay($actualData['valley_txs_day']);
+                $basicData->setValleyTxsHour($actualData['valley_txs_hour']);
+                $basicData->setZipcode($zipcode);
+                $entityManager->persist($basicData);
+            }
+        }
+
+    }
+
+    /**
+     * @Route("/extract_category_data", name="categoryData")
+     */
+    public function dataCategory()
+    {
+        //Entity manager necesario para gestionar las peticiones
+        $entityManager = $this->getDoctrine()->getManager();
+
+        //Conexión con la base de datos
+        $conn = $entityManager->getConnection();
+
+        //Cliente HTTP para peticiones a la API BBVA
+        $client = HttpClient::create();
+
+        //Recojo el token inicial para las posteriores consultas
+        $response = $this->getToken($client);
+
+        if ($statusCode = $response->getStatusCode() != 200) {
+            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+        } else {
+            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            $sql = 'DELETE FROM category_data';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $sql = 'ALTER TABLE category_data AUTO_INCREMENT=1;';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+            $decodedResponse = $response->toArray();
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
+
+            $this->getBasicData($client, $tokenType, $accessToken, $entityManager);
+        }
+        return $this->render('base.html.twig');
+    }
+
+
 }

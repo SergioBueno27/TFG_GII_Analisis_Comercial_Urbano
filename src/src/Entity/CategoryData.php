@@ -42,6 +42,17 @@ class CategoryData
      */
     private $merchants;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Zipcode", inversedBy="categoryData")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $zipcode;
+
+    /**
+     * @ORM\Column(type="string", length=6)
+     */
+    private $date;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +114,30 @@ class CategoryData
     public function setMerchants(?int $merchants): self
     {
         $this->merchants = $merchants;
+
+        return $this;
+    }
+
+    public function getZipcode(): ?Zipcode
+    {
+        return $this->zipcode;
+    }
+
+    public function setZipcode(?Zipcode $zipcode): self
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    public function getDate(): ?string
+    {
+        return $this->date;
+    }
+
+    public function setDate(string $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

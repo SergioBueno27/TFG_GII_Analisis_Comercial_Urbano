@@ -4,15 +4,17 @@ namespace App\Controller;
 
 use App\Entity\BasicData;
 use App\Entity\Category;
+use App\Entity\CategoryData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
+
 set_time_limit(0);
 class AppController extends AbstractController
 {
-    
+
     //Este código proviene de BBVA tras registrarme en la página
     private $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
 
@@ -113,7 +115,7 @@ class AppController extends AbstractController
         $category->setDescription('Filtered data by BBVA');
         $entityManager->persist($category);
         $entityManager->flush();
-        //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos 
+        //A partir de aquí recorro las categorías y subcategorías y las almaceno en la base de datos
         $categorias = json_decode($response->getContent())->data[0];
         foreach ($categorias->categories as $actualCategory) {
             $category = new Category();
@@ -175,7 +177,7 @@ class AppController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         foreach ($zipcodes as $zipcode) {
-            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512", [
+            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201501", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -187,7 +189,7 @@ class AppController extends AbstractController
             } else {
                 $decodedResponse = $response->toArray();
                 $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
-                
+
             }
         }
         //Una vez que he persistido todos los datos los integro en la base de datos
@@ -197,7 +199,7 @@ class AppController extends AbstractController
     private function sendBasicData($decodedResponse, $zipcode, $entityManager)
     {
         foreach ($decodedResponse['data'] as $actualData) {
-            if (sizeof($actualData) != 1){
+            if (sizeof($actualData) != 1) {
                 $basicData = new BasicData();
                 $basicData->setAvg($actualData['avg']);
                 $basicData->setCards($actualData['cards']);
@@ -250,10 +252,70 @@ class AppController extends AbstractController
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];
 
-            $this->getBasicData($client, $tokenType, $accessToken, $entityManager);
+            $this->getCategoryData($client, $tokenType, $accessToken, $entityManager);
         }
         return $this->render('base.html.twig');
     }
+    private function getCategoryData($client, $tokenType, $accessToken, $entityManager)
+    {
+        $zipcodes = $this->getDoctrine()
+            ->getRepository(Zipcode::class)
+            ->findAll();
+        foreach ($zipcodes as $zipcode) {
+            // Realizados cambios en fecha ojo
+            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201501", [
+                'headers' => [
+                    'Authorization' => $tokenType . ' ' . $accessToken,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            if ($statusCode = $response->getStatusCode() != 200) {
+                echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
 
+            } else {
+                $decodedResponse = $response->toArray();
+                $this->sendCategoryData($decodedResponse, $zipcode, $entityManager);
 
+            }
+        }
+    }
+    private function sendCategoryData($decodedResponse, $zipcode, $entityManager)
+    {
+        foreach ($decodedResponse['data'] as $mainData) {
+            $actualDate = $mainData['date'];
+            if (sizeof($mainData)==6) {
+                foreach ($mainData['categories'] as $actualData) {
+                    if (sizeof($actualData) != 1) {
+                        //En el caso que sean datos filtrados solo me proporcionan 3
+                        $categoryId = $this->getDoctrine()
+                            ->getRepository(Category::class)
+                            ->findOneBy(['code' => $actualData['id']]);
+
+                        if (sizeof($actualData) == 3) {
+                            $categoryData = new CategoryData();
+                            $categoryData->setZipcode($zipcode);
+                            $categoryData->setDate($actualDate);
+                            $categoryData->setCategoryId($categoryId);
+                            $categoryData->setAvg($actualData['avg']);
+                            $categoryData->setTxs($actualData['txs']);
+                            $entityManager->persist($categoryData);
+                        } else {
+                            $categoryData = new CategoryData();
+                            $categoryData->setZipcode($zipcode);
+                            $categoryData->setDate($actualDate);
+                            $categoryData->setCategoryId($categoryId);
+                            $categoryData->setAvg($actualData['avg']);
+                            $categoryData->setCards($actualData['cards']);
+                            $categoryData->setMerchants($actualData['merchants']);
+                            $categoryData->setTxs($actualData['txs']);
+                            $entityManager->persist($categoryData);
+                        }
+                    }
+                }
+            }
+
+        }
+        $entityManager->flush();
+
+    }
 }

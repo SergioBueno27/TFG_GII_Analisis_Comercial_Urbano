@@ -50,14 +50,24 @@ class AppController extends AbstractController
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
 
             //Recojo los mercaderes con sus categorías y subcategorías
-            $response = $this->getMerchants($client, $tokenType, $accessToken);
+            $response = $this->getMerchants($client, $tokenType, $accessToken, $expirationTime);
 
             if ($statusCode = $response->getStatusCode() != 200) {
                 echo "Error en la consulta get_merchants: " . $statusCode = $response->getStatusCode();
 
             } else {
+                //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+                $sql = 'DELETE FROM category_data';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $sql = 'ALTER TABLE category_data AUTO_INCREMENT=1;';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
 
                 //Primero elimino todo el contenido actual en base de datos para volver a rellenar
                 $sql = 'DELETE FROM sub_category';
@@ -96,8 +106,32 @@ class AppController extends AbstractController
         return $response;
     }
 
-    private function getMerchants($client, $tokenType, $accessToken)
+    private function refreshToken($client, &$tokenType, &$accessToken, &$expirationTime)
     {
+        //Lo pongo a 100 segundos para tener margen que no expire el token
+        if (($expirationTime - time()) < 100) {
+            //Recojo el token inicial para las posteriores consultas
+            $response = $this->getToken($client);
+            if ($statusCode = $response->getStatusCode() != 200) {
+                echo "Error en la consulta get_token en refreshToken: " . $statusCode = $response->getStatusCode();
+                exit;
+
+            } else {
+                $decodedResponse = $response->toArray();
+                $tokenType = $decodedResponse['token_type'];
+                $accessToken = $decodedResponse['access_token'];
+                $expiresIn = $decodedResponse['expires_in'];
+                //Para controlar cuando a expirado el token
+                $expirationTime = time() + $expiresIn;
+            }
+        }
+
+    }
+
+    private function getMerchants($client, $tokenType, $accessToken, $expirationTime)
+    {
+        $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+
         $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories', [
             'headers' => [
                 'Authorization' => $tokenType . ' ' . $accessToken,
@@ -151,7 +185,8 @@ class AppController extends AbstractController
         $response = $this->getToken($client);
 
         if ($statusCode = $response->getStatusCode() != 200) {
-            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+            echo "Error en la consulta get_token en extraer datos básicos: " . $statusCode = $response->getStatusCode();
+            exit;
 
         } else {
             //Primero elimino todo el contenido actual en base de datos para volver a rellenar
@@ -165,32 +200,33 @@ class AppController extends AbstractController
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
 
-            $this->getBasicData($client, $tokenType, $accessToken, $entityManager);
+            $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
         return $this->render('base.html.twig');
     }
-
-    private function getBasicData($client, $tokenType, $accessToken, $entityManager)
+    private function getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
+        $responses = [];
         foreach ($zipcodes as $zipcode) {
-            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201501", [
+            $client = HttpClient::create();
+            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
                 ],
             ]);
-            if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
-
-            } else {
-                $decodedResponse = $response->toArray();
-                $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
-
-            }
+        }
+        foreach ($responses as $response) {
+            $decodedResponse = $response->toArray();
+            $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
         }
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
@@ -217,6 +253,7 @@ class AppController extends AbstractController
                 $entityManager->persist($basicData);
             }
         }
+        $entityManager->flush();
 
     }
 
@@ -251,17 +288,21 @@ class AppController extends AbstractController
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
 
-            $this->getCategoryData($client, $tokenType, $accessToken, $entityManager);
+            $this->getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
         return $this->render('base.html.twig');
     }
-    private function getCategoryData($client, $tokenType, $accessToken, $entityManager)
+    private function getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
         foreach ($zipcodes as $zipcode) {
+            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
             $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201501", [
                 'headers' => [
@@ -283,7 +324,7 @@ class AppController extends AbstractController
     {
         foreach ($decodedResponse['data'] as $mainData) {
             $actualDate = $mainData['date'];
-            if (sizeof($mainData)==6) {
+            if (sizeof($mainData) == 6) {
                 foreach ($mainData['categories'] as $actualData) {
                     if (sizeof($actualData) != 1) {
                         //En el caso que sean datos filtrados solo me proporcionan 3

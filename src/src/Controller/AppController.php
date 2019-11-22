@@ -7,6 +7,7 @@ use App\Entity\Category;
 use App\Entity\CategoryData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
+use App\Entity\DayData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
@@ -215,18 +216,30 @@ class AppController extends AbstractController
             ->findAll();
         $responses = [];
         foreach ($zipcodes as $zipcode) {
-            $client = HttpClient::create();
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512", [
+            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512&cards=all", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
                 ],
             ]);
         }
-        foreach ($responses as $response) {
-            $decodedResponse = $response->toArray();
-            $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
+
+        $cont = 200;
+        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            $response = $responses[$i];
+            $zipcode = $zipcodes[$i];
+            if (--$cont == 0) {
+                $cont = 200;
+                $entityManager->flush();
+            }
+            if ($statusCode = $response->getStatusCode() != 200) {
+                echo "Error en la consulta get basic data: " . $statusCode = $response->getStatusCode();
+
+            } else {
+                $decodedResponse = $response->toArray();
+                $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
+            }
         }
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
@@ -253,7 +266,6 @@ class AppController extends AbstractController
                 $entityManager->persist($basicData);
             }
         }
-        $entityManager->flush();
 
     }
 
@@ -301,24 +313,29 @@ class AppController extends AbstractController
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
+        $responses = [];
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            // Realizados cambios en fecha ojo
-            $response = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201501", [
+            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201512&cards=all", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
                 ],
             ]);
+        }
+        $cont = 10;
+        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            $response = $responses[$i];
+            $zipcode = $zipcodes[$i];
             if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
-
+                echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
             } else {
                 $decodedResponse = $response->toArray();
                 $this->sendCategoryData($decodedResponse, $zipcode, $entityManager);
-
             }
         }
+        //Una vez que he persistido todos los datos los integro en la base de datos
+        $entityManager->flush();
     }
     private function sendCategoryData($decodedResponse, $zipcode, $entityManager)
     {
@@ -359,4 +376,107 @@ class AppController extends AbstractController
         $entityManager->flush();
 
     }
+
+    /**
+     * @Route("/extract_consumption_data", name="consumptionData")
+     */
+    public function dataConsumption()
+    {
+        //Entity manager necesario para gestionar las peticiones
+        $entityManager = $this->getDoctrine()->getManager();
+
+        //Conexión con la base de datos
+        $conn = $entityManager->getConnection();
+
+        //Cliente HTTP para peticiones a la API BBVA
+        $client = HttpClient::create();
+
+        //Recojo el token inicial para las posteriores consultas
+        $response = $this->getToken($client);
+
+        if ($statusCode = $response->getStatusCode() != 200) {
+            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+        } else {
+            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            $sql = 'DELETE FROM day_data';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $sql = 'ALTER TABLE day_data AUTO_INCREMENT=1;';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+
+            $decodedResponse = $response->toArray();
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
+
+            $this->getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        }
+        return $this->render('base.html.twig');
+    }
+
+    private function getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    {
+        $zipcodes = $this->getDoctrine()
+            ->getRepository(Zipcode::class)
+            ->findAll();
+        $responses = [];
+        foreach ($zipcodes as $zipcode) {
+            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            // Realizados cambios en fecha ojo
+            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/consumption_pattern?min_date=201501&max_date=201512&cards=all", [
+                'headers' => [
+                    'Authorization' => $tokenType . ' ' . $accessToken,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+        }
+        $cont = 20;
+        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            $response = $responses[$i];
+            $zipcode = $zipcodes[$i];
+            if (--$cont == 0) {
+                $cont = 20;
+                $entityManager->flush();
+            }
+            if ($statusCode = $response->getStatusCode() != 200) {
+                echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+            } else {
+                $decodedResponse = $response->toArray();
+                $this->sendConsumptionData($decodedResponse, $zipcode, $entityManager);
+            }
+        }
+        //Una vez que he persistido todos los datos los integro en la base de datos
+        $entityManager->flush();
+    }
+
+    private function sendConsumptionData($decodedResponse, $zipcode, $entityManager)
+    {
+        foreach ($decodedResponse['data'] as $mainData) {
+            $actualDate = $mainData['date'];
+            if (sizeof($mainData) == 6) {
+                foreach ($mainData['days'] as $actualData) {
+                    if (sizeof($actualData) != 1) {
+                        $dayData = new DayData();
+                        $dayData->setZipcode($zipcode);
+                        $dayData->setDate($actualDate);
+                        $dayData->setAvg($actualData['avg']);
+                        $dayData->setDay($actualData['day']);
+                        $dayData->setMax($actualData['max']);
+                        $dayData->setMerchants($actualData['merchants']);
+                        $dayData->setMin($actualData['min']);
+                        $dayData->setMode($actualData['mode']);
+                        $dayData->setStd($actualData['std']);
+                        $dayData->setTxs($actualData['txs']);
+                        $entityManager->persist($dayData);
+                    }
+                }
+            }
+
+        }
+
+    }
+
 }

@@ -1,5 +1,5 @@
 framework:
-    secret: '%env(APP_SECRET)%'
+    secret: "%env(APP_SECRET)%"
     #csrf_protection: true
     #http_method_override: true
 
@@ -14,3 +14,7 @@ framework:
     #fragments: true
     php_errors:
         log: true
+    http_client:
+        max_host_connections: 10
+        default_options:
+            max_redirects: 7

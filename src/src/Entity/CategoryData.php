@@ -35,7 +35,7 @@ class CategoryData
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="categoryData")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $categoryId;
+    private $category;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -94,14 +94,14 @@ class CategoryData
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $categoryId): self
+    public function setCategory(?Category $category): self
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
 
         return $this;
     }

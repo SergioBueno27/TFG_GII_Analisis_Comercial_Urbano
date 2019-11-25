@@ -38,12 +38,12 @@ class Category
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\SubCategory", mappedBy="category", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\SubCategory", mappedBy="category")
      */
     private $subCategories;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="categoryId", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="category")
      */
     private $categoryData;
 
@@ -168,7 +168,7 @@ class Category
     {
         if (!$this->categoryData->contains($categoryData)) {
             $this->categoryData[] = $categoryData;
-            $categoryData->setCategoryId($this);
+            $categoryData->setCategory($this);
         }
 
         return $this;
@@ -179,8 +179,8 @@ class Category
         if ($this->categoryData->contains($categoryData)) {
             $this->categoryData->removeElement($categoryData);
             // set the owning side to null (unless already changed)
-            if ($categoryData->getCategoryId() === $this) {
-                $categoryData->setCategoryId(null);
+            if ($categoryData->getCategory() === $this) {
+                $categoryData->setCategory(null);
             }
         }
 

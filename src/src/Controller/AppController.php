@@ -7,7 +7,7 @@ use App\Entity\Category;
 use App\Entity\CategoryData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
-use App\Entity\DayData;
+use App\Entity\ConsumptionDay;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
@@ -331,11 +331,12 @@ class AppController extends AbstractController
                 echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
             } else {
                 $decodedResponse = $response->toArray();
+                $entityManager->flush();
                 $this->sendCategoryData($decodedResponse, $zipcode, $entityManager);
+                $entityManager->flush();
+                
             }
         }
-        //Una vez que he persistido todos los datos los integro en la base de datos
-        $entityManager->flush();
     }
     private function sendCategoryData($decodedResponse, $zipcode, $entityManager)
     {
@@ -345,7 +346,7 @@ class AppController extends AbstractController
                 foreach ($mainData['categories'] as $actualData) {
                     if (sizeof($actualData) != 1) {
                         //En el caso que sean datos filtrados solo me proporcionan 3
-                        $categoryId = $this->getDoctrine()
+                        $category = $this->getDoctrine()
                             ->getRepository(Category::class)
                             ->findOneBy(['code' => $actualData['id']]);
 
@@ -353,7 +354,7 @@ class AppController extends AbstractController
                             $categoryData = new CategoryData();
                             $categoryData->setZipcode($zipcode);
                             $categoryData->setDate($actualDate);
-                            $categoryData->setCategoryId($categoryId);
+                            $categoryData->setCategory($category);
                             $categoryData->setAvg($actualData['avg']);
                             $categoryData->setTxs($actualData['txs']);
                             $entityManager->persist($categoryData);
@@ -361,7 +362,7 @@ class AppController extends AbstractController
                             $categoryData = new CategoryData();
                             $categoryData->setZipcode($zipcode);
                             $categoryData->setDate($actualDate);
-                            $categoryData->setCategoryId($categoryId);
+                            $categoryData->setCategory($category);
                             $categoryData->setAvg($actualData['avg']);
                             $categoryData->setCards($actualData['cards']);
                             $categoryData->setMerchants($actualData['merchants']);
@@ -373,8 +374,6 @@ class AppController extends AbstractController
             }
 
         }
-        $entityManager->flush();
-
     }
 
     /**

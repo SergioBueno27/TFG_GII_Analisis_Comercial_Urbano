@@ -49,14 +49,14 @@ class Zipcode
     private $categoryData;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DayData", mappedBy="zipcode", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\ConsumptionDayData", mappedBy="zipcode", orphanRemoval=true)
      */
-    private $dayData;
+    private $consumptionDayData;
 
     public function __construct()
     {
         $this->categoryData = new ArrayCollection();
-        $this->dayData = new ArrayCollection();
+        $this->consumptionDayData = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -175,30 +175,30 @@ class Zipcode
     }
 
     /**
-     * @return Collection|DayData[]
+     * @return Collection|ConsumptionDayData[]
      */
-    public function getDayData(): Collection
+    public function getConsumptionDayData(): Collection
     {
-        return $this->dayData;
+        return $this->consumptionDayData;
     }
 
-    public function addDayData(DayData $dayData): self
+    public function addConsumptionDayData(ConsumptionDayData $consumptionDayData): self
     {
-        if (!$this->dayData->contains($dayData)) {
-            $this->dayData[] = $dayData;
-            $dayData->setZipcode($this);
+        if (!$this->consumptionDayData->contains($consumptionDayData)) {
+            $this->consumptionDayData[] = $consumptionDayData;
+            $consumptionDayData->setZipcode($this);
         }
 
         return $this;
     }
 
-    public function removeDayData(DayData $dayData): self
+    public function removeConsumptionDayData(ConsumptionDayData $consumptionDayData): self
     {
-        if ($this->dayData->contains($dayData)) {
-            $this->dayData->removeElement($dayData);
+        if ($this->consumptionDayData->contains($consumptionDayData)) {
+            $this->consumptionDayData->removeElement($consumptionDayData);
             // set the owning side to null (unless already changed)
-            if ($dayData->getZipcode() === $this) {
-                $dayData->setZipcode(null);
+            if ($consumptionDayData->getZipcode() === $this) {
+                $consumptionDayData->setZipcode(null);
             }
         }
 

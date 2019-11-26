@@ -1,6 +1,6 @@
 {
     "name": "tfg_gii_analisis_comercial_urbano/tfg_gii_analisis_comercial_urbano",
-    "description":"Análisis comercial urbano utilizando series temporales de compras de tarjetas de crédito",
+    "description": "Análisis comercial urbano utilizando series temporales de compras de tarjetas de crédito",
     "type": "project",
     "license": "MIT",
     "require": {
@@ -78,7 +78,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.3.*"
+            "require": "4.4.*"
         }
     }
 }

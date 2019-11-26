@@ -7,17 +7,19 @@ use App\Entity\Category;
 use App\Entity\CategoryData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
-use App\Entity\ConsumptionDay;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
 
 set_time_limit(0);
+ini_set('memory_limit', '512M');
 class AppController extends AbstractController
 {
 
     //Este código proviene de BBVA tras registrarme en la página
     private $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
+
+    private $cont = 2;
 
     /**
      * @Route("/home", name="home")
@@ -214,6 +216,7 @@ class AppController extends AbstractController
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
+        $this->cont = 200;
         $responses = [];
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
@@ -224,15 +227,9 @@ class AppController extends AbstractController
                 ],
             ]);
         }
-
-        $cont = 200;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             $response = $responses[$i];
             $zipcode = $zipcodes[$i];
-            if (--$cont == 0) {
-                $cont = 200;
-                $entityManager->flush();
-            }
             if ($statusCode = $response->getStatusCode() != 200) {
                 echo "Error en la consulta get basic data: " . $statusCode = $response->getStatusCode();
 
@@ -241,6 +238,7 @@ class AppController extends AbstractController
                 $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
             }
         }
+        
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
     }
@@ -264,6 +262,13 @@ class AppController extends AbstractController
                 $basicData->setValleyTxsHour($actualData['valley_txs_hour']);
                 $basicData->setZipcode($zipcode);
                 $entityManager->persist($basicData);
+                if ($this->cont != 0) {
+                    $this->cont = $this->cont - 1;
+                } else {
+                    $this->cont = 200;
+                    $entityManager->flush();
+                }
+
             }
         }
 
@@ -314,6 +319,7 @@ class AppController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
+        $this->cont = 500;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201512&cards=all", [
@@ -323,20 +329,20 @@ class AppController extends AbstractController
                 ],
             ]);
         }
-        $cont = 10;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             $response = $responses[$i];
             $zipcode = $zipcodes[$i];
             if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+                //echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
             } else {
                 $decodedResponse = $response->toArray();
-                $entityManager->flush();
                 $this->sendCategoryData($decodedResponse, $zipcode, $entityManager);
-                $entityManager->flush();
-                
             }
         }
+        //Una vez que he persistido todos los datos los integro en la base de datos
+        $entityManager->flush();
+        $entityManager->clear(CategoryData::class);
+
     }
     private function sendCategoryData($decodedResponse, $zipcode, $entityManager)
     {
@@ -355,9 +361,18 @@ class AppController extends AbstractController
                             $categoryData->setZipcode($zipcode);
                             $categoryData->setDate($actualDate);
                             $categoryData->setCategory($category);
+                            unset($category);
                             $categoryData->setAvg($actualData['avg']);
                             $categoryData->setTxs($actualData['txs']);
                             $entityManager->persist($categoryData);
+                            if ($this->cont != 0) {
+                                $this->cont = $this->cont - 1;
+                            } else {
+                                $this->cont = 500;
+                                $entityManager->flush();
+                                $entityManager->clear(CategoryData::class);
+                            }
+
                         } else {
                             $categoryData = new CategoryData();
                             $categoryData->setZipcode($zipcode);
@@ -368,6 +383,13 @@ class AppController extends AbstractController
                             $categoryData->setMerchants($actualData['merchants']);
                             $categoryData->setTxs($actualData['txs']);
                             $entityManager->persist($categoryData);
+                            if ($this->cont != 0) {
+                                $this->cont = $this->cont - 1;
+                            } else {
+                                $this->cont = 500;
+                                $entityManager->flush();
+                                $entityManager->clear(CategoryData::class);
+                            }
                         }
                     }
                 }

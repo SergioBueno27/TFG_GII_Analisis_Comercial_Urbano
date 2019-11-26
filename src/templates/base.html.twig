@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="icon" href="{{ asset('/icon/favicon.ico') }}"/>
-        <title>{% block title %}Análisis Comercial Urbano{% endblock %}</title>
-        {% block stylesheets %}<link rel="stylesheet" href="{{ asset('/css/main.css') }}">{% endblock %}
-    </head>
-    <body>
-        {% if app.user %}
-        <div class="mb-3">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ asset('/icon/favicon.ico') }}" />
+    <title>{% block title %}Análisis Comercial Urbano{% endblock %}</title>
+    {% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('/css/main.css') }}">{% endblock %}
+</head>
+
+<body>
+    {% if app.user %}
+    <div class="mb-3">
         {% for role in app.user.roles %}
         Role= {{role}}
         {% endfor %}
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('merchantData')}}">Extraer datos de mercaderes</a>
-            <a href="{{ path('basicData')}}">Extraer datos básicos</a>
-            <a href="{{ path('categoryData')}}">Extraer datos por categoría</a>
-            <a href="{{ path('consumptionData')}}">Extraer datos por días y horas</a>
-        {% endif %}
-        {% endif %}
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('merchantData')}}">Extraer datos de mercaderes</a>
+    <a href="{{ path('basicData')}}">Extraer datos básicos</a>
+    <a href="{{ path('categoryData')}}">Extraer datos por categoría</a>
+    <a href="{{ path('consumptionData')}}">Extraer datos por días y horas</a>
+    {% endif %}
+    {% endif %}
+    {% block body %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+</body>
+
 </html>

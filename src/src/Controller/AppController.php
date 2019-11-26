@@ -17,7 +17,7 @@ class AppController extends AbstractController
 {
 
     //Este código proviene de BBVA tras registrarme en la página
-    private $code = 'YXBwLmJidmEuSGZqZmJmYjpmJXVORlN0cUlFVFRqWmVwRUdPKldqYjVxeUpKUkskeklXa01yVkk5dEsqbTI3ZTlFWmc3QFdYUUg4eE1QJEZH';
+    private $code = 'YXBwLmJidmEuQUNVOm4wNDRTNCVBSHBTaDY4bW5sRXV4ZWZHWTVNcFRvbjcycVdkMzlTaWNtME1AcFU0aSVkSEMlbGZrampKeVpHVVg=';
 
     private $cont = 2;
 
@@ -26,6 +26,7 @@ class AppController extends AbstractController
      */
     public function index()
     {
+
         return $this->render('base.html.twig');
     }
 
@@ -333,7 +334,8 @@ class AppController extends AbstractController
             $response = $responses[$i];
             $zipcode = $zipcodes[$i];
             if ($statusCode = $response->getStatusCode() != 200) {
-                //echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+                echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+                exit;
             } else {
                 $decodedResponse = $response->toArray();
                 $this->sendCategoryData($decodedResponse, $zipcode, $entityManager);
@@ -361,7 +363,7 @@ class AppController extends AbstractController
                             $categoryData->setZipcode($zipcode);
                             $categoryData->setDate($actualDate);
                             $categoryData->setCategory($category);
-                            unset($category);
+                            // unset($category);
                             $categoryData->setAvg($actualData['avg']);
                             $categoryData->setTxs($actualData['txs']);
                             $entityManager->persist($categoryData);
@@ -378,6 +380,7 @@ class AppController extends AbstractController
                             $categoryData->setZipcode($zipcode);
                             $categoryData->setDate($actualDate);
                             $categoryData->setCategory($category);
+                            // unset($category);
                             $categoryData->setAvg($actualData['avg']);
                             $categoryData->setCards($actualData['cards']);
                             $categoryData->setMerchants($actualData['merchants']);

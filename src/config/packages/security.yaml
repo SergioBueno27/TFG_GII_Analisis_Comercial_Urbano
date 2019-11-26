@@ -28,6 +28,15 @@ security:
             form_login:
                 default_target_path: home
                 always_use_default_target_path: true
+            remember_me:
+                secret: "%kernel.secret%"
+                lifetime: 604800 # It will last one week
+                path: /
+                token_provider: 'Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider'
+                # by default, the feature is enabled by checking a
+                # checkbox in the login form (see below), uncomment the
+                # following line to always enable it.
+                #always_remember_me: true
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
             # https://symfony.com/doc/current/security/impersonating_user.html

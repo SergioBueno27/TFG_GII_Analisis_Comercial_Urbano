@@ -53,10 +53,16 @@ class Zipcode
      */
     private $consumptionDayData;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\DayData", mappedBy="zipcode", cascade={"persist"})
+     */
+    private $dayData;
+
     public function __construct()
     {
         $this->categoryData = new ArrayCollection();
         $this->consumptionDayData = new ArrayCollection();
+        $this->dayData = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -199,6 +205,37 @@ class Zipcode
             // set the owning side to null (unless already changed)
             if ($consumptionDayData->getZipcode() === $this) {
                 $consumptionDayData->setZipcode(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DayData[]
+     */
+    public function getDayData(): Collection
+    {
+        return $this->dayData;
+    }
+
+    public function addDayData(DayData $dayData): self
+    {
+        if (!$this->dayData->contains($dayData)) {
+            $this->dayData[] = $dayData;
+            $dayData->setZipcode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDayData(DayData $dayData): self
+    {
+        if ($this->dayData->contains($dayData)) {
+            $this->dayData->removeElement($dayData);
+            // set the owning side to null (unless already changed)
+            if ($dayData->getZipcode() === $this) {
+                $dayData->setZipcode(null);
             }
         }
 

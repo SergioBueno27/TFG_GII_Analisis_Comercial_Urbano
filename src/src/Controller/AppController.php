@@ -7,12 +7,13 @@ use App\Entity\Category;
 use App\Entity\CategoryData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
+use App\Entity\DayData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
 
 set_time_limit(0);
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1024M');
 class AppController extends AbstractController
 {
 
@@ -447,6 +448,7 @@ class AppController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
+        $this->cont = 1000;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
@@ -457,16 +459,12 @@ class AppController extends AbstractController
                 ],
             ]);
         }
-        $cont = 20;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             $response = $responses[$i];
             $zipcode = $zipcodes[$i];
-            if (--$cont == 0) {
-                $cont = 20;
-                $entityManager->flush();
-            }
             if ($statusCode = $response->getStatusCode() != 200) {
                 echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+                exit;
             } else {
                 $decodedResponse = $response->toArray();
                 $this->sendConsumptionData($decodedResponse, $zipcode, $entityManager);
@@ -482,7 +480,7 @@ class AppController extends AbstractController
             $actualDate = $mainData['date'];
             if (sizeof($mainData) == 6) {
                 foreach ($mainData['days'] as $actualData) {
-                    if (sizeof($actualData) != 1) {
+                    if (sizeof($actualData) == 10) {
                         $dayData = new DayData();
                         $dayData->setZipcode($zipcode);
                         $dayData->setDate($actualDate);
@@ -494,12 +492,23 @@ class AppController extends AbstractController
                         $dayData->setMode($actualData['mode']);
                         $dayData->setStd($actualData['std']);
                         $dayData->setTxs($actualData['txs']);
+                        $dayData->setCards($actualData['cards']);
                         $entityManager->persist($dayData);
+                        unset($dayData);
+                        if ($this->cont != 0) {
+                            $this->cont = $this->cont - 1;
+                        } else {
+                            $this->cont = 1000;
+                            $entityManager->flush();
+                            $entityManager->clear();
+                        }
                     }
                 }
             }
 
         }
+        unset($decodedResponse);
+        unset($zipcode);
 
     }
 

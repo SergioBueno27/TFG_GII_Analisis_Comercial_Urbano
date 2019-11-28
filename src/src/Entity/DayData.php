@@ -17,7 +17,7 @@ class DayData
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Zipcode", inversedBy="dayData",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Zipcode", inversedBy="dayData")
      * @ORM\JoinColumn(nullable=false)
      */
     private $zipcode;

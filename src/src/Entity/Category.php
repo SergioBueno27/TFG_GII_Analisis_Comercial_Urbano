@@ -43,7 +43,7 @@ class Category
     private $subCategories;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="category",cascade={"persist"})
      */
     private $categoryData;
 

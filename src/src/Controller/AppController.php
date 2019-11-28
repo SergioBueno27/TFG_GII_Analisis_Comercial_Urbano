@@ -5,15 +5,15 @@ namespace App\Controller;
 use App\Entity\BasicData;
 use App\Entity\Category;
 use App\Entity\CategoryData;
+use App\Entity\DayData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
-use App\Entity\DayData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
 
 set_time_limit(0);
-ini_set('memory_limit', '1024M');
+ini_set('memory_limit', '-1');
 class AppController extends AbstractController
 {
 
@@ -23,7 +23,7 @@ class AppController extends AbstractController
     private $cont = 2;
 
     /**
-     * @Route("/home", name="home")
+     * @Route("/home", name="homex")
      */
     public function index()
     {
@@ -66,6 +66,12 @@ class AppController extends AbstractController
                 echo "Error en la consulta get_merchants: " . $statusCode = $response->getStatusCode();
 
             } else {
+                $sql = 'DELETE FROM basic_data';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $sql = 'DELETE FROM day_data';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
                 //Primero elimino todo el contenido actual en base de datos para volver a rellenar
                 $sql = 'DELETE FROM category_data';
                 $stmt = $conn->prepare($sql);
@@ -91,7 +97,9 @@ class AppController extends AbstractController
                 $sql = 'ALTER TABLE category AUTO_INCREMENT=1;';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-
+                $sql = 'DELETE FROM zipcode';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
                 $this->sendMerchants($response, $entityManager);
             }
 
@@ -215,10 +223,13 @@ class AppController extends AbstractController
     }
     private function getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
+        echo 'Inicio' . memory_get_usage()/1024/1024 ."M<br>";
+        $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
-        $this->cont = 200;
+        $this->cont = 500;
         $responses = [];
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
@@ -229,26 +240,28 @@ class AppController extends AbstractController
                 ],
             ]);
         }
+        echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            $response = $responses[$i];
-            $zipcode = $zipcodes[$i];
-            if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta get basic data: " . $statusCode = $response->getStatusCode();
+            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+                echo "Error en la consulta get basic data: " . $statusCode = $responses[$i]->getStatusCode();
 
             } else {
-                $decodedResponse = $response->toArray();
-                $this->sendBasicData($decodedResponse, $zipcode, $entityManager);
+                $decodedResponseData = $responses[$i]->toArray()['data'];
+                unset($responses[$i]);
+                $this->sendBasicData($decodedResponseData, $zipcodes[$i], $entityManager);
             }
         }
-        
+        echo 'Después de for' . memory_get_usage()/1024/1024 ."M<br>";
+
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
     }
 
-    private function sendBasicData($decodedResponse, $zipcode, $entityManager)
+    private function sendBasicData($decodedResponseData, $zipcode, $entityManager)
     {
-        foreach ($decodedResponse['data'] as $actualData) {
-            if (sizeof($actualData) != 1) {
+        foreach ($decodedResponseData as $actualData) {
+             if (sizeof($actualData) != 1) {
                 $basicData = new BasicData();
                 $basicData->setAvg($actualData['avg']);
                 $basicData->setCards($actualData['cards']);
@@ -267,11 +280,10 @@ class AppController extends AbstractController
                 if ($this->cont != 0) {
                     $this->cont = $this->cont - 1;
                 } else {
-                    $this->cont = 200;
+                    $this->cont = 500;
                     $entityManager->flush();
                 }
-
-            }
+             }
         }
 
     }
@@ -317,6 +329,7 @@ class AppController extends AbstractController
     }
     private function getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
+        echo 'Inicio' . memory_get_usage()/1024/1024 ."M<br>";
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
@@ -331,26 +344,27 @@ class AppController extends AbstractController
                 ],
             ]);
         }
+        echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            $response = $responses[$i];
-            $zipcode = $zipcodes[$i];
-            if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+            ;
+            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+                echo "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode();
                 exit;
             } else {
-                $decodedResponse = $response->toArray();
-                $this->sendCategoryData($decodedResponse, $zipcode, $entityManager);
+                $decodedResponse = $responses[$i]->toArray();
+                unset($responses[$i]);
+                $this->sendCategoryData($decodedResponse['data'], $zipcodes[$i], $entityManager);
             }
         }
+        echo 'Después de for' . memory_get_usage()/1024/1024 ."M<br>";
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
-        $entityManager->clear(CategoryData::class);
+        $entityManager->close();
 
     }
-    private function sendCategoryData($decodedResponse, $zipcode, $entityManager)
+    private function sendCategoryData($decodedResponseData, $zipcode, $entityManager)
     {
-        foreach ($decodedResponse['data'] as $mainData) {
-            $actualDate = $mainData['date'];
+        foreach ($decodedResponseData as $mainData) {
             if (sizeof($mainData) == 6) {
                 foreach ($mainData['categories'] as $actualData) {
                     if (sizeof($actualData) != 1) {
@@ -362,7 +376,7 @@ class AppController extends AbstractController
                         if (sizeof($actualData) == 3) {
                             $categoryData = new CategoryData();
                             $categoryData->setZipcode($zipcode);
-                            $categoryData->setDate($actualDate);
+                            $categoryData->setDate($mainData['date']);
                             $categoryData->setCategory($category);
                             // unset($category);
                             $categoryData->setAvg($actualData['avg']);
@@ -373,13 +387,12 @@ class AppController extends AbstractController
                             } else {
                                 $this->cont = 500;
                                 $entityManager->flush();
-                                $entityManager->clear(CategoryData::class);
                             }
 
                         } else {
                             $categoryData = new CategoryData();
                             $categoryData->setZipcode($zipcode);
-                            $categoryData->setDate($actualDate);
+                            $categoryData->setDate($mainData['date']);
                             $categoryData->setCategory($category);
                             // unset($category);
                             $categoryData->setAvg($actualData['avg']);
@@ -392,7 +405,6 @@ class AppController extends AbstractController
                             } else {
                                 $this->cont = 500;
                                 $entityManager->flush();
-                                $entityManager->clear(CategoryData::class);
                             }
                         }
                     }
@@ -448,7 +460,7 @@ class AppController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $this->cont = 1000;
+        $this->cont = 100;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
@@ -498,9 +510,8 @@ class AppController extends AbstractController
                         if ($this->cont != 0) {
                             $this->cont = $this->cont - 1;
                         } else {
-                            $this->cont = 1000;
+                            $this->cont = 100;
                             $entityManager->flush();
-                            $entityManager->clear();
                         }
                     }
                 }

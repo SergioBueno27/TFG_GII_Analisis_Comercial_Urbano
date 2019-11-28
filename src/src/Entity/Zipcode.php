@@ -24,27 +24,12 @@ class Zipcode
     private $zipcode;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $locality;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $subregion;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $region;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\BasicData", mappedBy="zipcode", orphanRemoval=true)
      */
     private $basicData;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="zipcode", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="zipcode"
      */
     private $categoryData;
 
@@ -54,7 +39,7 @@ class Zipcode
     private $consumptionDayData;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DayData", mappedBy="zipcode", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\DayData", mappedBy="zipcode")
      */
     private $dayData;
 
@@ -78,42 +63,6 @@ class Zipcode
     public function setZipcode(int $zipcode): self
     {
         $this->zipcode = $zipcode;
-
-        return $this;
-    }
-
-    public function getLocality(): ?int
-    {
-        return $this->locality;
-    }
-
-    public function setLocality(int $locality): self
-    {
-        $this->locality = $locality;
-
-        return $this;
-    }
-
-    public function getSubregion(): ?int
-    {
-        return $this->subregion;
-    }
-
-    public function setSubregion(int $subregion): self
-    {
-        $this->subregion = $subregion;
-
-        return $this;
-    }
-
-    public function getRegion(): ?int
-    {
-        return $this->region;
-    }
-
-    public function setRegion(int $region): self
-    {
-        $this->region = $region;
 
         return $this;
     }

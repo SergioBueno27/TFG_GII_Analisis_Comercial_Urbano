@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ConsumptionDayDataRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\HourDataRepository")
  */
-class ConsumptionDayData
+class HourData
 {
     /**
      * @ORM\Id()
@@ -17,25 +17,19 @@ class ConsumptionDayData
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=9)
-     */
-    private $day;
-
-    /**
-     * @ORM\Column(type="string", length=6)
-     */
-    private $date;
-
-    /**
      * @ORM\Column(type="float")
      */
     private $avg;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Zipcode", inversedBy="consumptionDayData")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer")
      */
-    private $zipcode;
+    private $cards;
+
+    /**
+     * @ORM\Column(type="string", length=2)
+     */
+    private $hour;
 
     /**
      * @ORM\Column(type="float")
@@ -67,33 +61,15 @@ class ConsumptionDayData
      */
     private $txs;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\DayData", inversedBy="hourData")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $dayData;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDay(): ?string
-    {
-        return $this->day;
-    }
-
-    public function setDay(string $day): self
-    {
-        $this->day = $day;
-
-        return $this;
-    }
-
-    public function getDate(): ?string
-    {
-        return $this->date;
-    }
-
-    public function setDate(string $date): self
-    {
-        $this->date = $date;
-
-        return $this;
     }
 
     public function getAvg(): ?float
@@ -108,14 +84,26 @@ class ConsumptionDayData
         return $this;
     }
 
-    public function getZipcode(): ?Zipcode
+    public function getCards(): ?int
     {
-        return $this->zipcode;
+        return $this->cards;
     }
 
-    public function setZipcode(?Zipcode $zipcode): self
+    public function setCards(int $cards): self
     {
-        $this->zipcode = $zipcode;
+        $this->cards = $cards;
+
+        return $this;
+    }
+
+    public function getHour(): ?string
+    {
+        return $this->hour;
+    }
+
+    public function setHour(string $hour): self
+    {
+        $this->hour = $hour;
 
         return $this;
     }
@@ -188,6 +176,18 @@ class ConsumptionDayData
     public function setTxs(int $txs): self
     {
         $this->txs = $txs;
+
+        return $this;
+    }
+
+    public function getDayData(): ?DayData
+    {
+        return $this->dayData;
+    }
+
+    public function setDayData(?DayData $dayData): self
+    {
+        $this->dayData = $dayData;
 
         return $this;
     }

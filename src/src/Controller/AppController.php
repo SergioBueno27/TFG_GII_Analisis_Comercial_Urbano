@@ -8,6 +8,7 @@ use App\Entity\CategoryData;
 use App\Entity\DayData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
+use App\Entity\HourData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +24,7 @@ class AppController extends AbstractController
     private $cont = 2;
 
     /**
-     * @Route("/home", name="homex")
+     * @Route("/home", name="home")
      */
     public function index()
     {
@@ -329,12 +330,15 @@ class AppController extends AbstractController
     }
     private function getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
+        $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+        
         echo 'Inicio' . memory_get_usage()/1024/1024 ."M<br>";
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $this->cont = 500;
+        $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201512&cards=all", [
@@ -346,20 +350,19 @@ class AppController extends AbstractController
         }
         echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            ;
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
                 echo "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode();
                 exit;
             } else {
-                $decodedResponse = $responses[$i]->toArray();
+                $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendCategoryData($decodedResponse['data'], $zipcodes[$i], $entityManager);
+                $this->sendCategoryData($decodedResponseData, $zipcodes[$i], $entityManager);
             }
         }
         echo 'Después de for' . memory_get_usage()/1024/1024 ."M<br>";
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
-        $entityManager->close();
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
 
     }
     private function sendCategoryData($decodedResponseData, $zipcode, $entityManager)
@@ -385,7 +388,7 @@ class AppController extends AbstractController
                             if ($this->cont != 0) {
                                 $this->cont = $this->cont - 1;
                             } else {
-                                $this->cont = 500;
+                                $this->cont = 5000;
                                 $entityManager->flush();
                             }
 
@@ -403,7 +406,7 @@ class AppController extends AbstractController
                             if ($this->cont != 0) {
                                 $this->cont = $this->cont - 1;
                             } else {
-                                $this->cont = 500;
+                                $this->cont = 5000;
                                 $entityManager->flush();
                             }
                         }
@@ -456,11 +459,14 @@ class AppController extends AbstractController
 
     private function getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
+        $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $this->cont = 100;
+        $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
@@ -471,24 +477,26 @@ class AppController extends AbstractController
                 ],
             ]);
         }
+        echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            $response = $responses[$i];
-            $zipcode = $zipcodes[$i];
-            if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta get category data: " . $statusCode = $response->getStatusCode();
+            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+                echo "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode();
                 exit;
             } else {
-                $decodedResponse = $response->toArray();
-                $this->sendConsumptionData($decodedResponse, $zipcode, $entityManager);
+                $decodedResponseData = $responses[$i]->toArray()['data'];
+                unset($responses[$i]);
+                $this->sendConsumptionData($decodedResponseData, $zipcodes[$i], $entityManager);
             }
         }
+        echo 'Despues de for' . memory_get_usage()/1024/1024 ."M<br>";
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
+        $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
     }
 
-    private function sendConsumptionData($decodedResponse, $zipcode, $entityManager)
+    private function sendConsumptionData($decodedResponseData, $zipcode, $entityManager)
     {
-        foreach ($decodedResponse['data'] as $mainData) {
+        foreach ($decodedResponseData as $mainData) {
             $actualDate = $mainData['date'];
             if (sizeof($mainData) == 6) {
                 foreach ($mainData['days'] as $actualData) {
@@ -506,21 +514,39 @@ class AppController extends AbstractController
                         $dayData->setTxs($actualData['txs']);
                         $dayData->setCards($actualData['cards']);
                         $entityManager->persist($dayData);
-                        unset($dayData);
                         if ($this->cont != 0) {
                             $this->cont = $this->cont - 1;
                         } else {
-                            $this->cont = 100;
+                            $this->cont = 5000;
                             $entityManager->flush();
+                        }
+                        foreach ($actualData['hours'] as $actualData){
+                            if (sizeof($actualData) == 9){
+                                $hourData = new HourData();
+                                $hourData->setDayData($dayData);
+                                $hourData->setAvg($actualData['avg']);
+                                $hourData->setCards($actualData['cards']);
+                                $hourData->setHour($actualData['hour']);
+                                $hourData->setMax($actualData['max']);
+                                $hourData->setMerchants($actualData['merchants']);
+                                $hourData->setMin($actualData['min']);
+                                $hourData->setMode($actualData['mode']);
+                                $hourData->setStd($actualData['std']);
+                                $hourData->setTxs($actualData['txs']);
+                                $entityManager->persist($hourData);
+                                if ($this->cont != 0) {
+                                    $this->cont = $this->cont - 1;
+                                } else {
+                                    $this->cont = 5000;
+                                    $entityManager->flush();
+                                }
+                            }
                         }
                     }
                 }
             }
 
         }
-        unset($decodedResponse);
-        unset($zipcode);
-
     }
 
 }

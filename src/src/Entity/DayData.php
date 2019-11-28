@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,6 +73,16 @@ class DayData
      * @ORM\Column(type="integer")
      */
     private $cards;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\HourData", mappedBy="dayData", orphanRemoval=true)
+     */
+    private $hourData;
+
+    public function __construct()
+    {
+        $this->hourData = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -205,6 +217,37 @@ class DayData
     public function setCards(int $cards): self
     {
         $this->cards = $cards;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|HourData[]
+     */
+    public function getHourData(): Collection
+    {
+        return $this->hourData;
+    }
+
+    public function addHourData(HourData $hourData): self
+    {
+        if (!$this->hourData->contains($hourData)) {
+            $this->hourData[] = $hourData;
+            $hourData->setDayData($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHourData(HourData $hourData): self
+    {
+        if ($this->hourData->contains($hourData)) {
+            $this->hourData->removeElement($hourData);
+            // set the owning side to null (unless already changed)
+            if ($hourData->getDayData() === $this) {
+                $hourData->setDayData(null);
+            }
+        }
 
         return $this;
     }

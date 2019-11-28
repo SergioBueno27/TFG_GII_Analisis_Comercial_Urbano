@@ -29,14 +29,9 @@ class Zipcode
     private $basicData;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="zipcode"
+     * @ORM\OneToMany(targetEntity="App\Entity\CategoryData", mappedBy="zipcode")
      */
     private $categoryData;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ConsumptionDayData", mappedBy="zipcode", orphanRemoval=true)
-     */
-    private $consumptionDayData;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\DayData", mappedBy="zipcode")
@@ -46,7 +41,6 @@ class Zipcode
     public function __construct()
     {
         $this->categoryData = new ArrayCollection();
-        $this->consumptionDayData = new ArrayCollection();
         $this->dayData = new ArrayCollection();
     }
 
@@ -123,37 +117,6 @@ class Zipcode
             // set the owning side to null (unless already changed)
             if ($categoryData->getZipcode() === $this) {
                 $categoryData->setZipcode(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ConsumptionDayData[]
-     */
-    public function getConsumptionDayData(): Collection
-    {
-        return $this->consumptionDayData;
-    }
-
-    public function addConsumptionDayData(ConsumptionDayData $consumptionDayData): self
-    {
-        if (!$this->consumptionDayData->contains($consumptionDayData)) {
-            $this->consumptionDayData[] = $consumptionDayData;
-            $consumptionDayData->setZipcode($this);
-        }
-
-        return $this;
-    }
-
-    public function removeConsumptionDayData(ConsumptionDayData $consumptionDayData): self
-    {
-        if ($this->consumptionDayData->contains($consumptionDayData)) {
-            $this->consumptionDayData->removeElement($consumptionDayData);
-            // set the owning side to null (unless already changed)
-            if ($consumptionDayData->getZipcode() === $this) {
-                $consumptionDayData->setZipcode(null);
             }
         }
 

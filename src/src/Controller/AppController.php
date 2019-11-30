@@ -6,9 +6,9 @@ use App\Entity\BasicData;
 use App\Entity\Category;
 use App\Entity\CategoryData;
 use App\Entity\DayData;
+use App\Entity\HourData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
-use App\Entity\HourData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
@@ -70,7 +70,13 @@ class AppController extends AbstractController
                 $sql = 'DELETE FROM basic_data';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
+                $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
                 $sql = 'DELETE FROM day_data';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $sql = 'ALTER TABLE day_data AUTO_INCREMENT=1;';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
                 //Primero elimino todo el contenido actual en base de datos para volver a rellenar
@@ -98,9 +104,7 @@ class AppController extends AbstractController
                 $sql = 'ALTER TABLE category AUTO_INCREMENT=1;';
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-                $sql = 'DELETE FROM zipcode';
-                $stmt = $conn->prepare($sql);
-                $stmt->execute();
+
                 $this->sendMerchants($response, $entityManager);
             }
 
@@ -224,13 +228,13 @@ class AppController extends AbstractController
     }
     private function getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
-        echo 'Inicio' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Inicio' . memory_get_usage() / 1024 / 1024 . "M<br>";
         $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
-        $this->cont = 500;
+        $this->cont = 5000;
         $responses = [];
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
@@ -241,7 +245,7 @@ class AppController extends AbstractController
                 ],
             ]);
         }
-        echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
                 echo "Error en la consulta get basic data: " . $statusCode = $responses[$i]->getStatusCode();
@@ -252,7 +256,7 @@ class AppController extends AbstractController
                 $this->sendBasicData($decodedResponseData, $zipcodes[$i], $entityManager);
             }
         }
-        echo 'Después de for' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
 
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
@@ -262,7 +266,7 @@ class AppController extends AbstractController
     private function sendBasicData($decodedResponseData, $zipcode, $entityManager)
     {
         foreach ($decodedResponseData as $actualData) {
-             if (sizeof($actualData) != 1) {
+            if (sizeof($actualData) != 1) {
                 $basicData = new BasicData();
                 $basicData->setAvg($actualData['avg']);
                 $basicData->setCards($actualData['cards']);
@@ -281,10 +285,10 @@ class AppController extends AbstractController
                 if ($this->cont != 0) {
                     $this->cont = $this->cont - 1;
                 } else {
-                    $this->cont = 500;
+                    $this->cont = 5000;
                     $entityManager->flush();
                 }
-             }
+            }
         }
 
     }
@@ -332,8 +336,8 @@ class AppController extends AbstractController
     {
         $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
-        
-        echo 'Inicio' . memory_get_usage()/1024/1024 ."M<br>";
+
+        echo 'Inicio' . memory_get_usage() / 1024 / 1024 . "M<br>";
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
@@ -348,7 +352,7 @@ class AppController extends AbstractController
                 ],
             ]);
         }
-        echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
                 echo "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode();
@@ -359,7 +363,7 @@ class AppController extends AbstractController
                 $this->sendCategoryData($decodedResponseData, $zipcodes[$i], $entityManager);
             }
         }
-        echo 'Después de for' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
@@ -438,7 +442,13 @@ class AppController extends AbstractController
             echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
         } else {
             //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            $sql = 'DELETE FROM hour_data';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
             $sql = 'DELETE FROM day_data';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $sql = 'ALTER TABLE hour_data AUTO_INCREMENT=1;';
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $sql = 'ALTER TABLE day_data AUTO_INCREMENT=1;';
@@ -477,24 +487,26 @@ class AppController extends AbstractController
                 ],
             ]);
         }
-        echo 'Antes de for' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
-                echo "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode();
-                exit;
+                echo $i;
+                echo "Error en la consulta get consumption_data: Error " . $statusCode = $responses[$i]->getStatusCode();
+                var_dump($responses[$i]);
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendConsumptionData($decodedResponseData, $zipcodes[$i], $entityManager);
+                $this->sendDays($decodedResponseData, $zipcodes[$i], $entityManager);
             }
         }
-        echo 'Despues de for' . memory_get_usage()/1024/1024 ."M<br>";
+        echo 'Despues de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
     }
 
-    private function sendConsumptionData($decodedResponseData, $zipcode, $entityManager)
+    private function sendDays($decodedResponseData, $zipcode, $entityManager)
     {
         foreach ($decodedResponseData as $mainData) {
             $actualDate = $mainData['date'];
@@ -515,38 +527,36 @@ class AppController extends AbstractController
                         $dayData->setCards($actualData['cards']);
                         $entityManager->persist($dayData);
                         if ($this->cont != 0) {
-                            $this->cont = $this->cont - 1;
-                        } else {
-                            $this->cont = 5000;
-                            $entityManager->flush();
+                            // $this->cont = $this->cont - 1;
                         }
-                        foreach ($actualData['hours'] as $actualData){
-                            if (sizeof($actualData) == 9){
+                        foreach ($actualData['hours'] as $actualHourData) {
+                            if (sizeof($actualHourData) == 9) {
                                 $hourData = new HourData();
                                 $hourData->setDayData($dayData);
-                                $hourData->setAvg($actualData['avg']);
-                                $hourData->setCards($actualData['cards']);
-                                $hourData->setHour($actualData['hour']);
-                                $hourData->setMax($actualData['max']);
-                                $hourData->setMerchants($actualData['merchants']);
-                                $hourData->setMin($actualData['min']);
-                                $hourData->setMode($actualData['mode']);
-                                $hourData->setStd($actualData['std']);
-                                $hourData->setTxs($actualData['txs']);
+                                $hourData->setAvg($actualHourData['avg']);
+                                $hourData->setHour($actualHourData['hour']);
+                                $hourData->setMax($actualHourData['max']);
+                                $hourData->setMerchants($actualHourData['merchants']);
+                                $hourData->setMin($actualHourData['min']);
+                                $hourData->setMode($actualHourData['mode']);
+                                $hourData->setStd($actualHourData['std']);
+                                $hourData->setTxs($actualHourData['txs']);
+                                $hourData->setCards($actualHourData['cards']);
                                 $entityManager->persist($hourData);
+                                
                                 if ($this->cont != 0) {
-                                    $this->cont = $this->cont - 1;
+                                    // $this->cont = $this->cont - 1;
                                 } else {
-                                    $this->cont = 5000;
-                                    $entityManager->flush();
+                                    // $this->cont = 5000;
+                                    // $entityManager->flush();
                                 }
                             }
                         }
                     }
                 }
+
             }
-
         }
-    }
 
+    }
 }

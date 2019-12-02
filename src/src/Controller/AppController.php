@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\BasicData;
 use App\Entity\Category;
 use App\Entity\CategoryData;
-use App\Entity\DayData;
-use App\Entity\HourData;
 use App\Entity\SubCategory;
 use App\Entity\Zipcode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -441,19 +439,19 @@ class AppController extends AbstractController
         if ($statusCode = $response->getStatusCode() != 200) {
             echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
         } else {
-            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
-            $sql = 'DELETE FROM hour_data';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $sql = 'DELETE FROM day_data';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $sql = 'ALTER TABLE hour_data AUTO_INCREMENT=1;';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $sql = 'ALTER TABLE day_data AUTO_INCREMENT=1;';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
+            // // Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            // $sql = 'DELETE FROM hour_data';
+            // $stmt = $conn->prepare($sql);
+            // $stmt->execute();
+            // $sql = 'DELETE FROM day_data';
+            // $stmt = $conn->prepare($sql);
+            // $stmt->execute();
+            // $sql = 'ALTER TABLE hour_data AUTO_INCREMENT=1;';
+            // $stmt = $conn->prepare($sql);
+            // $stmt->execute();
+            // $sql = 'ALTER TABLE day_data AUTO_INCREMENT=1;';
+            // $stmt = $conn->prepare($sql);
+            // $stmt->execute();
 
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
@@ -477,6 +475,13 @@ class AppController extends AbstractController
             ->findAll();
         $responses = [];
         $this->cont = 5000;
+
+        $dayFile = fopen('./csv/day.csv', 'w');
+        $hourFile = fopen('./csv/hour.csv', 'w');
+
+        fputcsv($dayFile, ["zipcode_id", "date", "avg", "day", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
+        fputcsv($hourFile, ["day_data_id", "avg", "hour", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
+
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
@@ -488,70 +493,79 @@ class AppController extends AbstractController
             ]);
         }
         echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
+        $idDay = 1;
+        $idHour = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
-                echo $i;
-                echo "Error en la consulta get consumption_data: Error " . $statusCode = $responses[$i]->getStatusCode();
-                var_dump($responses[$i]);
+            if (200 !== $responses[$i]->getStatusCode()) {
+                echo "Error en la consulta get consumption_data en la respuesta número " . $i . ": Error " . $responses[$i]->getStatusCode() . " código postal: " . $zipcodes[$i]->getZipcode();
+                unset($responses[$i]);
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendDays($decodedResponseData, $zipcodes[$i], $entityManager);
+                $this->sendDays($decodedResponseData, $zipcodes[$i], $entityManager, $idDay, $idHour, $dayFile);
             }
         }
+        fclose($dayFile);
+        fclose($hourFile);
         echo 'Despues de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         //Una vez que he persistido todos los datos los integro en la base de datos
         $entityManager->flush();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
     }
 
-    private function sendDays($decodedResponseData, $zipcode, $entityManager)
+    private function sendDays($decodedResponseData, $zipcode, $entityManager, &$idDay, &$idHour, &$dayFile)
     {
         foreach ($decodedResponseData as $mainData) {
             $actualDate = $mainData['date'];
             if (sizeof($mainData) == 6) {
                 foreach ($mainData['days'] as $actualData) {
                     if (sizeof($actualData) == 10) {
-                        $dayData = new DayData();
-                        $dayData->setZipcode($zipcode);
-                        $dayData->setDate($actualDate);
-                        $dayData->setAvg($actualData['avg']);
-                        $dayData->setDay($actualData['day']);
-                        $dayData->setMax($actualData['max']);
-                        $dayData->setMerchants($actualData['merchants']);
-                        $dayData->setMin($actualData['min']);
-                        $dayData->setMode($actualData['mode']);
-                        $dayData->setStd($actualData['std']);
-                        $dayData->setTxs($actualData['txs']);
-                        $dayData->setCards($actualData['cards']);
-                        $entityManager->persist($dayData);
-                        if ($this->cont != 0) {
-                            // $this->cont = $this->cont - 1;
-                        }
+                        fputcsv($dayFile, [$idDay++, $zipcode->getId(), $actualDate, $actualData['avg'], $actualData['day'], $actualData['max'],
+                            $actualData['min'], $actualData['merchants'], $actualData['mode'], $actualData['std'], $actualData['txs'], $actualData['cards']]);
+                        // $dayData = new DayData();
+                        // $dayData->setZipcode($zipcode);
+                        // $dayData->setDate($actualDate);
+                        // $dayData->setAvg($actualData['avg']);
+                        // $dayData->setDay($actualData['day']);
+                        // $dayData->setMax($actualData['max']);
+                        // $dayData->setMerchants($actualData['merchants']);
+                        // $dayData->setMin($actualData['min']);
+                        // $dayData->setMode($actualData['mode']);
+                        // $dayData->setStd($actualData['std']);
+                        // $dayData->setTxs($actualData['txs']);
+                        // $dayData->setCards($actualData['cards']);
+                        // $entityManager->persist($dayData);
+                        // if ($this->cont != 0) {
+                        //     $this->cont = $this->cont - 1;
+                        // }else {
+                        //     $this->cont = 5000;
+                        //     $entityManager->flush();
+                        // }
                         foreach ($actualData['hours'] as $actualHourData) {
-                            if (sizeof($actualHourData) == 9) {
-                                $hourData = new HourData();
-                                $hourData->setDayData($dayData);
-                                $hourData->setAvg($actualHourData['avg']);
-                                $hourData->setHour($actualHourData['hour']);
-                                $hourData->setMax($actualHourData['max']);
-                                $hourData->setMerchants($actualHourData['merchants']);
-                                $hourData->setMin($actualHourData['min']);
-                                $hourData->setMode($actualHourData['mode']);
-                                $hourData->setStd($actualHourData['std']);
-                                $hourData->setTxs($actualHourData['txs']);
-                                $hourData->setCards($actualHourData['cards']);
-                                $entityManager->persist($hourData);
-                                
-                                if ($this->cont != 0) {
-                                    // $this->cont = $this->cont - 1;
-                                } else {
-                                    // $this->cont = 5000;
-                                    // $entityManager->flush();
-                                }
-                            }
-                        }
+                             if (sizeof($actualHourData) == 9) {
+                                 
+                        //         $hourData = new HourData();
+                        //         $hourData->setDayData($dayData);
+                        //         $hourData->setAvg($actualHourData['avg']);
+                        //         $hourData->setHour($actualHourData['hour']);
+                        //         $hourData->setMax($actualHourData['max']);
+                        //         $hourData->setMerchants($actualHourData['merchants']);
+                        //         $hourData->setMin($actualHourData['min']);
+                        //         $hourData->setMode($actualHourData['mode']);
+                        //         $hourData->setStd($actualHourData['std']);
+                        //         $hourData->setTxs($actualHourData['txs']);
+                        //         $hourData->setCards($actualHourData['cards']);
+                        //         $entityManager->persist($hourData);
+
+                        //         if ($this->cont != 0) {
+                        //             $this->cont = $this->cont - 1;
+                        //         } else {
+                        //             $this->cont = 5000;
+                        //             $entityManager->flush();
+                        //         }
+                        //     }
+                        // }
                     }
                 }
 

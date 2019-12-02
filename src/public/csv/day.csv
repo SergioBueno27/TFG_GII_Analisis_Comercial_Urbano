@@ -1,4 +1,4 @@
-zipcode_id,date,avg,day,max,min,merchants,mode,std,txs,cards
+id,zipcode_id,date,avg,day,max,min,merchants,mode,std,txs,cards
 1,285,201501,67.8552,sunday,5978.78,0.01,1393,15.12,139.41,36631,32935
 2,285,201501,68.83275,monday,19359.46,0.08,1362,17.87,188.08,35860,32228
 3,285,201501,70.58039,tuesday,34516.28,0.08,1380,19.77,278.52,35156,31495

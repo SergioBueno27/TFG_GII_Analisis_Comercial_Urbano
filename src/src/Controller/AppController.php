@@ -446,12 +446,6 @@ class AppController extends AbstractController
             // $sql = 'DELETE FROM day_data';
             // $stmt = $conn->prepare($sql);
             // $stmt->execute();
-            // $sql = 'ALTER TABLE hour_data AUTO_INCREMENT=1;';
-            // $stmt = $conn->prepare($sql);
-            // $stmt->execute();
-            // $sql = 'ALTER TABLE day_data AUTO_INCREMENT=1;';
-            // $stmt = $conn->prepare($sql);
-            // $stmt->execute();
 
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
@@ -479,8 +473,8 @@ class AppController extends AbstractController
         $dayFile = fopen('./csv/day.csv', 'w');
         $hourFile = fopen('./csv/hour.csv', 'w');
 
-        fputcsv($dayFile, ["zipcode_id", "date", "avg", "day", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
-        fputcsv($hourFile, ["day_data_id", "avg", "hour", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
+        fputcsv($dayFile, ["id", "zipcode_id", "date", "avg", "day", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
+        fputcsv($hourFile, ["id", "day_data_id", "avg", "hour", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
 
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
@@ -500,10 +494,11 @@ class AppController extends AbstractController
             if (200 !== $responses[$i]->getStatusCode()) {
                 echo "Error en la consulta get consumption_data en la respuesta número " . $i . ": Error " . $responses[$i]->getStatusCode() . " código postal: " . $zipcodes[$i]->getZipcode();
                 unset($responses[$i]);
+                exit;
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendDays($decodedResponseData, $zipcodes[$i], $entityManager, $idDay, $idHour, $dayFile);
+                $this->sendDays($decodedResponseData, $zipcodes[$i], $entityManager, $idDay, $idHour, $dayFile, $hourFile);
             }
         }
         fclose($dayFile);
@@ -514,7 +509,7 @@ class AppController extends AbstractController
         $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
     }
 
-    private function sendDays($decodedResponseData, $zipcode, $entityManager, &$idDay, &$idHour, &$dayFile)
+    private function sendDays($decodedResponseData, $zipcode, $entityManager, &$idDay, &$idHour, &$dayFile, &$hourFile)
     {
         foreach ($decodedResponseData as $mainData) {
             $actualDate = $mainData['date'];
@@ -543,29 +538,29 @@ class AppController extends AbstractController
                         //     $entityManager->flush();
                         // }
                         foreach ($actualData['hours'] as $actualHourData) {
-                             if (sizeof($actualHourData) == 9) {
-                                 
-                        //         $hourData = new HourData();
-                        //         $hourData->setDayData($dayData);
-                        //         $hourData->setAvg($actualHourData['avg']);
-                        //         $hourData->setHour($actualHourData['hour']);
-                        //         $hourData->setMax($actualHourData['max']);
-                        //         $hourData->setMerchants($actualHourData['merchants']);
-                        //         $hourData->setMin($actualHourData['min']);
-                        //         $hourData->setMode($actualHourData['mode']);
-                        //         $hourData->setStd($actualHourData['std']);
-                        //         $hourData->setTxs($actualHourData['txs']);
-                        //         $hourData->setCards($actualHourData['cards']);
-                        //         $entityManager->persist($hourData);
+                            if (sizeof($actualHourData) == 9) {
+                                fputcsv($hourFile, [$idHour++, $idDay - 1, $actualHourData['avg'], $actualHourData['hour'], $actualHourData['max'], $actualHourData['min'], $actualHourData['merchants'], $actualHourData['mode'], $actualHourData['std'], $actualHourData['txs'], $actualHourData['cards']]);
+                                //         $hourData = new HourData();
+                                //         $hourData->setDayData($dayData);
+                                //         $hourData->setAvg($actualHourData['avg']);
+                                //         $hourData->setHour($actualHourData['hour']);
+                                //         $hourData->setMax($actualHourData['max']);
+                                //         $hourData->setMerchants($actualHourData['merchants']);
+                                //         $hourData->setMin($actualHourData['min']);
+                                //         $hourData->setMode($actualHourData['mode']);
+                                //         $hourData->setStd($actualHourData['std']);
+                                //         $hourData->setTxs($actualHourData['txs']);
+                                //         $hourData->setCards($actualHourData['cards']);
+                                //         $entityManager->persist($hourData);
 
-                        //         if ($this->cont != 0) {
-                        //             $this->cont = $this->cont - 1;
-                        //         } else {
-                        //             $this->cont = 5000;
-                        //             $entityManager->flush();
-                        //         }
-                        //     }
-                        // }
+                                //         if ($this->cont != 0) {
+                                //             $this->cont = $this->cont - 1;
+                                //         } else {
+                                //             $this->cont = 5000;
+                                //             $entityManager->flush();
+                                //         }
+                            }
+                        }
                     }
                 }
 

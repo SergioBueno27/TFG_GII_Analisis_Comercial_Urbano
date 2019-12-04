@@ -18,10 +18,18 @@
         You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
     </div>
     {% if is_granted('ROLE_ADMIN') %}
+    <div>
     <a href="{{ path('merchantData')}}">Extraer datos de mercaderes</a>
     <a href="{{ path('basicData')}}">Extraer datos básicos</a>
     <a href="{{ path('categoryData')}}">Extraer datos por categoría</a>
     <a href="{{ path('consumptionData')}}">Extraer datos por días y horas</a>
+    </div>
+
+    <div>
+    <a href="{{ path('uploadCategoryData')}}">Subir category_data a base de datos</a>
+    <a href="{{ path('uploadDayData')}}">Subir day_data a base de datos</a>
+    <a href="{{ path('uploadHourData')}}">Subir hour_data a base de datos</a>
+    </div>
     {% endif %}
     {% endif %}
     {% block body %}{% endblock %}

@@ -26,7 +26,7 @@ class HourData
     private $cards;
 
     /**
-     * @ORM\Column(type="string", length=2)
+     * @ORM\Column(type="string", length=255)
      */
     private $hour;
 

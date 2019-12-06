@@ -116,16 +116,26 @@ class UploadController extends AbstractController
         $stmt->execute();
 
         //Subo el fichero a base de datos desde mi carpeta
-        $sql = "LOAD DATA INFILE 'category.csv'
-        INTO TABLE Proyecto.category_data
+        $sql = "LOAD DATA INFILE 'destination.csv'
+        INTO TABLE Proyecto.destination
         FIELDS TERMINATED BY ','
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES
-        (avg,@vcards,@vmerchants,txs,category_id,zipcode_id,date)
+        ;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        
+        $sql = "LOAD DATA INFILE 'destinationData.csv'
+        INTO TABLE Proyecto.destination_data
+        FIELDS TERMINATED BY ','
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES
+        (destination_id,avg,@vcards,txs,@vmerchants,destination_zipcode)
         SET cards = nullif(@vcards,0),merchants = nullif(@vmerchants,0)
         ;";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
+        // fputcsv($destinationDataFile, ["destination_id","avg","cards","txs","merchants","destination_zipcode"]);
         return $this->render('base.html.twig');
     }
 }

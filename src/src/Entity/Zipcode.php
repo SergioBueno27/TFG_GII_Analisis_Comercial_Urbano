@@ -38,10 +38,16 @@ class Zipcode
      */
     private $dayData;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Destination", mappedBy="zipcode", orphanRemoval=true)
+     */
+    private $destinations;
+
     public function __construct()
     {
         $this->categoryData = new ArrayCollection();
         $this->dayData = new ArrayCollection();
+        $this->destinations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,6 +154,37 @@ class Zipcode
             // set the owning side to null (unless already changed)
             if ($dayData->getZipcode() === $this) {
                 $dayData->setZipcode(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Destination[]
+     */
+    public function getDestinations(): Collection
+    {
+        return $this->destinations;
+    }
+
+    public function addDestination(Destination $destination): self
+    {
+        if (!$this->destinations->contains($destination)) {
+            $this->destinations[] = $destination;
+            $destination->setZipcode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDestination(Destination $destination): self
+    {
+        if ($this->destinations->contains($destination)) {
+            $this->destinations->removeElement($destination);
+            // set the owning side to null (unless already changed)
+            if ($destination->getZipcode() === $this) {
+                $destination->setZipcode(null);
             }
         }
 

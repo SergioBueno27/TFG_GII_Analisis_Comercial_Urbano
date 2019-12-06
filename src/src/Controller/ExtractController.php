@@ -15,10 +15,10 @@ set_time_limit(0);
 ini_set('memory_limit', '-1');
 class ExtractController extends AbstractController
 {
-        //Este código proviene de BBVA tras registrarme en la página
-        private $code = 'YXBwLmJidmEuQUNVOm4wNDRTNCVBSHBTaDY4bW5sRXV4ZWZHWTVNcFRvbjcycVdkMzlTaWNtME1AcFU0aSVkSEMlbGZrampKeVpHVVg=';
+    //Este código proviene de BBVA tras registrarme en la página
+    private $code = 'YXBwLmJidmEuQUNVOm4wNDRTNCVBSHBTaDY4bW5sRXV4ZWZHWTVNcFRvbjcycVdkMzlTaWNtME1AcFU0aSVkSEMlbGZrampKeVpHVVg=';
 
-        private $cont = 2;
+    private $cont = 2;
     /**
      * @Route("/extract_merchants", name="merchantData")
      */
@@ -343,7 +343,6 @@ class ExtractController extends AbstractController
         }
     }
 
-
     /**
      * @Route("/extract_consumption_data", name="consumptionData")
      */
@@ -448,11 +447,15 @@ class ExtractController extends AbstractController
 
     }
 
-        /**
+    /**
      * @Route("/extract_destination_data", name="destinationData")
      */
     public function dataDestination()
     {
+        /*
+        /* Dados los clientes de un código postal, listado de otros códigos postales dónde compran
+         */
+
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -482,20 +485,19 @@ class ExtractController extends AbstractController
 
     private function getDestinationData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
-        $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
-        $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
-
         echo 'Inicio' . memory_get_usage() / 1024 / 1024 . "M<br>";
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $originFile = fopen('./csv/origin.csv', 'w');
-        fputcsv($categoryFile, ["avg", "cards", "merchants", "txs", "category_id", "zipcode_id", "date"]);
+        $destinationFile = fopen('./csv/destination.csv', 'w');
+        $destinationDataFile = fopen('./csv/destinationData.csv', 'w');
+        fputcsv($destinationFile, ["id","zipcode_id","avg","cards","date","merchants","txs"]);
+        fputcsv($destinationDataFile, ["destination_id","avg","cards","txs","merchants","destination_zipcode"]);
         $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201512&cards=bbva", [
+            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/destination_distribution?min_date=201501&max_date=201512&cards=bbva&destination_type=zipcodes", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -503,38 +505,35 @@ class ExtractController extends AbstractController
             ]);
         }
         echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
+        $idDestination = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
-                echo "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode();
+                echo "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode();
+                var_dump($responses[$i]->toArray());
                 exit;
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendCategoryData($decodedResponseData, $zipcodes[$i], $entityManager, $categoryFile);
+                $this->sendDestinationData($decodedResponseData, $zipcodes[$i], $destinationFile,$destinationDataFile,$idDestination);
             }
         }
+        fclose($destinationFile);
+        fclose($destinationDataFile);
         echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
-        //Una vez que he persistido todos los datos los integro en la base de datos
-        $entityManager->flush();
-        $entityManager->getConnection()->getConfiguration()->setSQLLogger($sqlLogger);
 
     }
-    private function sendDestinationData($decodedResponseData, $zipcode, $entityManager, $categoryFile)
+    private function sendDestinationData($decodedResponseData, $zipcode,&$destinationFile,&$destinationDataFile,&$idDestination)
     {
         foreach ($decodedResponseData as $mainData) {
             if (sizeof($mainData) == 6) {
-                foreach ($mainData['categories'] as $actualData) {
-                    if (sizeof($actualData) != 1) {
-                        //En el caso que sean datos filtrados solo me proporcionan 3
-                        $categoryId = $this->getDoctrine()
-                            ->getRepository(Category::class)
-                            ->findOneBy(['code' => $actualData['id']])->getId();
-
-                        if (sizeof($actualData) == 3) {
-                            fputcsv($categoryFile, [$actualData['avg'], 0, 0, $actualData['txs'], $categoryId, $zipcode->getId(), $mainData['date']]);
-                        } else {
-                            fputcsv($categoryFile, [$actualData['avg'], $actualData['cards'], $actualData['merchants'], $actualData['txs'], $categoryId, $zipcode->getId(), $mainData['date']]);
-                        }
+                fputcsv($destinationFile, [$idDestination++,$zipcode->getId(), $mainData['avg'], $mainData['cards'], $mainData['date'], $mainData['merchants'], $mainData['cards']]);
+                foreach ($mainData['zipcodes'] as $actualData) {
+                    //En el caso que sean datos filtrados solo me proporcionan 3
+                    if (sizeof($actualData) == 5) {
+                        fputcsv($destinationDataFile, [$idDestination-1 , $actualData['avg'], $actualData['cards'],$actualData['txs'],$actualData['merchants'],$actualData['id']]);
+                    }
+                    if((sizeof($actualData) == 3)){
+                        fputcsv($destinationDataFile, [$idDestination-1 , $actualData['avg'], 0,$actualData['txs'],0,$actualData['id']]);
                     }
                 }
             }

@@ -509,8 +509,6 @@ class ExtractController extends AbstractController
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
                 echo "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode();
-                var_dump($responses[$i]->toArray());
-                exit;
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);

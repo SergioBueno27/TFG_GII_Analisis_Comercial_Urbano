@@ -52,6 +52,10 @@ class UploadController extends AbstractController
         //Conexión con la base de datos
         $conn = $entityManager->getConnection();
         // Primero elimino todo el contenido actual en base de datos para volver a rellenar
+        $sql = 'DELETE FROM hour_data';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
         $sql = 'DELETE FROM day_data';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -124,7 +128,7 @@ class UploadController extends AbstractController
         ;";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-        
+
         $sql = "LOAD DATA INFILE 'destinationData.csv'
         INTO TABLE Proyecto.destination_data
         FIELDS TERMINATED BY ','

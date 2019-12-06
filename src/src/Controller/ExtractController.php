@@ -17,6 +17,9 @@ class ExtractController extends AbstractController
 {
     //Este código proviene de BBVA tras registrarme en la página
     private $code = 'YXBwLmJidmEuQUNVOm4wNDRTNCVBSHBTaDY4bW5sRXV4ZWZHWTVNcFRvbjcycVdkMzlTaWNtME1AcFU0aSVkSEMlbGZrampKeVpHVVg=';
+    
+    //Enlace al que hacer la petición a la API
+    private $link = "https://apis.bbva.com/paystats_sbx/4/zipcodes/";
 
     private $cont = 2;
     /**
@@ -194,7 +197,7 @@ class ExtractController extends AbstractController
         $responses = [];
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512&cards=all", [
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/basic_stats?min_date=201501&max_date=201512", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -296,7 +299,7 @@ class ExtractController extends AbstractController
         $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201512&cards=all", [
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/category_distribution?min_date=201501&max_date=201512", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -395,7 +398,7 @@ class ExtractController extends AbstractController
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
-            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/consumption_pattern?min_date=201501&max_date=201512&cards=all", [
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/consumption_pattern?min_date=201501&max_date=201512", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -497,7 +500,7 @@ class ExtractController extends AbstractController
         $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            $responses[] = $client->request('GET', "https://apis.bbva.com/paystats_sbx/4/zipcodes/" . $zipcode->getZipcode() . "/destination_distribution?min_date=201501&max_date=201512&cards=bbva&destination_type=zipcodes", [
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/destination_distribution?min_date=201501&max_date=201512&destination_type=zipcodes", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -521,6 +524,97 @@ class ExtractController extends AbstractController
 
     }
     private function sendDestinationData($decodedResponseData, $zipcode,&$destinationFile,&$destinationDataFile,&$idDestination)
+    {
+        foreach ($decodedResponseData as $mainData) {
+            if (sizeof($mainData) == 6) {
+                fputcsv($destinationFile, [$idDestination++,$zipcode->getId(), $mainData['avg'], $mainData['cards'], $mainData['date'], $mainData['merchants'], $mainData['cards']]);
+                foreach ($mainData['zipcodes'] as $actualData) {
+                    //En el caso que sean datos filtrados solo me proporcionan 3
+                    if (sizeof($actualData) == 5) {
+                        fputcsv($destinationDataFile, [$idDestination-1 , $actualData['avg'], $actualData['cards'],$actualData['txs'],$actualData['merchants'],$actualData['id']]);
+                    }
+                    if((sizeof($actualData) == 3)){
+                        fputcsv($destinationDataFile, [$idDestination-1 , $actualData['avg'], 0,$actualData['txs'],0,$actualData['id']]);
+                    }
+                }
+            }
+
+        }
+    }
+
+        /**
+     * @Route("/extract_origin_data", name="originData")
+     */
+    public function dataOrigin()
+    {
+        /*
+        /* Dado un código postal, listado de clientes por código postal, que compran en el código postal proporcionado.
+         */
+
+        //Entity manager necesario para gestionar las peticiones
+        $entityManager = $this->getDoctrine()->getManager();
+
+        //Conexión con la base de datos
+        $conn = $entityManager->getConnection();
+
+        //Cliente HTTP para peticiones a la API BBVA
+        $client = HttpClient::create();
+
+        //Recojo el token inicial para las posteriores consultas
+        $response = $this->getToken($client);
+
+        if ($statusCode = $response->getStatusCode() != 200) {
+            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+        } else {
+            $decodedResponse = $response->toArray();
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
+
+            $this->getOriginData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        }
+        return $this->render('base.html.twig');
+    }
+
+    private function getOriginData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    {
+        echo 'Inicio' . memory_get_usage() / 1024 / 1024 . "M<br>";
+        $zipcodes = $this->getDoctrine()
+            ->getRepository(Zipcode::class)
+            ->findAll();
+        $responses = [];
+        foreach ($zipcodes as $zipcode) {
+            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?min_date=201501&max_date=201512&origin_type=zipcodes", [
+                'headers' => [
+                    'Authorization' => $tokenType . ' ' . $accessToken,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            var_dump($zipcode);
+            var_dump($responses[0]->toArray()['data']);
+            exit;
+        }
+        echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
+        $idOrigin = 1;
+        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+                echo "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode();
+                exit;
+            } else {
+                $decodedResponseData = $responses[$i]->toArray()['data'];
+                unset($responses[$i]);
+                $this->sendOriginData($decodedResponseData, $zipcodes[$i], $destinationFile,$destinationDataFile,$idDestination);
+            }
+        }
+        fclose($destinationFile);
+        fclose($destinationDataFile);
+        echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
+
+    }
+    private function sendOriginData($decodedResponseData, $zipcode,&$destinationFile,&$destinationDataFile,&$idDestination)
     {
         foreach ($decodedResponseData as $mainData) {
             if (sizeof($mainData) == 6) {

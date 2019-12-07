@@ -585,6 +585,8 @@ class ExtractController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
+        $originFile = fopen('./csv/origin.csv', 'w');
+        fputcsv($originFile, ["zipcode_id","avg","cards","origin_zipcode","merchants","txs","date"]);
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?min_date=201501&max_date=201512&origin_type=zipcodes", [
@@ -593,12 +595,8 @@ class ExtractController extends AbstractController
                     'Accept' => 'application/json',
                 ],
             ]);
-            var_dump($zipcode);
-            var_dump($responses[0]->toArray()['data']);
-            exit;
         }
         echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
-        $idOrigin = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
                 echo "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode();
@@ -606,26 +604,116 @@ class ExtractController extends AbstractController
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendOriginData($decodedResponseData, $zipcodes[$i], $destinationFile,$destinationDataFile,$idDestination);
+                $this->sendOriginData($decodedResponseData, $zipcodes[$i], $originFile);
             }
         }
-        fclose($destinationFile);
-        fclose($destinationDataFile);
+        fclose($originFile);
         echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
 
     }
-    private function sendOriginData($decodedResponseData, $zipcode,&$destinationFile,&$destinationDataFile,&$idDestination)
+    private function sendOriginData($decodedResponseData, $zipcode,&$originFile)
     {
         foreach ($decodedResponseData as $mainData) {
             if (sizeof($mainData) == 6) {
-                fputcsv($destinationFile, [$idDestination++,$zipcode->getId(), $mainData['avg'], $mainData['cards'], $mainData['date'], $mainData['merchants'], $mainData['cards']]);
                 foreach ($mainData['zipcodes'] as $actualData) {
                     //En el caso que sean datos filtrados solo me proporcionan 3
                     if (sizeof($actualData) == 5) {
-                        fputcsv($destinationDataFile, [$idDestination-1 , $actualData['avg'], $actualData['cards'],$actualData['txs'],$actualData['merchants'],$actualData['id']]);
+                        fputcsv($originFile, [$zipcode->getId(), $actualData['avg'], $actualData['cards'],$actualData['id'],$actualData['merchants'],$actualData['txs'],$mainData['date']]);
                     }
                     if((sizeof($actualData) == 3)){
-                        fputcsv($destinationDataFile, [$idDestination-1 , $actualData['avg'], 0,$actualData['txs'],0,$actualData['id']]);
+                        fputcsv($originFile, [$zipcode->getId(), $actualData['avg'], 0,$actualData['id'],0,$actualData['txs'],$mainData['date']]);
+                    }
+                }
+            }
+
+        }
+    }
+
+            /**
+     * @Route("/extract_origin_age_gender_data", name="originAgeGenderData")
+     */
+    public function dataOriginAgeGender()
+    {
+        /*
+        /* Dado un código postal, listado de clientes por código postal, que compran en el código postal proporcionado.
+         */
+
+        //Entity manager necesario para gestionar las peticiones
+        $entityManager = $this->getDoctrine()->getManager();
+
+        //Conexión con la base de datos
+        $conn = $entityManager->getConnection();
+
+        //Cliente HTTP para peticiones a la API BBVA
+        $client = HttpClient::create();
+
+        //Recojo el token inicial para las posteriores consultas
+        $response = $this->getToken($client);
+
+        if ($statusCode = $response->getStatusCode() != 200) {
+            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+        } else {
+            $decodedResponse = $response->toArray();
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
+
+            $this->getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        }
+        return $this->render('base.html.twig');
+    }
+
+    private function getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    {
+        echo 'Inicio' . memory_get_usage() / 1024 / 1024 . "M<br>";
+        $zipcodes = $this->getDoctrine()
+            ->getRepository(Zipcode::class)
+            ->findAll();
+        $responses = [];
+        $originAgeDataFile = fopen('./csv/originAgeData.csv', 'w');
+        $originGenderDataFile = fopen('./csv/originGenderData.csv', 'w');
+        fputcsv($originAgeDataFile, ["zipcode_id","avg","cards","origin_zipcode","merchants","txs","date"]);
+        fputcsv($originGenderDataFile, ["zipcode_id","avg","cards","origin_zipcode","merchants","txs","date"]);
+        foreach ($zipcodes as $zipcode) {
+            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?min_date=201501&max_date=201512&origin_type=zipcodes&expand=ages.genders", [
+                'headers' => [
+                    'Authorization' => $tokenType . ' ' . $accessToken,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            var_dump($responses[0]->toArray()['data'][0]['zipcodes'][0]['ages']);
+            exit;
+        }
+        echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
+        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+                echo "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode();
+                exit;
+            } else {
+                $decodedResponseData = $responses[$i]->toArray()['data'];
+                unset($responses[$i]);
+                $this->getOriginAgeGenderData($decodedResponseData, $zipcodes[$i], $originFile);
+            }
+        }
+        fclose($originFile);
+        echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
+
+    }
+    private function sendOriginAgeGenderData($decodedResponseData, $zipcode,&$originFile)
+    {
+        foreach ($decodedResponseData as $mainData) {
+            if (sizeof($mainData) == 6) {
+                foreach ($mainData['zipcodes'] as $actualData) {
+                    foreach($actualData['ages'] as $age)
+                    //En el caso que sean datos filtrados solo me proporcionan 3
+                    if (sizeof($actualData) == 5) {
+                        fputcsv($originFile, [$zipcode->getId(), $actualData['avg'], $actualData['cards'],$actualData['id'],$actualData['merchants'],$actualData['txs'],$mainData['date']]);
+                    }
+                    if((sizeof($actualData) == 3)){
+                        fputcsv($originFile, [$zipcode->getId(), $actualData['avg'], 0,$actualData['id'],0,$actualData['txs'],$mainData['date']]);
                     }
                 }
             }

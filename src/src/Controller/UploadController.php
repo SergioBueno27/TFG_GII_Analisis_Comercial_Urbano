@@ -111,11 +111,15 @@ class UploadController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
-        $sql = 'ALTER TABLE destination_data AUTO_INCREMENT=1;';
+        $sql = 'ALTER TABLE destination_data AUTO_INCREMENT=1';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
         $sql = 'DELETE FROM destination';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        $sql = 'ALTER TABLE destination AUTO_INCREMENT=1';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
@@ -140,6 +144,36 @@ class UploadController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         // fputcsv($destinationDataFile, ["destination_id","avg","cards","txs","merchants","destination_zipcode"]);
+        return $this->render('base.html.twig');
+    }
+
+    /**
+     * @Route("/upload_origin_data", name="uploadOriginData")
+     */
+    public function uploadOriginData()
+    {
+
+        $entityManager = $this->getDoctrine()->getManager();
+        //Conexión con la base de datos
+        $conn = $entityManager->getConnection();
+        // Primero elimino todo el contenido actual en base de datos para volver a rellenar
+        $sql = 'DELETE FROM origin_data';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        $sql = 'ALTER TABLE origin_data AUTO_INCREMENT=1';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        //Subo el fichero a base de datos desde mi carpeta
+        $sql = "LOAD DATA INFILE 'origin.csv'
+        INTO TABLE Proyecto.origin_data
+        FIELDS TERMINATED BY ','
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES
+        (zipcode_id,avg,cards,origin_zipcode,merchants,txs,date)
+        ;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
         return $this->render('base.html.twig');
     }
 }

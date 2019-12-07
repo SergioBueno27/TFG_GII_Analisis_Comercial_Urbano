@@ -685,7 +685,6 @@ class ExtractController extends AbstractController
                 ],
             ]);
         }
-        exit;
         echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         $idAge = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
@@ -695,7 +694,7 @@ class ExtractController extends AbstractController
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
                 unset($responses[$i]);
-                $this->sendOriginAgeGenderData($decodedResponseData, $zipcodes[$i], $originAgeDataFile,$originGenderDataFile,$idAge);
+                $this->sendOriginAgeGenderData($decodedResponseData, $zipcodes[$i], $originAgeDataFile, $originGenderDataFile, $idAge);
             }
         }
         fclose($originAgeDataFile);
@@ -703,32 +702,32 @@ class ExtractController extends AbstractController
         echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
 
     }
-    private function sendOriginAgeGenderData($decodedResponseData, $zipcode, &$originAgeDataFile,&$originGenderDataFile,&$idAge)
+    private function sendOriginAgeGenderData($decodedResponseData, $zipcode, &$originAgeDataFile, &$originGenderDataFile, &$idAge)
     {
         foreach ($decodedResponseData as $mainData) {
             if (sizeof($mainData) == 6) {
                 foreach ($mainData['zipcodes'] as $actualData) {
-                    foreach ($actualData['ages'] as $age) {
-                        if (sizeof($age) == 6) {
-                            fputcsv($originAgeDataFile, [$idAge++, $age['avg'], $age['cards'], $age['age'], $age['merchants'], $age['txs'], $zipcode->getId(), $mainData['date'], $actualData['id']]);
-                            foreach ($age['genders'] as $gender) {
-                                //En el caso que sean datos filtrados solo me proporcionan 3
-                                if (sizeof($gender) == 5) {
-                                    fputcsv($originGenderDataFile, [$idAge-1, $gender['avg'], $gender['cards'], $gender['id'], $gender['merchants'], $gender['txs']]);
-                                }
-                                if ((sizeof($gender) == 3)) {
-                                    var_dump($gender);
-                                    exit;
+                    if (sizeof($actualData) == 6) {
+                        foreach ($actualData['ages'] as $age) {
+                            if (sizeof($age) == 6) {
+                                fputcsv($originAgeDataFile, [$idAge++, $age['avg'], $age['cards'], $age['id'], $age['merchants'], $age['txs'], $zipcode->getId(), $mainData['date'], $actualData['id']]);
+                                foreach ($age['genders'] as $gender) {
+                                    //En el caso que sean datos filtrados solo me proporcionan 3
+                                    if (sizeof($gender) == 5) {
+                                        fputcsv($originGenderDataFile, [$idAge - 1, $gender['avg'], $gender['cards'], $gender['id'], $gender['merchants'], $gender['txs']]);
+                                    }
+                                    if ((sizeof($gender) == 3)) {
+                                        fputcsv($originGenderDataFile, [$idAge - 1, $gender['avg'], 0, $gender['id'], 0, $gender['txs']]);
+                                    }
                                 }
                             }
-                        } else {
-                            var_dump($age);
-                            exit;
+                            if (sizeof($age) == 3) {
+                                fputcsv($originAgeDataFile, [$idAge++, $age['avg'], 0, $age['id'], 0, $age['txs'], $zipcode->getId(), $mainData['date'], $actualData['id']]);
+                            }
                         }
                     }
                 }
             }
-
         }
     }
 }

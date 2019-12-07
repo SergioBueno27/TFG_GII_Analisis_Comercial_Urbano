@@ -176,4 +176,53 @@ class UploadController extends AbstractController
         $stmt->execute();
         return $this->render('base.html.twig');
     }
+
+        /**
+     * @Route("/upload_origin_age_gender_data", name="uploadOriginAgeGenderData")
+     */
+     public function uploadOriginAgeGenderData()
+     {
+ 
+         $entityManager = $this->getDoctrine()->getManager();
+         //Conexión con la base de datos
+         $conn = $entityManager->getConnection();
+         // Primero elimino todo el contenido actual en base de datos para volver a rellenar
+
+         $sql = 'DELETE FROM origin_gender_data';
+         $stmt = $conn->prepare($sql);
+         $stmt->execute();
+
+         $sql = 'ALTER TABLE origin_gender_data AUTO_INCREMENT=1';
+         $stmt = $conn->prepare($sql);
+         $stmt->execute();
+
+         $sql = 'DELETE FROM origin_age_data';
+         $stmt = $conn->prepare($sql);
+         $stmt->execute();
+
+         //Subo el fichero a base de datos desde mi carpeta
+         $sql = "LOAD DATA INFILE 'originAgeData.csv'
+         INTO TABLE Proyecto.origin_age_data
+         FIELDS TERMINATED BY ','
+         LINES TERMINATED BY '\n'
+         IGNORE 1 LINES
+         (id, avg, @vcards, age, @vmerchants, txs, zipcode_id, date, origin_zipcode)
+         SET cards = nullif(@vcards,0),merchants = nullif(@vmerchants,0)
+         ;";
+         $stmt = $conn->prepare($sql);
+         $stmt->execute();
+
+         $sql = "LOAD DATA INFILE 'originGenderData.csv'
+         INTO TABLE Proyecto.origin_gender_data
+         FIELDS TERMINATED BY ','
+         LINES TERMINATED BY '\n'
+         IGNORE 1 LINES
+         (origin_age_data_id, avg, @vcards, gender, @vmerchants, txs)
+         SET cards = nullif(@vcards,0),merchants = nullif(@vmerchants,0)
+         ;";
+         $stmt = $conn->prepare($sql);
+         $stmt->execute();
+         
+         return $this->render('base.html.twig');
+     }
 }

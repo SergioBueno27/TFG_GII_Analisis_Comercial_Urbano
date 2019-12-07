@@ -22,7 +22,7 @@ class OriginGenderData
     private $avg;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     private $cards;
 
@@ -32,7 +32,7 @@ class OriginGenderData
     private $gender;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     private $merchants;
 

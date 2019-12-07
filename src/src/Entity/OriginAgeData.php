@@ -13,7 +13,6 @@ class OriginAgeData
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -24,7 +23,7 @@ class OriginAgeData
     private $avg;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     private $cards;
 
@@ -34,7 +33,7 @@ class OriginAgeData
     private $age;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=true)
      */
     private $merchants;
 

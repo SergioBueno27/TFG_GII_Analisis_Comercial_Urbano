@@ -48,12 +48,18 @@ class Zipcode
      */
     private $originData;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OriginAgeData", mappedBy="zipcode", orphanRemoval=true)
+     */
+    private $originAgeData;
+
     public function __construct()
     {
         $this->categoryData = new ArrayCollection();
         $this->dayData = new ArrayCollection();
         $this->destinations = new ArrayCollection();
         $this->originData = new ArrayCollection();
+        $this->originAgeData = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +228,37 @@ class Zipcode
             // set the owning side to null (unless already changed)
             if ($originData->getZipcode() === $this) {
                 $originData->setZipcode(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OriginAgeData[]
+     */
+    public function getOriginAgeData(): Collection
+    {
+        return $this->originAgeData;
+    }
+
+    public function addOriginAgeData(OriginAgeData $originAgeData): self
+    {
+        if (!$this->originAgeData->contains($originAgeData)) {
+            $this->originAgeData[] = $originAgeData;
+            $originAgeData->setZipcode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOriginAgeData(OriginAgeData $originAgeData): self
+    {
+        if ($this->originAgeData->contains($originAgeData)) {
+            $this->originAgeData->removeElement($originAgeData);
+            // set the owning side to null (unless already changed)
+            if ($originAgeData->getZipcode() === $this) {
+                $originAgeData->setZipcode(null);
             }
         }
 

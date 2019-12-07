@@ -48,6 +48,22 @@ class OriginAgeData
      */
     private $genders;
 
+    /**
+     * @ORM\Column(type="string", length=6)
+     */
+    private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Zipcode", inversedBy="originAgeData")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $zipcode;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $originZipcode;
+
     public function __construct()
     {
         $this->genders = new ArrayCollection();
@@ -145,6 +161,42 @@ class OriginAgeData
                 $gender->setOriginAgeData(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDate(): ?string
+    {
+        return $this->date;
+    }
+
+    public function setDate(string $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getZipcode(): ?Zipcode
+    {
+        return $this->zipcode;
+    }
+
+    public function setZipcode(?Zipcode $zipcode): self
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    public function getOriginZipcode(): ?string
+    {
+        return $this->originZipcode;
+    }
+
+    public function setOriginZipcode(string $originZipcode): self
+    {
+        $this->originZipcode = $originZipcode;
 
         return $this;
     }

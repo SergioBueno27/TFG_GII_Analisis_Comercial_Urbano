@@ -1,1 +1,1 @@
-zipcode_id,avg,cards,origin_zipcode,merchants,txs,date
+id,avg,cards,age,merchants,txs,zipcode_id,date,origin_zipcode

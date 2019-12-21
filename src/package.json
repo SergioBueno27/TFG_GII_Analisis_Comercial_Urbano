@@ -5,7 +5,9 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@mdi/font": "^4.7.95"
+  },
   "devDependencies": {
     "del": "^5.1.0",
     "gulp": "^4.0.2",

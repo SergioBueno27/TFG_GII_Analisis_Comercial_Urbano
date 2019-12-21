@@ -11,7 +11,6 @@ gulp.task('styles', () => {
 gulp.task('clean', () => {
     return del([
         'public/css/main.css',
-        'public/mdi',
     ]);
 });
 

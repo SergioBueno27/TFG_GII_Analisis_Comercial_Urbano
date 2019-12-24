@@ -1,30 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Análisis Comercial Urbano-Login{% endblock %}
-
+{% block title %}Análisis Comercial Urbano-Login
+{% endblock %}
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('/css/login.css') }}">
+{% endblock %}
+{% block header %}{% endblock %}
+{% block menu %}{% endblock %}
 {% block body %}
-<form method="post">
-    {% if error %}
-    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-    <div class="content">
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control"
-            placeholder="Email" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+	<div class="container">
+		<form method="post">
+			{% if error %}
+				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			{% endif %}
+			<div class="content">
+				<div id="titulo">
+					<h1>
+						<span class="mdi mdi-finance">Análisis comercial urbano</span>
+					</h1>
+				</div>
+				<label for="inputEmail" class="sr-only">Email</label>
+				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-    </div>
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" id="remember_me" name="_remember_me" checked> Remember me
-        </label>
-    </div>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			</div>
+			<div class="checkbox mb-3">
+				<label>
+					<input type="checkbox" id="remember_me" name="_remember_me" checked>
+					Remember me
+				</label>
+			</div>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+			<button class="btn btn-lg btn-primary" type="submit">
+				Sign in
+			</button>
+		</form>
+	</div>
 {% endblock %}

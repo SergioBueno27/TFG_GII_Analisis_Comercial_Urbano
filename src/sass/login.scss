@@ -1,0 +1,41 @@
+@import url("../node_modules/@mdi/font/css/materialdesignicons.min.css");
+$color-primary:#3A6073;
+$color-primary-dark:#16222A;
+$color-secondary:#f71c2e;
+$color-black:#000000;
+$color-white:#ffffff;
+$color-grey:#bebebe;
+$color-grey-dark:#696868;
+
+html {
+    height: 100%;
+    background: #16222A;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, $color-primary-dark, $color-primary);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, $color-primary-dark, $color-primary);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // Lo pongo a 98% para que no ocupe mas de la pantalla
+    min-height: 98%;
+    max-height: 98%;
+    color: $color-white;
+
+}
+
+.container {
+    background: $color-primary;
+    border-radius: 5px;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+    ;
+}

@@ -1,42 +1,87 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="{{ asset('/icon/favicon.ico') }}" />
-    <title>{% block title %}Análisis Comercial Urbano{% endblock %}</title>
-    {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('/css/main.css') }}">
-    {% endblock %}
-</head>
-{% block body %}
-<body>
-    <h1><span class="mdi mdi-finance"></span> Análisis comercial urbano</h1>
-    {% if app.user %}
-    <div class="mb-3">
-        {% for role in app.user.roles %}
-        Role= {{role}}
-        {% endfor %}
-        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-    </div>
-    {% if is_granted('ROLE_ADMIN') %}
-    <div>
-    <a href="{{ path('merchantData')}}">Extraer datos de mercaderes</a>
-    <a href="{{ path('basicData')}}">Extraer datos básicos</a>
-    <a href="{{ path('categoryData')}}">Extraer datos por categoría</a>
-    <a href="{{ path('consumptionData')}}">Extraer datos por días y horas</a>
-    </div>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="icon" href="{{ asset('/icon/favicon.ico') }}"/>
+		<title>
+			{% block title %}Análisis Comercial Urbano
+			{% endblock %}
+		</title>
+		{% block stylesheets %}
+			<link rel="stylesheet" href="{{ asset('/css/main.css') }}">
+		{% endblock %}
+	</head>
+	{% block body %}
+		<body>
+			<div class="main">
+				{% block header %}
+					<div id="header">
+						<div id="titulo">
+							<h1>
+								<span class="mdi mdi-finance">Análisis comercial urbano</span>
+							</h1>
+						</div>
+						<div class="flex_derecha_arriba">
+							Logueado como
+							{{ app.user.username }},
 
-    <div>
-    <a href="{{ path('uploadCategoryData')}}">Subir category_data a base de datos</a>
-    <a href="{{ path('uploadDayData')}}">Subir day_data a base de datos</a>
-    <a href="{{ path('uploadHourData')}}">Subir hour_data a base de datos</a>
-    </div>
-    {% endif %}
-    {% endif %}
-    
-    {% block javascripts %}{% endblock %}
-</body>
-{% endblock %}
+							<a id="exit" title="Exit" href="{{ path('app_logout') }}" class="mdi mdi-exit-run"></a>
+						</div>
+						{% if app.user %}
+							{% if is_granted('ROLE_ADMIN') %}
+								<div id="menu">
 
-</html>
+									<nav>
+										<ul>
+											<li id="nombreMenu" class="mdi mdi-security">
+												Menú Administración</li>
+											<a href="{{path('merchantData')}}">
+												<li>Extraer Mercaderes</li>
+											</a>
+											<a href="{{ path('basicData')}}">
+												<li>Extraer Datos básicos</li>
+											</a>
+											<ul>
+												<a href="{{ path('categoryData')}}">
+													<li>Extraer datos por categoría</li>
+												</a>
+												<a href="{{ path('uploadCategoryData')}}">
+													<li>Subir category_data a base de datos</li>
+												</a>
+											</ul>
+											<ul>
+												<a href="{{ path('consumptionData')}}">
+													<li>Extraer datos por días y horas</li>
+												</a>
+												<a href="{{ path('uploadDayData')}}">
+													<li>Subir day_data a base de datos</li>
+												</a>
+												<a href="{{ path('uploadHourData')}}">
+													<li>Subir hour_data a base de datos</li>
+												</a>
+											</ul>
+										</ul>
+									</nav>
+								</div>
+
+							{% endif %}
+						{% endif %}
+						<div id="menu">
+							<nav>
+								<ul>
+									<li id="nombreMenu" class="mdi mdi-menu">
+										Menú Principal</li>
+								</div>
+							{% endblock %}
+
+
+							{% block javascripts %}{% endblock %}
+						</div>
+					</div>
+				</body>
+			{% endblock %}
+
+		</html>
+	</body>
+</html></head></html>

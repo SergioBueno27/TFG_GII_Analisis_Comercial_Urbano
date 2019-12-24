@@ -1,6 +1,95 @@
 @import url("../node_modules/@mdi/font/css/materialdesignicons.min.css");
+$color-primary:#3A6073;
+$color-primary-dark:#16222A;
+$color-secondary:#f71c2e;
+$color-black:#000000;
+$color-white:#ffffff;
+$color-grey:#bebebe;
+$color-grey-dark:#696868;
 
 /* clase css principal */
 body {
-  font-family: "Courier New", Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.5em;
+    color: $color-white;
+}
+
+.main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+
+    #header {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: space-between;
+        background-color: $color-primary;
+    }
+
+    #menu {
+        flex-basis: 100%;
+    }
+
+    #menu ul li {
+        background-color: $color-grey-dark;
+    }
+
+    #menu nav>ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0;
+        background-color: $color-grey;
+    }
+
+    #menu nav>ul>ul {
+        list-style: none;
+
+    }
+
+    #menu nav li {
+        position: relative;
+    }
+
+    #menu nav a {
+        color: $color-white;
+        text-decoration: none;
+        flex-wrap: wrap;
+
+    }
+
+    #menu li:hover {
+        transition: 0.2s ease-in-out;
+        color: $color-black;
+        background-color: $color-grey;
+    }
+
+    #titulo {
+        float: left;
+    }
+
+    #exit {
+        font-size: 2em;
+        color: $color-secondary;
+    }
+
+    #exit:hover {
+        color: $color-white;
+    }
+
+    .flex_derecha {
+        float: right;
+        align-self: flex-start;
+    }
+
+    #nombreMenu {
+        color: $color-black !important;
+        background-color: $color-grey !important;
+    }
 }

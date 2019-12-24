@@ -1,0 +1,27 @@
+@import url("../node_modules/@mdi/font/css/materialdesignicons.min.css");
+html {
+  height: 100%;
+  background: #16222A;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #16222A, #3A6073);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #16222A, #3A6073);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+
+body {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 98%;
+  max-height: 98%;
+  color: #ffffff; }
+
+.container {
+  background: #3A6073;
+  border-radius: 5px;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  padding: 1%; }

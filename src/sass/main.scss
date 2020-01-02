@@ -1,95 +1,98 @@
 @import url("../node_modules/@mdi/font/css/materialdesignicons.min.css");
-$color-primary:#3A6073;
-$color-primary-dark:#16222A;
-$color-secondary:#f71c2e;
-$color-black:#000000;
-$color-white:#ffffff;
-$color-grey:#bebebe;
-$color-grey-dark:#696868;
+$color-primary: #3a6073;
+$color-primary-dark: #16222a;
+$color-secondary: #f71c2e;
+$color-black: #000000;
+$color-white: #ffffff;
+$color-grey: #bebebe;
+$color-grey-dark: #696868;
 
 /* clase css principal */
 body {
-    font-family: "Courier New", Courier, monospace;
-    font-size: 1.5em;
-    color: $color-white;
+  font-family: "Serif", serif, sans-serif;
+  font-size: 1.5em;
+  color: $color-white;
+}
+
+nav {
+  padding: 1%;
 }
 
 .main {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  #header {
+    display: flex;
+    flex-wrap: wrap;
     width: 100%;
+    justify-content: space-between;
+    background-color: $color-primary;
+  }
 
+  #menu {
+    flex-basis: 100%;
+  }
 
-    #header {
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        justify-content: space-between;
-        background-color: $color-primary;
-    }
+  #menu ul li {
+    margin-top: 0;
+    background-color: $color-grey-dark;
+  }
 
-    #menu {
-        flex-basis: 100%;
-    }
+  #menu nav > ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 1%;
+    background-color: $color-grey;
+  }
 
-    #menu ul li {
-        background-color: $color-grey-dark;
-    }
+  #menu nav > ul > ul {
+    list-style: none;
+  }
 
-    #menu nav>ul {
-        list-style: none;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        margin: 0;
-        background-color: $color-grey;
-    }
+  #menu nav li {
+    position: relative;
+  }
 
-    #menu nav>ul>ul {
-        list-style: none;
+  #menu nav a {
+    color: $color-white;
+    text-decoration: none;
+    flex-wrap: wrap;
+  }
 
-    }
+  #menu li:hover {
+    transition: 0.1s ease-in-out;
+    color: $color-black;
+    background-color: $color-grey;
+  }
 
-    #menu nav li {
-        position: relative;
-    }
+  #titulo {
+    float: left;
+  }
 
-    #menu nav a {
-        color: $color-white;
-        text-decoration: none;
-        flex-wrap: wrap;
+  #exit {
+    font-size: 2em;
+    color: $color-secondary;
+  }
 
-    }
+  #exit:hover {
+    color: $color-white;
+  }
 
-    #menu li:hover {
-        transition: 0.2s ease-in-out;
-        color: $color-black;
-        background-color: $color-grey;
-    }
+  .flex_derecha {
+    float: right;
+    align-self: flex-start;
+  }
 
-    #titulo {
-        float: left;
-    }
-
-    #exit {
-        font-size: 2em;
-        color: $color-secondary;
-    }
-
-    #exit:hover {
-        color: $color-white;
-    }
-
-    .flex_derecha {
-        float: right;
-        align-self: flex-start;
-    }
-
-    #nombreMenu {
-        color: $color-black !important;
-        background-color: $color-grey !important;
-    }
+  #nombreMenu {
+    color: $color-black !important;
+    background-color: $color-grey !important;
+  }
 }

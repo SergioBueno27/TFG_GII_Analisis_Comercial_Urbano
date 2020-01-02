@@ -34,54 +34,60 @@
 
 									<nav>
 										<ul>
-											<li id="nombreMenu" class="mdi mdi-security">
-												Menú Administración</li>
-											<a href="{{path('merchantData')}}">
-												<li>Extraer Mercaderes</li>
-											</a>
-											<a href="{{ path('basicData')}}">
-												<li>Extraer Datos básicos</li>
-											</a>
 											<ul>
-												<a href="{{ path('categoryData')}}">
-													<li>Extraer datos por categoría</li>
-												</a>
-												<a href="{{ path('uploadCategoryData')}}">
-													<li>Subir category_data a base de datos</li>
+												<li id="nombreMenu" class="mdi mdi-security">
+													Menú Administración</li>
+											</ul>
+											<ul>
+												<a href="{{path('merchantData')}}">
+													<li>Extraer Mercaderes</li>
 												</a>
 											</ul>
 											<ul>
-												<a href="{{ path('consumptionData')}}">
-													<li>Extraer datos por días y horas</li>
+												<a href="{{ path('basicData')}}">
+													<li>Extraer Datos básicos</li>
 												</a>
-												<a href="{{ path('uploadDayData')}}">
-													<li>Subir day_data a base de datos</li>
-												</a>
-												<a href="{{ path('uploadHourData')}}">
-													<li>Subir hour_data a base de datos</li>
-												</a>
-											</ul>
+											</li>
 										</ul>
-									</nav>
-								</div>
+										<ul>
+											<li>Extraer datos por días y horas</li>
+											<a href="{{ path('categoryData')}}">
+												<li>Extraer datos por categoría</li>
+											</a>
+											<a href="{{ path('uploadCategoryData')}}">
+												<li>Subir category_data a base de datos</li>
+											</a>
+										</ul>
+										<ul>
+											<a href="{{ path('consumptionData')}}">
+												<li>Extraer datos por días y horas</li>
+											</a>
+											<a href="{{ path('uploadDayData')}}">
+												<li>Subir day_data a base de datos</li>
+											</a>
+											<a href="{{ path('uploadHourData')}}">
+												<li>Subir hour_data a base de datos</li>
+											</a>
+										</ul>
+									</ul>
+								</nav>
+							</div>
 
-							{% endif %}
 						{% endif %}
-						<div id="menu">
-							<nav>
-								<ul>
-									<li id="nombreMenu" class="mdi mdi-menu">
-										Menú Principal</li>
-								</div>
-							{% endblock %}
+					{% endif %}
+					<div id="menu">
+						<nav>
+							<ul>
+								<li id="nombreMenu" class="mdi mdi-menu">
+									Menú Principal</li>
+							</div>
+						{% endblock %}
 
 
-							{% block javascripts %}{% endblock %}
-						</div>
+						{% block javascripts %}{% endblock %}
 					</div>
-				</body>
-			{% endblock %}
-
-		</html>
+				</div>
+			</body>
+		{% endblock %}
 	</body>
-</html></head></html>
+</html></body></html></head></html>

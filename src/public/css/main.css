@@ -1,9 +1,12 @@
 @import url("../node_modules/@mdi/font/css/materialdesignicons.min.css");
 /* clase css principal */
 body {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Serif", serif, sans-serif;
   font-size: 1.5em;
   color: #ffffff; }
+
+nav {
+  padding: 1%; }
 
 .main {
   position: absolute;
@@ -15,10 +18,11 @@ body {
     flex-wrap: wrap;
     width: 100%;
     justify-content: space-between;
-    background-color: #3A6073; }
+    background-color: #3a6073; }
   .main #menu {
     flex-basis: 100%; }
   .main #menu ul li {
+    margin-top: 0;
     background-color: #696868; }
   .main #menu nav > ul {
     list-style: none;
@@ -28,6 +32,7 @@ body {
     align-items: center;
     justify-content: space-between;
     margin: 0;
+    padding: 1%;
     background-color: #bebebe; }
   .main #menu nav > ul > ul {
     list-style: none; }
@@ -38,7 +43,7 @@ body {
     text-decoration: none;
     flex-wrap: wrap; }
   .main #menu li:hover {
-    transition: 0.2s ease-in-out;
+    transition: 0.1s ease-in-out;
     color: #000000;
     background-color: #bebebe; }
   .main #titulo {

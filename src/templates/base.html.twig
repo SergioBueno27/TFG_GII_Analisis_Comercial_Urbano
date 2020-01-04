@@ -30,64 +30,75 @@
 						</div>
 						{% if app.user %}
 							{% if is_granted('ROLE_ADMIN') %}
-								<div id="menu">
+								<div id="menu"></div>
 
-									<nav>
-										<ul>
-											<ul>
-												<li id="nombreMenu" class="mdi mdi-security">
-													Menú Administración</li>
-											</ul>
-											<ul>
-												<a href="{{path('merchantData')}}">
-													<li>Extraer Mercaderes</li>
-												</a>
-											</ul>
-											<ul>
-												<a href="{{ path('basicData')}}">
-													<li>Extraer Datos básicos</li>
-												</a>
-											</li>
-										</ul>
-										<ul>
-											<li>Extraer datos por días y horas</li>
-											<a href="{{ path('categoryData')}}">
-												<li>Extraer datos por categoría</li>
-											</a>
-											<a href="{{ path('uploadCategoryData')}}">
-												<li>Subir category_data a base de datos</li>
-											</a>
-										</ul>
-										<ul>
-											<a href="{{ path('consumptionData')}}">
-												<li>Extraer datos por días y horas</li>
-											</a>
-											<a href="{{ path('uploadDayData')}}">
-												<li>Subir day_data a base de datos</li>
-											</a>
-											<a href="{{ path('uploadHourData')}}">
-												<li>Subir hour_data a base de datos</li>
-											</a>
-										</ul>
-									</ul>
-								</nav>
-							</div>
-
+							{% endif %}
 						{% endif %}
-					{% endif %}
-					<div id="menu">
-						<nav>
-							<ul>
-								<li id="nombreMenu" class="mdi mdi-menu">
-									Menú Principal</li>
-							</div>
-						{% endblock %}
+						<div id="menu">
+							<nav>
+								<ul>
+									<li id="nombreMenu" class="mdi mdi-menu">
+										Menú Principal</li>
+								</div>
+							{% endblock %}
 
 
-						{% block javascripts %}{% endblock %}
+							{% block javascripts %}{% endblock %}
+						</div>
 					</div>
-				</div>
-			</body>
-		{% endblock %}
+				{% endblock %}
+				<nav>
+					<ul>
+						<ul>
+							<li id="nombreMenu" class="mdi mdi-security">
+								Menú Administración</li>
+						</ul>
+						<ul>
+							<a href="{{path('merchantData')}}">
+								<li>
+									<button>Extraer Mercaderes</button>
+								</li>
+							</a>
+						</ul>
+						<ul>
+							<a href="{{ path('basicData')}}">
+								<li>
+									<button>Extraer Datos básicos</button>
+								</li>
+							</a>
+						</li>
+					</ul>
+					<ul>
+						<a href="{{ path('categoryData')}}">
+							<li>
+								<button>Extraer datos por categoría</button>
+							</li>
+						</a>
+						<a href="{{ path('uploadCategoryData')}}">
+							<li>
+								<button>Subir category_data a base de datos</button>
+							</li>
+						</a>
+					</ul>
+					<ul>
+						<a href="{{ path('consumptionData')}}">
+							<li>
+								<button>Extraer datos por días y horas</button>
+							</li>
+						</a>
+						<a href="{{ path('uploadDayData')}}">
+							<li>
+								<button>Subir day_data a base de datos</button>
+							</li>
+						</a>
+						<a href="{{ path('uploadHourData')}}">
+							<li>
+								<button>Subir hour_data a base de datos</button>
+							</li>
+						</a>
+					</ul>
+				</ul>
+			</nav>
+		</body>
 	</body>
-</html></body></html></head></html>
+</html></body></html></body></html></head></html>

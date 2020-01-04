@@ -1,16 +1,16 @@
-@import url("../node_modules/@mdi/font/css/materialdesignicons.min.css");
+@import url("../@mdi/font/css/materialdesignicons.min.css");
 html {
   height: 100%;
-  background: #16222A;
+  background: #16222a;
   /* fallback for old browsers */
-  background: -webkit-linear-gradient(to top, #16222A, #3A6073);
+  background: -webkit-linear-gradient(to top, #16222a, #2c4a58);
   /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to top, #16222A, #3A6073);
+  background: linear-gradient(to top, #16222a, #2c4a58);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
 
 body {
   font-family: "Serif", serif, sans-serif;
-  font-size: 1.5em;
+  font-size: 1em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +19,7 @@ body {
   color: #ffffff; }
 
 .container {
-  background: #3A6073;
+  background: #2c4a58;
   border-radius: 5px;
   width: 450px;
   display: flex;
@@ -29,8 +29,5 @@ body {
 .form-control {
   width: 90%; }
 
-input {
-  font-size: 100%; }
-
-button {
-  font-size: 100%; }
+.alert {
+  color: #f71c2e; }

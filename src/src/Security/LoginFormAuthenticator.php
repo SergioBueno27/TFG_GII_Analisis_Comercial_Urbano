@@ -39,7 +39,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function supports(Request $request)
     {
         return 'app_login' === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        && $request->isMethod('POST');
     }
 
     public function getCredentials(Request $request)
@@ -68,7 +68,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Email o contraseña inválida');
         }
 
         return $user;

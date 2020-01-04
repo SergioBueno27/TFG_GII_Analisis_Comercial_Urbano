@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Análisis Comercial Urbano-Login
-{% endblock %}
+<title>
+	{% block title %}Análisis Comercial Urbano-Login
+	{% endblock %}
+</title>
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('/css/login.css') }}">
 {% endblock %}
@@ -9,6 +9,7 @@
 {% block menu %}{% endblock %}
 {% block body %}
 	<div class="container">
+
 		<form method="post">
 			{% if error %}
 				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -16,7 +17,7 @@
 			<div class="content">
 				<div id="titulo">
 					<h1>
-						<span class="mdi mdi-finance">Análisis comercial urbano</span>
+						<span class="mdi mdi-finance">Análisis comercial urbano - Login</span>
 					</h1>
 				</div>
 				<label for="inputEmail" class="sr-only">Email</label>
@@ -29,13 +30,18 @@
 			<div class="checkbox mb-3">
 				<label>
 					<input type="checkbox" id="remember_me" name="_remember_me" checked>
-					Remember me
+					Recordarme
 				</label>
 			</div>
 
 			<button class="btn btn-lg btn-primary" type="submit">
-				Sign in
+				Loguearse
 			</button>
+			<a href="{{ path('app_register') }}">
+				<button class="btn btn-lg btn-primary" type="button">Registrarse</button>
+			</a>
 		</form>
+
+
 	</div>
 {% endblock %}

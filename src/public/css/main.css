@@ -17,6 +17,10 @@ body {
 nav {
   padding: 1%; }
 
+button {
+  border-radius: 8px;
+  font-size: 1em; }
+
 #header {
   display: flex;
   flex-wrap: wrap;
@@ -51,11 +55,6 @@ nav {
   color: #ffffff;
   text-decoration: none;
   flex-wrap: wrap; }
-
-#menu li:hover {
-  transition: 0.1s ease-in-out;
-  color: #000000;
-  background-color: #bebebe; }
 
 #titulo {
   float: left; }

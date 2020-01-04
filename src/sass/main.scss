@@ -6,19 +6,19 @@ $color-black: #000000;
 $color-white: #ffffff;
 $color-grey: #bebebe;
 $color-grey-dark: #696868;
+
 html {
   min-height: 100%;
   background: #16222a;
   /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to top,
-    $color-primary-dark,
-    $color-primary
-  );
+  background: -webkit-linear-gradient(to top,
+      $color-primary-dark,
+      $color-primary);
   /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to top, $color-primary-dark, $color-primary);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
 /* clase css principal */
 body {
   font-family: "Serif", serif, sans-serif;
@@ -28,6 +28,11 @@ body {
 
 nav {
   padding: 1%;
+}
+
+button {
+  border-radius: 8px;
+  font-size: 1em;
 }
 
 #header {
@@ -46,7 +51,7 @@ nav {
   margin-top: 0;
 }
 
-#menu nav > ul {
+#menu nav>ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
@@ -58,7 +63,7 @@ nav {
   background-color: $color-white;
 }
 
-#menu nav > ul > ul {
+#menu nav>ul>ul {
   list-style: none;
 }
 
@@ -70,12 +75,6 @@ nav {
   color: $color-white;
   text-decoration: none;
   flex-wrap: wrap;
-}
-
-#menu li:hover {
-  transition: 0.1s ease-in-out;
-  color: $color-black;
-  background-color: $color-grey;
 }
 
 #titulo {

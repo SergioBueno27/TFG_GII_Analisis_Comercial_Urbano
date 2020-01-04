@@ -5,14 +5,33 @@
 	<link rel="stylesheet" href="{{ asset('/css/login.css') }}">
 {% endblock %}
 {% block body %}
+	<div class="container">
+		{{ form_start(registrationForm) }}
+		<div class="content">
+			<div id="titulo">
+				<h1>
+					<span class="mdi mdi-finance">Análisis comercial urbano - Register</span>
+				</h1>
+			</div>
 
-	<h1>Register</h1>
-
-	{{ form_start(registrationForm) }}
-	{{ form_row(registrationForm.email) }}
-	{{ form_row(registrationForm.plainPassword) }}
-	{{ form_row(registrationForm.agreeTerms) }}
-
-	<button class="btn">Register</button>
-	{{ form_end(registrationForm) }}
+			{{ form_label(registrationForm.email) }}
+			<div></div>
+			{{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Introduce Email'}})}}
+			<div></div>
+			Contraseña
+			<div></div>
+			{{ form_errors(registrationForm.plainPassword.first) }}
+			{{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Introduce Contraseña'}}) }}
+			{{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Repite Contraseña'}}) }}
+			<div></div>
+			{{ form_label(registrationForm.agreeTerms) }}
+			{{ form_widget(registrationForm.agreeTerms) }}
+			<div></div>
+			<button class="btn">Registrarse</button>
+			<a href="{{ path('app_login') }}">
+				<button class="btn btn-lg btn-primary" type="button">Loguearse</button>
+			</a>
+			{{ form_end(registrationForm) }}
+		</div>
+	</div>
 {% endblock %}

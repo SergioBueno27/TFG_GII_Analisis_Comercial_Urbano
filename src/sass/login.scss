@@ -11,14 +11,21 @@ html {
   height: 100%;
   background: #16222a;
   /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to top,
-    $color-primary-dark,
-    $color-primary
-  );
+  background: -webkit-linear-gradient(to top,
+      $color-primary-dark,
+      $color-primary);
   /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to top, $color-primary-dark, $color-primary);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+button {
+  border-radius: 8px;
+  font-size: 1em;
+}
+
+button:hover {
+  color: white;
 }
 
 body {

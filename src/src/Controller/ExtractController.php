@@ -40,7 +40,16 @@ class ExtractController extends AbstractController
         $response = $this->getToken($client);
 
         if ($statusCode = $response->getStatusCode() != 200) {
-            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
+            return $this->render('/security/administration.html.twig',[
+                'status' => "0",
+                'status_merchants' => "Error en la consulta post_token: " . $statusCode = $response->getStatusCode(),
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day' => "0",
+                'status_upload_hour' => "0",
+            ]);
 
         } else {
             $decodedResponse = $response->toArray();
@@ -54,7 +63,16 @@ class ExtractController extends AbstractController
             $response = $this->getMerchants($client, $tokenType, $accessToken, $expirationTime);
 
             if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta get_merchants: " . $statusCode = $response->getStatusCode();
+                return $this->render('/security/administration.html.twig',[
+                    'status' => "0",
+                    'status_merchants' => "Error en la consulta get_merchants: " . $statusCode = $response->getStatusCode(),
+                    'status_basic' => "0",
+                    'status_category' => "0",
+                    'status_upload_category' => "0",
+                    'status_day_hour' => "0",
+                    'status_upload_day' => "0",
+                    'status_upload_hour' => "0",
+                ]);
 
             } else {
                 $sql = 'DELETE FROM basic_data';
@@ -68,7 +86,16 @@ class ExtractController extends AbstractController
             }
 
         }
-        return $this->render('base.html.twig');
+        return $this->render('/security/administration.html.twig',[
+            'status' => "0",
+            'status_merchants' => "0",
+            'status_basic' => "0",
+            'status_category' => "0",
+            'status_upload_category' => "0",
+            'status_day_hour' => "0",
+            'status_upload_day' => "0",
+            'status_upload_hour' => "0",
+        ]);
     }
 
     private function getToken($client)
@@ -80,6 +107,18 @@ class ExtractController extends AbstractController
                 'Authorization' => 'Basic ' . $this->code,
             ],
         ]);
+        if ($statusCode = $response->getStatusCode() != 200) {
+            return $this->render('/security/administration.html.twig',[
+                'status' => "Error en la consulta get_token: " . $statusCode = $response->getStatusCode(),
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day' => "0",
+                'status_upload_hour' => "0",
+            ]);
+        }
         return $response;
     }
 
@@ -90,8 +129,16 @@ class ExtractController extends AbstractController
             //Recojo el token inicial para las posteriores consultas
             $response = $this->getToken($client);
             if ($statusCode = $response->getStatusCode() != 200) {
-                echo "Error en la consulta get_token en refreshToken: " . $statusCode = $response->getStatusCode();
-                exit;
+                return $this->render('/security/administration.html.twig',[
+                    'status' => "Error en la consulta refresh_token: " . $statusCode = $response->getStatusCode(),
+                    'status_merchants' => "0",
+                    'status_basic' => "0",
+                    'status_category' => "0",
+                    'status_upload_category' => "0",
+                    'status_day_hour' => "0",
+                    'status_upload_day' => "0",
+                    'status_upload_hour' => "0",
+                ]);
 
             } else {
                 $decodedResponse = $response->toArray();
@@ -115,7 +162,21 @@ class ExtractController extends AbstractController
                 'Accept' => 'application/json',
             ],
         ]);
-        return $response;
+        if ($statusCode = $response->getStatusCode() != 200) {
+            return $this->render('/security/administration.html.twig',[
+                'status' => "Error en la consulta refresh_token: " . $statusCode = $response->getStatusCode(),
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day' => "0",
+                'status_upload_hour' => "0",
+            ]);
+        }
+        else {
+            return $response;
+        }
     }
 
     private function sendMerchants($response, $entityManager)
@@ -160,30 +221,23 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
+        //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+        $sql = 'DELETE FROM basic_data';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
 
-        if ($statusCode = $response->getStatusCode() != 200) {
-            echo "Error en la consulta get_token en extraer datos básicos: " . $statusCode = $response->getStatusCode();
-            exit;
+        $decodedResponse = $response->toArray();
+        $tokenType = $decodedResponse['token_type'];
+        $accessToken = $decodedResponse['access_token'];
+        $expiresIn = $decodedResponse['expires_in'];
+        //Para controlar cuando a expirado el token
+        $expirationTime = time() + $expiresIn;
 
-        } else {
-            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
-            $sql = 'DELETE FROM basic_data';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-
-            $decodedResponse = $response->toArray();
-            $tokenType = $decodedResponse['token_type'];
-            $accessToken = $decodedResponse['access_token'];
-            $expiresIn = $decodedResponse['expires_in'];
-            //Para controlar cuando a expirado el token
-            $expirationTime = time() + $expiresIn;
-
-            $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
-        }
-        return $this->render('base.html.twig');
+        $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        return $this->render('/security/administration.html.twig');
     }
     private function getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
@@ -208,6 +262,7 @@ class ExtractController extends AbstractController
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
                 echo "Error en la consulta get basic data: " . $statusCode = $responses[$i]->getStatusCode();
+                
 
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
@@ -281,7 +336,7 @@ class ExtractController extends AbstractController
 
             $this->getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
-        return $this->render('base.html.twig');
+        return $this->render('/security/administration.html.twig');
     }
 
     private function getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
@@ -375,7 +430,7 @@ class ExtractController extends AbstractController
 
             $this->getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
-        return $this->render('base.html.twig');
+        return $this->render('/security/administration.html.twig');
     }
 
     private function getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
@@ -483,7 +538,7 @@ class ExtractController extends AbstractController
 
             $this->getDestinationData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
-        return $this->render('base.html.twig');
+        return $this->render('/security/administration.html.twig');
     }
 
     private function getDestinationData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
@@ -575,7 +630,7 @@ class ExtractController extends AbstractController
 
             $this->getOriginData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
-        return $this->render('base.html.twig');
+        return $this->render('/security/administration.html.twig');
     }
 
     private function getOriginData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
@@ -662,7 +717,7 @@ class ExtractController extends AbstractController
 
             $this->getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
         }
-        return $this->render('base.html.twig');
+        return $this->render('/security/administration.html.twig');
     }
 
     private function getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime)

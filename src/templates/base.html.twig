@@ -39,7 +39,7 @@
 									{% if app.user %}
 										{% if is_granted('ROLE_ADMIN') %}
 											<ul>
-												<a href="{{path('merchantData')}}">
+												<a href="{{path('admin')}}">
 													<li>
 														<button class="mdi mdi-database-plus">Extraer y subir a base de datos</button>
 													</li>
@@ -47,52 +47,16 @@
 											</ul>
 										{% endif %}
 									{% endif %}
-
-									<ul>
-										<a href="{{ path('basicData')}}">
-											<li>
-												<button>Extraer Datos básicos</button>
-											</li>
-										</a>
-									</li>
 								</ul>
-								<ul>
-									<a href="{{ path('categoryData')}}">
-										<li>
-											<button>Extraer datos por categoría</button>
-										</li>
-									</a>
-									<a href="{{ path('uploadCategoryData')}}">
-										<li>
-											<button>Subir category_data a base de datos</button>
-										</li>
-									</a>
-								</ul>
-								<ul>
-									<a href="{{ path('consumptionData')}}">
-										<li>
-											<button>Extraer datos por días y horas</button>
-										</li>
-									</a>
-									<a href="{{ path('uploadDayData')}}">
-										<li>
-											<button>Subir day_data a base de datos</button>
-										</li>
-									</a>
-									<a href="{{ path('uploadHourData')}}">
-										<li>
-											<button>Subir hour_data a base de datos</button>
-										</li>
-									</a>
-								</ul>
-							</ul>
-						</nav>
-					</div>
-				{% endblock %}
+							</nav>
+						</div>
+					{% endblock %}
 
 
-				{% block javascripts %}{% endblock %}
-			</div>
+					{% block javascripts %}{% endblock %}
+				</div>
+			{% endblock %}
+			{% block containers %}{% endblock %}
 		</body>
-	</html>
-</div>{% endblock %}</body></body></html></body></html></body></html></head> </html>
+	</body>
+</html></div>

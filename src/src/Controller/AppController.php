@@ -18,4 +18,21 @@ class AppController extends AbstractController
         return $this->render('base.html.twig');
     }
 
+    /**
+     * @Route("/admin", name="admin")
+     */
+    public function admin()
+    {
+        return $this->render('/security/administration.html.twig', [
+            'status' => "0",
+            'status_merchants' => "0",
+            'status_basic' => "0",
+            'status_category' => "0",
+            'status_upload_category' => "0",
+            'status_day_hour' => "0",
+            'status_upload_day' => "0",
+            'status_upload_hour' => "0",
+        ]);
+    }
+
 }

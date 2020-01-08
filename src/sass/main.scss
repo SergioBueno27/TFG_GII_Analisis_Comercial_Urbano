@@ -30,11 +30,6 @@ nav {
   padding: 1%;
 }
 
-button {
-  border-radius: 8px;
-  font-size: 1em;
-}
-
 
 #header {
   display: flex;
@@ -58,7 +53,6 @@ button {
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   margin: 0;
   padding: 1%;
   background-color: $color-white;
@@ -99,4 +93,32 @@ button {
 #nombreMenu {
   color: $color-black !important;
   background-color: $color-white !important;
+}
+
+.container {
+  background-color: $color-primary;
+  color: $color-white;
+  margin-top: 1%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.container-element {
+  width: 300px;
+}
+
+.margin_top {
+  margin-top: 1%;
+}
+
+.margin_bottom {
+  margin-bottom: 1%;
+}
+
+.alert {
+  color: $color-secondary;
 }

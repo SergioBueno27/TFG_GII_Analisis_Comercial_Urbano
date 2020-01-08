@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% block title %}Análisis comercial urbano-Admin
+{% endblock %}
+{% block containers %}
+	{% if status %}
+		<div class="container">
+			<div class="alert">{{ status_merchants }}
+				busque causa del error e intente otra vez</div>
+		</div>
+	{% endif %}
+	<div class="container">
+		{% if status_merchants %}
+			<div class="alert">{{ status_merchants }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
+		<a class="margin_top margin_bottom" href="{{path('merchantData')}}">
+			<button class="container-element">Extraer y subir mercaderes</button>
+		</a>
+	</div>
+	<div class="container">
+		<a class="margin_top margin_bottom" href="{{ path('basicData')}}">
+			<button class="container-element">Extraer y subir datos básicos</button>
+		</a>
+	</div>
+	<div class="container">
+		<a class="margin_top" href="{{ path('categoryData')}}">
+			<button class="container-element">Extraer datos por categoría</button>
+		</a>
+		<a class="margin_bottom margin_top" href="{{ path('uploadCategoryData')}}">
+			<button class="container-element">Subir category_data a base de datos</button>
+		</a>
+	</div>
+	<div class="container">
+		<a class="margin_top" href="{{ path('consumptionData')}}">
+			<button class="container-element">Extraer datos por días y horas</button>
+		</a>
+		<a class="margin_top" href="{{ path('uploadDayData')}}">
+			<button class="container-element">Subir day_data a base de datos</button>
+		</a>
+		<a class="margin_bottom margin_top" href="{{ path('uploadHourData')}}">
+			<button class="container-element">Subir hour_data a base de datos</button>
+		</a>
+	</div>
+
+{% endblock %}

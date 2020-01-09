@@ -30,8 +30,13 @@ class AppController extends AbstractController
             'status_category' => "0",
             'status_upload_category' => "0",
             'status_day_hour' => "0",
-            'status_upload_day' => "0",
-            'status_upload_hour' => "0",
+            'status_upload_day_hour' => "0",
+            'status_destination' => "0",
+            'status_upload_destination' => "0",
+            'status_origin' => "0",
+            'status_upload_origin' => "0",
+            'status_origin_age_gender' => "0",
+            'status_upload_origin_age_gender' => "0",
         ]);
     }
 

@@ -881,7 +881,6 @@ class ExtractController extends AbstractController
 
     private function getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
-        echo 'Inicio' . memory_get_usage() / 1024 / 1024 . "M<br>";
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
             ->findAll();
@@ -899,7 +898,6 @@ class ExtractController extends AbstractController
                 ],
             ]);
         }
-        echo 'Antes de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
         $idAge = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
             if ($statusCode = $responses[$i]->getStatusCode() != 200) {
@@ -926,7 +924,6 @@ class ExtractController extends AbstractController
         }
         fclose($originAgeDataFile);
         fclose($originGenderDataFile);
-        echo 'Después de for' . memory_get_usage() / 1024 / 1024 . "M<br>";
 
     }
     private function sendOriginAgeGenderData($decodedResponseData, $zipcode, &$originAgeDataFile, &$originGenderDataFile, &$idAge)

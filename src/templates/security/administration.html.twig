@@ -4,13 +4,13 @@
 {% block containers %}
 	{% if status %}
 		<div class="container">
-			<div class="alert">{{ status_merchants }}
+			<div class="alert margin_top">{{ status_merchants }}
 				busque causa del error e intente otra vez</div>
 		</div>
 	{% endif %}
 	<div class="container">
 		{% if status_merchants %}
-			<div class="alert">{{ status_merchants }}
+			<div class="alert margin_top">{{ status_merchants }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
 		<a class="margin_top margin_bottom" href="{{path('merchantData')}}">
@@ -18,22 +18,40 @@
 		</a>
 	</div>
 	<div class="container">
+		{% if status_basic %}
+			<div class="alert margin_top">{{ status_basic }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
 		<a class="margin_top margin_bottom" href="{{ path('basicData')}}">
 			<button class="container-element">Extraer y subir datos básicos</button>
 		</a>
 	</div>
 	<div class="container">
+		{% if status_category %}
+			<div class="alert margin_top">{{ status_category }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
 		<a class="margin_top" href="{{ path('categoryData')}}">
 			<button class="container-element">Extraer datos por categoría</button>
 		</a>
+		{% if status_upload_category %}
+			<div class="margin_top">{{ status_upload_category }}</div>
+		{% endif %}
 		<a class="margin_bottom margin_top" href="{{ path('uploadCategoryData')}}">
 			<button class="container-element">Subir category_data a base de datos</button>
 		</a>
 	</div>
 	<div class="container">
+		{% if status_day_hour %}
+			<div class="alert margin_top">{{ status_day_hour }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
 		<a class="margin_top" href="{{ path('consumptionData')}}">
 			<button class="container-element">Extraer datos por días y horas</button>
 		</a>
+		{% if status_upload_day_hour %}
+			<div class="margin_top">{{ status_upload_day_hour }}</div>
+		{% endif %}
 		<a class="margin_top" href="{{ path('uploadDayData')}}">
 			<button class="container-element">Subir day_data a base de datos</button>
 		</a>
@@ -42,36 +60,48 @@
 		</a>
 	</div>
 	<div class="container">
+		{% if status_destination %}
+			<div class="alert margin_top">{{ status_destination }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
 		<a class="margin_top" href="{{ path('destinationData')}}">
 			<button class="container-element">Extraer datos por destino</button>
 		</a>
+		{% if status_upload_destination %}
+			<div class="margin_top">{{ status_upload_destination }}</div>
+		{% endif %}
 		<a class="margin_bottom margin_top" href="{{ path('uploadDayData')}}">
 			<button class="container-element">Subir datos por destino</button>
 		</a>
 	</div>
 
 	<div class="container">
+		{% if status_origin %}
+			<div class="alert margin_top">{{ status_origin }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
 		<a class="margin_top" href="{{ path('originData')}}">
 			<button class="container-element">Extraer datos por origen</button>
 		</a>
+		{% if status_upload_origin %}
+			<div class="margin_top">{{ status_upload_origin }}</div>
+		{% endif %}
 		<a class="margin_bottom margin_top" href="{{ path('uploadOriginData')}}">
 			<button class="container-element">Subir datos por origen</button>
 		</a>
 	</div>
 
 	<div class="container">
-		<a class="margin_top" href="{{ path('originData')}}">
-			<button class="container-element">Extraer datos por origen</button>
-		</a>
-		<a class="margin_bottom margin_top" href="{{ path('uploadOriginData')}}">
-			<button class="container-element">Subir datos por origen</button>
-		</a>
-	</div>
-
-	<div class="container">
+		{% if status_origin_age_gender %}
+			<div class="alert margin_top">{{ status_origin }}
+				busque causa del error e intente otra vez</div>
+		{% endif %}
 		<a class="margin_top" href="{{ path('originAgeGenderData')}}">
 			<button class="container-element">Extraer datos por origen, edad y género</button>
 		</a>
+		{% if status_upload_origin_age_gender %}
+			<div class="margin_top">{{ status_upload_origin_age_gender }}</div>
+		{% endif %}
 		<a class="margin_bottom margin_top" href="{{ path('uploadOriginAgeGenderData')}}">
 			<button class="container-element">Subir datos por origen, edad y género</button>
 		</a>

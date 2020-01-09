@@ -41,5 +41,40 @@
 			<button class="container-element">Subir hour_data a base de datos</button>
 		</a>
 	</div>
+	<div class="container">
+		<a class="margin_top" href="{{ path('destinationData')}}">
+			<button class="container-element">Extraer datos por destino</button>
+		</a>
+		<a class="margin_bottom margin_top" href="{{ path('uploadDayData')}}">
+			<button class="container-element">Subir datos por destino</button>
+		</a>
+	</div>
+
+	<div class="container">
+		<a class="margin_top" href="{{ path('originData')}}">
+			<button class="container-element">Extraer datos por origen</button>
+		</a>
+		<a class="margin_bottom margin_top" href="{{ path('uploadOriginData')}}">
+			<button class="container-element">Subir datos por origen</button>
+		</a>
+	</div>
+
+	<div class="container">
+		<a class="margin_top" href="{{ path('originData')}}">
+			<button class="container-element">Extraer datos por origen</button>
+		</a>
+		<a class="margin_bottom margin_top" href="{{ path('uploadOriginData')}}">
+			<button class="container-element">Subir datos por origen</button>
+		</a>
+	</div>
+
+	<div class="container">
+		<a class="margin_top" href="{{ path('originAgeGenderData')}}">
+			<button class="container-element">Extraer datos por origen, edad y género</button>
+		</a>
+		<a class="margin_bottom margin_top" href="{{ path('uploadOriginAgeGenderData')}}">
+			<button class="container-element">Subir datos por origen, edad y género</button>
+		</a>
+	</div>
 
 {% endblock %}

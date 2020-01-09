@@ -18,9 +18,13 @@
 				{% block header %}
 					<div id="header">
 						<div id="titulo">
+
 							<h1>
-								<span class="mdi mdi-finance">Análisis comercial urbano</span>
+								<a href="{{path('home')}}">
+									<span class="mdi mdi-finance">Análisis comercial urbano</span>
+								</a>
 							</h1>
+
 						</div>
 						<div class="flex_derecha_arriba">
 							Usuario:
@@ -47,6 +51,20 @@
 											</ul>
 										{% endif %}
 									{% endif %}
+									<ul>
+										<a href="{{path('basic_data')}}">
+											<li>
+												<button>Datos básicos</button>
+											</li>
+										</a>
+									</ul>
+									<ul>
+										<a href="{{path('category_data')}}">
+											<li>
+												<button>Datos por categoría</button>
+											</li>
+										</a>
+									</ul>
 								</ul>
 							</nav>
 						</div>

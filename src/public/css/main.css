@@ -91,3 +91,7 @@ nav {
 
 .alert {
   color: #f71c2e; }
+
+h1 > a {
+  text-decoration: none;
+  color: #ffffff; }

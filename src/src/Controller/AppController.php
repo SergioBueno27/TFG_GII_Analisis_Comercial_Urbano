@@ -40,4 +40,20 @@ class AppController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/basic_data", name="basic_data")
+     */
+    public function basic_data()
+    {
+        return $this->render('/data/basic_data.html.twig');
+    }
+
+    /**
+     * @Route("/category_data", name="category_data")
+     */
+    public function category_data()
+    {
+        return $this->render('/data/category_data.html.twig');
+    }
+
 }

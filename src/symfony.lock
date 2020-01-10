@@ -93,6 +93,15 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.2.1"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.0.1"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
     },
@@ -104,6 +113,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "php": {
+        "version": "7.3.13"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"

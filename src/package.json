@@ -6,7 +6,8 @@
     "test": "tests"
   },
   "dependencies": {
-    "@mdi/font": "^4.7.95"
+    "@mdi/font": "^4.7.95",
+    "ag-grid-community": "^22.1.1"
   },
   "devDependencies": {
     "del": "^5.1.0",

@@ -16,7 +16,7 @@ ini_set('memory_limit', '-1');
 class ExtractController extends AbstractController
 {
     //Este código proviene de BBVA tras registrarme en la página
-    private $code = 'YXBwLmJidmEuQUNVOm4wNDRTNCVBSHBTaDY4bW5sRXV4ZWZHWTVNcFRvbjcycVdkMzlTaWNtME1AcFU0aSVkSEMlbGZrampKeVpHVVg=';
+    private $code = 'YXBwLmJidmEuQUNVOkxQWm9nNDJyRDNWcTI1eGN3ZVBmbkVzbHN4ZThnYlpjbFNiNDJrJERkTHl2YVYxZVRUdm5WbGlSeHFQaVR3SEw=';
 
     //Enlace al que hacer la petición a la API
     private $link = "https://apis.bbva.com/paystats_sbx/4/zipcodes/";
@@ -127,22 +127,7 @@ class ExtractController extends AbstractController
             ],
         ]);
         if ($statusCode = $response->getStatusCode() != 200) {
-            return $this->render('/security/administration.html.twig', [
-                'status' => "Error en la consulta get_token: " . $statusCode = $response->getStatusCode(),
-                'status_merchants' => "0",
-                'status_basic' => "0",
-                'status_category' => "0",
-                'status_upload_category' => "0",
-                'status_day_hour' => "0",
-                'status_upload_day_hour' => "0",
-                'status_destination' => "0",
-                'status_upload_destination' => "0",
-                'status_origin' => "0",
-                'status_upload_origin' => "0",
-                'status_origin_age_gender' => "0",
-                'status_upload_origin_age_gender' => "0",
-
-            ]);
+            return $response;
             
         }
         return $response;
@@ -258,38 +243,57 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
-        //Primero elimino todo el contenido actual en base de datos para volver a rellenar
-        $sql = 'DELETE FROM basic_data';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
+        if ($statusCode = $response->getStatusCode() != 200) {
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "Error en la consulta post_token: " . $statusCode = $response->getStatusCode(),
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day_hour' => "0",
+                'status_destination' => "0",
+                'status_upload_destination' => "0",
+                'status_origin' => "0",
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => "0",
+                'status_upload_origin_age_gender' => "0",
 
-        $decodedResponse = $response->toArray();
-        $tokenType = $decodedResponse['token_type'];
-        $accessToken = $decodedResponse['access_token'];
-        $expiresIn = $decodedResponse['expires_in'];
-        //Para controlar cuando a expirado el token
-        $expirationTime = time() + $expiresIn;
+            ]);
 
-        $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
-        return $this->render('/security/administration.html.twig', [
-            'status' => "0",
-            'status_merchants' => "0",
-            'status_basic' => "0",
-            'status_category' => "0",
-            'status_upload_category' => "0",
-            'status_day_hour' => "0",
-            'status_upload_day_hour' => "0",
-            'status_destination' => "0",
-            'status_upload_destination' => "0",
-            'status_origin' => "0",
-            'status_upload_origin' => "0",
-            'status_origin_age_gender' => "0",
-            'status_upload_origin_age_gender' => "0",
+        } else {
+            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
+            $sql = 'DELETE FROM basic_data';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $decodedResponse = $response->toArray();
+            $tokenType = $decodedResponse['token_type'];
+            $accessToken = $decodedResponse['access_token'];
+            $expiresIn = $decodedResponse['expires_in'];
+            //Para controlar cuando a expirado el token
+            $expirationTime = time() + $expiresIn;
 
-        ]);
+            $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day_hour' => "0",
+                'status_destination' => "0",
+                'status_upload_destination' => "0",
+                'status_origin' => "0",
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => "0",
+                'status_upload_origin_age_gender' => "0",
+
+            ]);
+        }
     }
     private function getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {

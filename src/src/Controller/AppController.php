@@ -15,6 +15,7 @@ class AppController extends AbstractController
      */
     public function index()
     {
+
         return $this->render('base.html.twig');
     }
 
@@ -45,6 +46,8 @@ class AppController extends AbstractController
      */
     public function basic_data()
     {
+        // $basic_data = $this->getDoctrine()->getRepository(BasicData::class)->findAll();
+        // var_dump($basic_data[0]);
         return $this->render('/data/basic_data.html.twig');
     }
 

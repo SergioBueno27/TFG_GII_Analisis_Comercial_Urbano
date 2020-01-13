@@ -53,7 +53,7 @@ class AppController extends AbstractController
         // var_dump($queryData[0]);
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "date", "field" => "date"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "peak_txs_day", "field" => "peak_txs_day"], $cont++ => ["headerName" => "peak_txs_hour", "field" => "peak_txs_hour"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "valley_txs_day", "field" => "valley_txs_day"], $cont++ => ["headerName" => "valley_txs_hour", "field" => "valley_txs_hour"], $cont++ => ["headerName" => "max", "field" => "max"]];  
-        $gridOptions = ["columnDefs" => "columnDefs","rowData" => "rowData","pagination" => true];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -88,7 +88,7 @@ class AppController extends AbstractController
         FROM App\Entity\Zipcode zipcode JOIN zipcode.basicData basic_data')->getResult();
         // var_dump($queryData[0]);
         $cont = 0;
-        $gridOptions = ["columnDefs" => "columnDefs","rowData" => "rowData","pagination" => true];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "date", "field" => "date"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "peak_txs_day", "field" => "peak_txs_day"], $cont++ => ["headerName" => "peak_txs_hour", "field" => "peak_txs_hour"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "valley_txs_day", "field" => "valley_txs_day"], $cont++ => ["headerName" => "valley_txs_hour", "field" => "valley_txs_hour"], $cont++ => ["headerName" => "max", "field" => "max"]];  
         $data = [];
         $cont = 0;
@@ -117,7 +117,7 @@ class AppController extends AbstractController
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "code", "field" => "code"], $cont++ => ["headerName" => "description", "field" => "description"], $cont++ => ["headerName" => "date", "field" => "date"]];  
-        $gridOptions = ["columnDefs" => "columnDefs","rowData" => "rowData","pagination" => true];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -151,7 +151,7 @@ class AppController extends AbstractController
         JOIN zipcode.categoryData category_data JOIN category_data.category category')->getResult();
         // var_dump($queryData[0]);
         $cont = 0;
-        $gridOptions = ["columnDefs" => "columnDefs","rowData" => "rowData","pagination" => true];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "code", "field" => "code"], $cont++ => ["headerName" => "description", "field" => "description"], $cont++ => ["headerName" => "date", "field" => "date"]];
         $data = [];
         $cont = 0;
@@ -164,6 +164,43 @@ class AppController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
+        ]);
+    }
+
+    /**
+     * @Route("/day_data/{zipcode}", name="day_data_zipcode")
+     */
+    public function day_data_zipcode(string $zipcode)
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT category_data.id,zipcode.zipcode,category_data.avg,category_data.cards,category_data.merchants,
+        category_data.txs,zipcode.zipcode,category.code,category.description,category_data.date FROM App\Entity\Zipcode zipcode 
+        JOIN zipcode.dayData day_data WHERE zipcode.zipcode='.$zipcode)->getResult();
+        // var_dump($queryData);
+        // exit;
+        $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "code", "field" => "code"], $cont++ => ["headerName" => "description", "field" => "description"], $cont++ => ["headerName" => "date", "field" => "date"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $zipcodes = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs'], "zipcode" => $actualData['zipcode'], "code" => $actualData['code'], "description" => $actualData['description'], "date" => $actualData['date']]];
+            $cont++;
+        }
+        $cont = 0;
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'zipcodes' => $zipcodes,
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+            'selectedZipcode' => $zipcode,
+
         ]);
     }
 

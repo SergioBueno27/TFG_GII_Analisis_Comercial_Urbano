@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block title %}Análisis comercial urbano-Admin
 {% endblock %}
+{% block afterMenu %}
+	<h4>
+		<a href="{{path('home')}}">
+			<span class="mdi mdi-arrow-left">Atrás</span>
+		</a>
+	</h4>
+{% endblock %}
 {% block containers %}
 	{% if status %}
 		<div class="container">
-			<div class="alert margin_top">{{ status_merchants }}
-				busque causa del error e intente otra vez</div>
+			<div class="margin_top margin_bottom">{{ status }}</div>
 		</div>
 	{% endif %}
 	<div class="container">

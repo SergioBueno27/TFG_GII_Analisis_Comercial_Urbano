@@ -126,8 +126,13 @@ nav {
   color: $color-secondary;
 }
 
-h1>a {
+h1>a,h4>a {
   text-decoration: none;
   color: $color-white;
 
+}
+
+#myGrid {
+  width: 100%;
+  height: 500px;
 }

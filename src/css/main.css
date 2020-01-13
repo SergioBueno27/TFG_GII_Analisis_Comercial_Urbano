@@ -95,6 +95,10 @@ nav {
 .alert {
   color: #f71c2e; }
 
-h1 > a {
+h1 > a, h4 > a {
   text-decoration: none;
   color: #ffffff; }
+
+#myGrid {
+  width: 100%;
+  height: 500px; }

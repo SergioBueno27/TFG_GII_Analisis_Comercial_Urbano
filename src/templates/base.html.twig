@@ -10,6 +10,7 @@
 		</title>
 		{% block stylesheets %}
 			<link rel="stylesheet" href="{{ asset('/css/main.css') }}">
+			<script src="{{ asset('ag-grid-community/dist/ag-grid-community.min.noStyle.js') }}"></script>
 		{% endblock %}
 	</head>
 	{% block body %}
@@ -18,13 +19,13 @@
 				{% block header %}
 					<div id="header">
 						<div id="titulo">
-
+							{% block linkHeader %}
 							<h1>
 								<a href="{{path('home')}}">
 									<span class="mdi mdi-finance">Análisis comercial urbano</span>
 								</a>
 							</h1>
-
+							{% endblock %}
 						</div>
 						<div class="flex_derecha_arriba">
 							Usuario:
@@ -52,14 +53,21 @@
 										{% endif %}
 									{% endif %}
 									<ul>
-										<a href="{{path('basic_data')}}">
+										<a href="{{ path('basic_data_zipcode', {'zipcode': 28001}) }}">
 											<li>
 												<button>Datos básicos</button>
 											</li>
 										</a>
 									</ul>
 									<ul>
-										<a href="{{path('category_data')}}">
+										<a href="{{ path('category_data_zipcode', {'zipcode': 28001}) }}">
+											<li>
+												<button>Datos por categoría</button>
+											</li>
+										</a>
+									</ul>
+									<ul>
+										<a href="{{ path('category_data_zipcode', {'zipcode': 28001}) }}">
 											<li>
 												<button>Datos por categoría</button>
 											</li>
@@ -69,7 +77,7 @@
 							</nav>
 						</div>
 					{% endblock %}
-
+					{% block afterMenu %}{% endblock %}
 
 					{% block javascripts %}{% endblock %}
 				</div>

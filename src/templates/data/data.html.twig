@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+{% block title %}Análisis comercial urbano-Basic Data
+{% endblock %}
+{% block afterMenu %}
+{# Elimino los primeros carácteres para comprobar que sea una tabla que muestra todos los datos#}
+
+
+
+{% if  app.request.get('_route')[0:4] != 'all_' %}
+	<h4>
+		<a href="{{path('home')}}">
+			<span class="mdi mdi-arrow-left">Atrás</span>
+		</a>
+	</h4>
+	{% else %}
+	<h4>
+		<a href="{{ path(app.request.get('_route')[4:], {zipcode: 28001}) }}">
+			<span class="mdi mdi-arrow-left">Atrás</span>
+		</a>
+	</h4>
+{% endif %}
+	
+{% endblock %}
+{% block containers %}
+
+{% if  app.request.get('_route')[0:4] != 'all_' %}
+<div class="container">
+	<div class="margin_top">Seleccione código postal</div>
+	<div class=" margin_bottom">
+		<select onchange="getZipcodeData()" name="zipcode" id="zipcode">
+			{% for zipcode in zipcodes %}
+				{% if zipcode == selectedZipcode %}
+					<option value ="{{ zipcode }}" selected = "selected">{{ zipcode }}</option>
+				{% else %}
+					<option value = "{{ zipcode }}" >{{ zipcode }}</option>
+				{% endif %}
+			{% endfor %}
+		</select> 
+	</div>
+</div>
+{% endif %}
+
+<div id="myGrid" class="ag-theme-balham"></div>
+<script type="text/javascript" charset="utf-8">
+	var rowData = [JSON.parse("{{ data|escape('js') }}")];
+	var rowData = rowData[0];
+	var columnDefs = [JSON.parse("{{ columnDefs|escape('js') }}")];
+	var columnDefs = columnDefs[0];
+	// let the grid know which columns and what data to use
+	// Recibo los dos valores como string por lo que tengo 
+	// que cambiar el valor por el de las variables javascript
+	var gridOptions = JSON.parse("{{ gridOptions|escape('js') }}");
+	gridOptions.columnDefs = columnDefs;
+	gridOptions.rowData = rowData;
+	var eGridDiv = document.querySelector('#myGrid');
+
+	new agGrid.Grid(eGridDiv, gridOptions);
+
+	function getZipcodeData() {
+		value = document.getElementById("zipcode").value;
+		//Recojo la ruta actual para hacer la redirección
+		let url = "{{ path(app.request.attributes.get('_route'), {'zipcode': 'value' })|escape('js') }}";
+		url = url.replace("value", value);
+		window.location.href = url;
+	}
+</script>
+{% if is_granted('ROLE_ADMIN') %}
+	{% if  app.request.get('_route')[0:4] != 'all_' %}
+		<div class="container margin_bottom"><div class="margin_top margin_bottom">
+			<a href="{{path('all_'~app.request.attributes.get('_route'))}}">
+				<button>Mostrar todos los datos</button>
+			</a>
+		</div>
+	{% endif %}
+{% endif %}
+{% endblock %}

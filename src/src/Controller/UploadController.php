@@ -40,7 +40,7 @@ class UploadController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -83,7 +83,7 @@ class UploadController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -123,7 +123,7 @@ class UploadController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -187,7 +187,7 @@ class UploadController extends AbstractController
         $stmt->execute();
         // fputcsv($destinationDataFile, ["destination_id","avg","cards","txs","merchants","destination_zipcode"]);
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -231,7 +231,7 @@ class UploadController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -294,7 +294,7 @@ class UploadController extends AbstractController
         $stmt->execute();
 
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",

@@ -100,7 +100,7 @@ class ExtractController extends AbstractController
 
         }
         return $this->render('/security/administration.html.twig', [
-            'status' => "0",
+            'status' => "Operación correcta",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -306,7 +306,7 @@ class ExtractController extends AbstractController
         $responses = [];
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/basic_stats?". $this->intervalDate, [
+            $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/basic_stats?". $this->intervalDate , [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -423,7 +423,7 @@ class ExtractController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $categoryFile = fopen('./csv/category.csv', 'w');
+        $categoryFile = fopen('../csv/category.csv', 'w');
         fputcsv($categoryFile, ["avg", "cards", "merchants", "txs", "category_id", "zipcode_id", "date"]);
         $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
@@ -539,8 +539,8 @@ class ExtractController extends AbstractController
         $responses = [];
         $this->cont = 5000;
 
-        $dayFile = fopen('./csv/day.csv', 'w');
-        $hourFile = fopen('./csv/hour.csv', 'w');
+        $dayFile = fopen('../csv/day.csv', 'w');
+        $hourFile = fopen('../csv/hour.csv', 'w');
 
         fputcsv($dayFile, ["id", "zipcode_id", "date", "avg", "day", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
         fputcsv($hourFile, ["id", "day_data_id", "avg", "hour", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
@@ -662,8 +662,8 @@ class ExtractController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $destinationFile = fopen('./csv/destination.csv', 'w');
-        $destinationDataFile = fopen('./csv/destinationData.csv', 'w');
+        $destinationFile = fopen('../csv/destination.csv', 'w');
+        $destinationDataFile = fopen('../csv/destinationData.csv', 'w');
         fputcsv($destinationFile, ["id", "zipcode_id", "avg", "cards", "date", "merchants", "txs"]);
         fputcsv($destinationDataFile, ["destination_id", "avg", "cards", "txs", "merchants", "destination_zipcode"]);
         $this->cont = 5000;
@@ -718,6 +718,9 @@ class ExtractController extends AbstractController
                     }
                     if ((sizeof($actualData) == 3)) {
                         fputcsv($destinationDataFile, [$idDestination - 1, $actualData['avg'], 0, $actualData['txs'], 0, $actualData['id']]);
+                    }else{
+                        var_dump($actualData);
+                        exit;
                     }
                 }
             }
@@ -782,7 +785,7 @@ class ExtractController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $originFile = fopen('./csv/origin.csv', 'w');
+        $originFile = fopen('../csv/origin.csv', 'w');
         fputcsv($originFile, ["zipcode_id", "avg", "cards", "origin_zipcode", "merchants", "txs", "date"]);
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
@@ -889,8 +892,8 @@ class ExtractController extends AbstractController
             ->getRepository(Zipcode::class)
             ->findAll();
         $responses = [];
-        $originAgeDataFile = fopen('./csv/originAgeData.csv', 'w');
-        $originGenderDataFile = fopen('./csv/originGenderData.csv', 'w');
+        $originAgeDataFile = fopen('../csv/originAgeData.csv', 'w');
+        $originGenderDataFile = fopen('../csv/originGenderData.csv', 'w');
         fputcsv($originAgeDataFile, ["id", "avg", "cards", "age", "merchants", "txs", "zipcode_id", "date", "origin_zipcode"]);
         fputcsv($originGenderDataFile, ["origin_age_data_id", "avg", "cards", "gender", "merchants", "txs"]);
         foreach ($zipcodes as $zipcode) {

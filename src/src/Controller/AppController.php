@@ -269,7 +269,7 @@ class AppController extends AbstractController
     /**
      * @Route("/all_hour_data_zipcode", name="all_hour_data_zipcode")
      */
-    public function hour_day_data_zipcode()
+    public function all_hour_data_zipcode()
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT hour_data.id,day_data.id as id_day,day_data.day,day_data.date,zipcode.zipcode,hour_data.avg,hour_data.cards,hour_data.hour,hour_data.max,hour_data.merchants,hour_data.min,hour_data.mode,hour_data.std,hour_data.txs FROM App\Entity\Zipcode zipcode 
         JOIN zipcode.dayData day_data JOIN day_data.hourData hour_data')->getResult();
@@ -291,5 +291,246 @@ class AppController extends AbstractController
         ]);
     }
 
-    
+    /**
+     * @Route("/destination_data/{zipcode}", name="destination_data_zipcode")
+     */
+    public function destination_data_zipcode(string $zipcode)
+    {
+        $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT destination_data.id,zipcode.zipcode,destinations.date,destination_data.destinationZipcode,destination_data.avg,destination_data.cards,destination_data.txs,destination_data.merchants FROM App\Entity\Zipcode zipcode  JOIN  zipcode.destinations destinations JOIN destinations.destinationData destination_data  WHERE zipcode.zipcode='.$zipcode)->getResult();
+
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "destinationZipcode", "field" => "destinationZipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "txs", "field" => "txs"],$cont++ => ["headerName" => "merchants", "field" => "merchants"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $zipcodes = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"destinationZipcode" => $actualData['destinationZipcode'],"date" => $actualData['date'], "zipcode" => $actualData['zipcode'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "txs" => $actualData['txs'], "merchants" => $actualData['merchants']]];
+            $cont++;
+        }
+        $cont = 0;
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'zipcodes' => $zipcodes,
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+            'selectedZipcode' => $zipcode,
+
+        ]);
+    }
+
+    /**
+     * @Route("/all_destination_data_zipcode", name="all_destination_data_zipcode")
+     */
+    public function all_destination_data_zipcode()
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT destination_data.id,zipcode.zipcode,destinations.date,destination_data.destinationZipcode,destination_data.avg,destination_data.cards,destination_data.txs,destination_data.merchants FROM App\Entity\Zipcode zipcode  JOIN  zipcode.destinations destinations JOIN destinations.destinationData destination_data')->getResult();
+        // var_dump($queryData[0]);
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "id_day", "field" => "id_day"],$cont++ => ["headerName" => "day", "field" => "day"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "hour", "field" => "hour"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "max", "field" => "max"], $cont++ => ["headerName" => "mode", "field" => "mode"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"destinationZipcode" => $actualData['destinationZipcode'],"date" => $actualData['date'], "zipcode" => $actualData['zipcode'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "txs" => $actualData['txs'], "merchants" => $actualData['merchants']]];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+        ]);
+    }
+
+    /**
+     * @Route("/origin_data/{zipcode}", name="origin_data_zipcode")
+     */
+    public function origin_data_zipcode(string $zipcode)
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_data.id,zipcode.zipcode,origin_data.avg,origin_data.cards,origin_data.originZipcode,origin_data.merchants,origin_data.txs,origin_data.date FROM App\Entity\Zipcode zipcode JOIN zipcode.originData origin_data WHERE zipcode.zipcode='.$zipcode)->getResult();
+        // var_dump($queryData);
+        // exit;
+        $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $zipcodes = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $cont++;
+        }
+        $cont = 0;
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'zipcodes' => $zipcodes,
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+            'selectedZipcode' => $zipcode,
+
+        ]);
+    }
+
+    /**
+     * @Route("/all_origin_data_zipcode", name="all_origin_data_zipcode")
+     */
+    public function all_origin_data_zipcode()
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_data.id,zipcode.zipcode,origin_data.avg,origin_data.cards,origin_data.originZipcode,origin_data.merchants,origin_data.txs,origin_data.date FROM App\Entity\Zipcode zipcode JOIN zipcode.originData origin_data')->getResult();
+        // var_dump($queryData);
+        // exit;
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+
+        ]);
+    }
+
+        /**
+     * @Route("/origin_age_data/{zipcode}", name="origin_age_data_zipcode")
+     */
+    public function origin_age_data_zipcode(string $zipcode)
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_age_data.id,zipcode.zipcode,origin_age_data.avg,origin_age_data.cards,origin_age_data.age,origin_age_data.merchants,origin_age_data.txs,origin_age_data.date,origin_age_data.originZipcode FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data WHERE zipcode.zipcode='.$zipcode)->getResult();
+        // var_dump($queryData);
+        // exit;
+        $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $zipcodes = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'],"age" => $actualData['age'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $cont++;
+        }
+        $cont = 0;
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'zipcodes' => $zipcodes,
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+            'selectedZipcode' => $zipcode,
+
+        ]);
+    }
+
+        /**
+     * @Route("/all_origin_age_data_zipcode", name="all_origin_age_data_zipcode")
+     */
+    public function all_origin_age_data_zipcode()
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_age_data.id,zipcode.zipcode,origin_age_data.avg,origin_age_data.cards,origin_age_data.age,origin_age_data.merchants,origin_age_data.txs,origin_age_data.date,origin_age_data.originZipcode FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data WHERE zipcode.zipcode='.$zipcode)->getResult();
+        // var_dump($queryData);
+        // exit;
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'],"age" => $actualData['age'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $cont++;
+        }
+        $cont = 0;
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+
+        ]);
+    }
+
+            /**
+     * @Route("/origin_gender_data/{zipcode}", name="origin_gender_data_zipcode")
+     */
+    public function origin_gender_data_zipcode(string $zipcode)
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT genders.id,origin_age_data.date,zipcode.zipcode,origin_age_data.originZipcode,genders.avg,genders.cards,genders.gender,genders.merchants,genders.txs FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data JOIN origin_age_data.genders genders WHERE zipcode.zipcode='.$zipcode)->getResult();
+        // var_dump($queryData);
+        // exit;
+        $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "gender", "field" => "gender"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $zipcodes = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'],"gender" => $actualData['gender'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $cont++;
+        }
+        $cont = 0;
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'zipcodes' => $zipcodes,
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+            'selectedZipcode' => $zipcode,
+
+        ]);
+    }
+
+        /**
+     * @Route("/all_origin_gender_data_zipcode", name="all_origin_gender_data_zipcode")
+     */
+    public function all_origin_gender_data_zipcode()
+    {
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT genders.id,origin_age_data.date,zipcode.zipcode,origin_age_data.originZipcode,genders.avg,genders.cards,genders.gender,genders.merchants,genders.txs FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data JOIN origin_age_data.genders')->getResult();
+        // var_dump($queryData);
+        // exit;
+        $cont = 0;
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $data = [];
+        $cont = 0;
+        foreach ( $queryData as $actualData ){
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'],"age" => $actualData['age'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $cont++;
+        }
+        
+        return $this->render('/data/data.html.twig', [
+            'data' => json_encode($data),
+            'columnDefs' => json_encode($columnDefs),
+            'gridOptions' => json_encode($gridOptions),
+
+        ]);
+    }
 }

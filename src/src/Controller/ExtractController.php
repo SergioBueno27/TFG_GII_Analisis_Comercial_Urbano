@@ -278,7 +278,7 @@ class ExtractController extends AbstractController
 
             $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
             return $this->render('/security/administration.html.twig', [
-                'status' => "0",
+                'status' => "Operación correcta",
                 'status_merchants' => "0",
                 'status_basic' => "0",
                 'status_category' => "0",
@@ -718,9 +718,6 @@ class ExtractController extends AbstractController
                     }
                     if ((sizeof($actualData) == 3)) {
                         fputcsv($destinationDataFile, [$idDestination - 1, $actualData['avg'], 0, $actualData['txs'], 0, $actualData['id']]);
-                    }else{
-                        var_dump($actualData);
-                        exit;
                     }
                 }
             }

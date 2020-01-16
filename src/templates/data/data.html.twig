@@ -1,24 +1,16 @@
 {% extends 'base.html.twig' %}
-{% block title %}Análisis comercial urbano-Basic Data
+{% block title %}Análisis comercial urbano-Data
 {% endblock %}
 {% block afterMenu %}
 {# Elimino los primeros carácteres para comprobar que sea una tabla que muestra todos los datos#}
 
 
 
-{% if  app.request.get('_route')[0:4] != 'all_' %}
-	<h4>
-		<a href="{{path('home')}}">
-			<span class="mdi mdi-arrow-left">Atrás</span>
-		</a>
-	</h4>
-	{% else %}
-	<h4>
-		<a href="{{ path(app.request.get('_route')[4:], {zipcode: 28001}) }}">
-			<span class="mdi mdi-arrow-left">Atrás</span>
-		</a>
-	</h4>
-{% endif %}
+<h4>
+	<a href="javascript: history.go(-1)">
+		<span class="mdi mdi-arrow-left">Atrás</span>
+	</a>
+</h4>
 	
 {% endblock %}
 {% block containers %}

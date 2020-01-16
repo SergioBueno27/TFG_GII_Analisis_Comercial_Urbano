@@ -11,7 +11,7 @@ set_time_limit(0);
 ini_set('memory_limit', '-1');
 class GridController extends AbstractController
 {
-
+    
     /**
      * @Route("/basic_data/{zipcode}", name="basic_data_zipcode")
      */

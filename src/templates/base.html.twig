@@ -11,6 +11,7 @@
 		{% block stylesheets %}
 			<link rel="stylesheet" href="{{ asset('/css/main.css') }}">
 			<script src="{{ asset('ag-grid-community/dist/ag-grid-community.min.noStyle.js') }}"></script>
+			<script src="{{ asset('chart.js/Chart.bundle.min.js') }}"></script>
 		{% endblock %}
 	</head>
 	{% block body %}
@@ -113,8 +114,6 @@
 						</div>
 					{% endblock %}
 					{% block afterMenu %}{% endblock %}
-
-					{% block javascripts %}{% endblock %}
 				</div>
 			{% endblock %}
 			{% block containers %}{% endblock %}

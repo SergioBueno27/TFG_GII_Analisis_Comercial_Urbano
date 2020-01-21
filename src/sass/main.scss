@@ -1,7 +1,7 @@
 @import url("../@mdi/font/css/materialdesignicons.min.css");
 @import url("../@mdi/font/css/materialdesignicons.min.css");
 @import url('../ag-grid-community/dist/styles/ag-grid.css');
-@import url('../ag-grid-community/dist/styles/ag-theme-balham.css');
+@import url('./ag-grid-themes/styles/ag-theme-balham-dark/sass/ag-theme-balham-dark.css');
 $color-primary: #3a6073;
 $color-primary-light: #69a2be;
 $color-primary-dark: #16222a;
@@ -14,7 +14,7 @@ $color-grey-dark: #696868;
 html {
   min-height: 100%;
   background: #16222a;
-  /* fallback for old browsers */
+  /* fallback for old browsers */ 
   background: -webkit-linear-gradient(to top,
       $color-primary-dark,
       $color-primary);
@@ -168,7 +168,7 @@ h1>a,h4>a {
 }
 
 .flex_menu a:hover {
-  background-color: $color-primary;
+  background-color: $color-primary-dark;
   color: $color-white;
 }
 .flex_menu h3 {

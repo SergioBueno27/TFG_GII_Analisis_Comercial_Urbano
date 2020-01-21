@@ -1,4 +1,4 @@
-@import url("../@mdi/font/css/materialdesignicons.min.css");
+
 html {
   height: 100%;
   background: #16222a;
@@ -9,7 +9,7 @@ html {
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
 
 body {
-  font-family: "Serif", serif, sans-serif;
+  font-family: "Serif", "serif", "sans-serif";
   font-size: 1em;
   display: flex;
   justify-content: center;

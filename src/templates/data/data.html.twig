@@ -1,18 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}Análisis comercial urbano-Data
 {% endblock %}
-{% block afterMenu %}
-{# Elimino los primeros carácteres para comprobar que sea una tabla que muestra todos los datos#}
 
-
-
-<h4>
-	<a href="javascript: history.go(-1)">
-		<span class="mdi mdi-arrow-left">Atrás</span>
-	</a>
-</h4>
-	
-{% endblock %}
 {% block containers %}
 
 {% if  app.request.get('_route')[0:4] != 'all_' %}
@@ -66,7 +55,7 @@
 			</a>
 		</div>
 		<div class="container margin_bottom"><div class="margin_top margin_bottom">
-			<a href="{{path('chart_'~app.request.attributes.get('_route'))}}">
+			<a href="{{path('chart_'~app.request.attributes.get('_route'),{'zipcode': selectedZipcode})}}">
 				<button>Mostrar gráficos</button>
 			</a>
 		</div>

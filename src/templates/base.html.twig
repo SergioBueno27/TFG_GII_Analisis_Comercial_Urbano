@@ -34,89 +34,35 @@
 
 							<a id="exit" title="Exit" href="{{ path('app_logout') }}" class="mdi mdi-exit-run"></a>
 						</div>
-
+						
 						<div id="menu">
-							<nav>
-								<ul>
-									<ul>
-										<h3 id="nombreMenu">
-											Menú Principal</h3>
-									</ul>
-									{% if app.user %}
+							<div class="flex_menu">
+								{% if app.user %}
 										{% if is_granted('ROLE_ADMIN') %}
-											<ul>
-												<a href="{{path('admin')}}">
-													<li>
-														<button class="mdi mdi-database-plus">Extraer y subir a base de datos</button>
-													</li>
-												</a>
-											</ul>
+											<a class="mdi mdi-database-plus" href="{{path('admin')}}">Extraer y subir a base de datos</a>
 										{% endif %}
-									{% endif %}
-									<ul>
-										<a href="{{ path('basic_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos básicos</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('category_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por categoría</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('day_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por día</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('hour_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por hora</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('destination_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por destino</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('origin_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por origen</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('origin_age_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por origen y edad</button>
-											</li>
-										</a>
-									</ul>
-									<ul>
-										<a href="{{ path('origin_gender_data_zipcode', {'zipcode': 28001}) }}">
-											<li>
-												<button>Datos por origen y género</button>
-											</li>
-										</a>
-									</ul>
-								</ul>
-							</nav>
+								{% endif %}
+								<a href="{{ path('basic_data_zipcode', {'zipcode': 28001}) }}">Datos básicos</a>
+								<a href="{{ path('category_data_zipcode', {'zipcode': 28001}) }}">Datos por categoría</a>
+								<a href="{{ path('day_data_zipcode', {'zipcode': 28001}) }}">Datos por día</a>
+								<a href="{{ path('hour_data_zipcode', {'zipcode': 28001}) }}">Datos por hora</a>
+								<a href="{{ path('destination_data_zipcode', {'zipcode': 28001}) }}">Datos por destino</a>
+								<a href="{{ path('origin_data_zipcode', {'zipcode': 28001}) }}">Datos por origen</a>
+								<a href="{{ path('origin_age_data_zipcode', {'zipcode': 28001}) }}">Datos por origen y edad</a>
+								<a href="{{ path('origin_gender_data_zipcode', {'zipcode': 28001}) }}">Datos por origen y género</a>
+							</div>
 						</div>
 					{% endblock %}
-					{% block afterMenu %}{% endblock %}
+					{% block afterMenu %}<h4>
+						<a href="javascript: history.go(-1)">
+							<span class="mdi mdi-arrow-left">Atrás</span>
+						</a>
+					</h4>
+					{% endblock %}
 				</div>
 			{% endblock %}
 			{% block containers %}{% endblock %}
+			{% block javascript %}{% endblock %}
 		</body>
 	</body>
 </html></div>

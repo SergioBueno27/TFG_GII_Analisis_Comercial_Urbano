@@ -2,10 +2,6 @@
 {% block title %}Análisis comercial urbano-Data
 {% endblock %}
 {% block afterMenu %}
-{# Elimino los primeros carácteres para comprobar que sea una tabla que muestra todos los datos#}
-
-
-
 <h4>
 	<a href="javascript: history.go(-1)">
 		<span class="mdi mdi-arrow-left">Atrás</span>
@@ -14,26 +10,16 @@
 	
 {% endblock %}
 {% block containers %}
-<script type="text/javascript" charset="utf-8">
-var ctx = document.getElementById('myChart').getContext('2d');
-var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
 
-    // The data for our dataset
-    data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45]
-        }]
-    },
-
-    // Configuration options go here
-    options: {}
-});
-</script>
-
+{% for cont, chart in charts %}
+    <div class="container">
+        <div class="white_container">
+            <canvas id="chart{{ cont }}"></canvas>
+        </div> 
+    </div>
+    <script type="text/javascript" charset="utf-8">
+    var ctx = document.getElementById('chart{{ cont }}').getContext('2d');
+    var chart = new Chart(ctx, JSON.parse("{{ charts[cont][cont]|escape('js') }}"));
+    </script>
+{% endfor %}
 {% endblock %}

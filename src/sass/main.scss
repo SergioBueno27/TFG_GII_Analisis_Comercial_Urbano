@@ -3,6 +3,7 @@
 @import url('../ag-grid-community/dist/styles/ag-grid.css');
 @import url('../ag-grid-community/dist/styles/ag-theme-balham.css');
 $color-primary: #3a6073;
+$color-primary-light: #69a2be;
 $color-primary-dark: #16222a;
 $color-secondary: #f71c2e;
 $color-black: #000000;
@@ -102,12 +103,24 @@ nav {
   background-color: $color-primary;
   color: $color-white;
   margin-top: 1%;
+  
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+.white_container {
+  background-color: $color-white;
+  color: $color-black;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
 }
 
 .container-element {
@@ -135,4 +148,30 @@ h1>a,h4>a {
 #myGrid {
   width: 100%;
   height: 500px;
+}
+.flex_menu {
+  overflow: hidden;
+  background-color: $color-primary-light;
+
+}
+
+.flex_menu a {
+  float: left;
+  color: $color-black;
+  padding: 1% 1%;
+  text-decoration: underline;
+  font-size: 1em;
+  background-color: $color-primary-light;
+  margin-right: 1%;
+  min-width:10%;
+
+}
+
+.flex_menu a:hover {
+  background-color: $color-primary;
+  color: $color-white;
+}
+.flex_menu h3 {
+  background-color: $color-primary;
+  color: $color-black;
 }

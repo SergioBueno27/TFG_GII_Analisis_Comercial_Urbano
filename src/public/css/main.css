@@ -126,7 +126,18 @@ h1 > a, h4 > a {
   font-size: 1em;
   background-color: #69a2be;
   margin-right: 1%;
-  min-width: 10%; }
+  width: 30%; }
+
+@media only screen and (max-width: 600px) {
+  .flex_menu a {
+    float: left;
+    color: #000000;
+    padding: 1% 1%;
+    text-decoration: underline;
+    font-size: 1em;
+    background-color: #69a2be;
+    margin-right: 1%;
+    width: 100%; } }
 
 .flex_menu a:hover {
   background-color: #16222a;

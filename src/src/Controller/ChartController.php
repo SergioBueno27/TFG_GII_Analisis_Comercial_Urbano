@@ -31,7 +31,12 @@ class ChartController extends AbstractController
         }else{
             throw $this->createNotFoundException('Código postal no disponible');
         }
-        
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
         // Listado de meses
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
@@ -55,8 +60,9 @@ class ChartController extends AbstractController
         $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$months,'datasets'=>[['label'=>'Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>'Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
             'charts'=>$charts,
+            'zipcodes'=>$zipcodes,
         ]);
     }
      /**
@@ -66,7 +72,7 @@ class ChartController extends AbstractController
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         //Necesario para recoger las categorías de un determinado código postal ya que solo tendra algunas categorías de negocio
-        $queryCategories = $this->getDoctrine()->getManager()->createQuery('SELECT category.code FROM App\Entity\CategoryData category_data JOIN category_data.zipcode zipcode JOIN category_data.category category WHERE zipcode.zipcode='.$zipcode)->getResult(); 
+        $queryCategories = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT category.code FROM App\Entity\Category category JOIN category.categoryData category_data JOIN category_data.zipcode zipcode  WHERE zipcode.zipcode='.$zipcode)->getResult(); 
 
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && in_array([ 'code' => $category_code],$queryCategories)){
             // Hace falta poner :category_code para que lo trate como string
@@ -81,6 +87,12 @@ class ChartController extends AbstractController
         // Inicializo variable
         $data=[0=>$initialValues,1=>$initialValues,2=>$initialValues];
         
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
         // Listado de meses
         $months=['201501', '201502', '201503', '201504', '201505','201506','201507','201508','201509','201510','201511','201512'];
         foreach ( $queryData as $actualData ){
@@ -103,10 +115,11 @@ class ChartController extends AbstractController
         }
 
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
             'selectedCategory'=>$category_code,
             'charts'=>$charts,
             'categories'=>$categories,
+            'zipcodes'=>$zipcodes,
         ]);
     }
 
@@ -116,6 +129,7 @@ class ChartController extends AbstractController
     public function chart_day_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
         //Necesario para recoger las categorías de un determinado código postal ya que solo tendra algunas categorías de negocio
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && strlen($date) == 6 ){
             // Hace falta poner :category_code para que lo trate como string
@@ -125,12 +139,23 @@ class ChartController extends AbstractController
         }else{
             throw $this->createNotFoundException('Código postal o categoría no disponible');
         }
+        // TODO Crear funciones para encapsular funciones recurrentes
+        $cont = 0;
+        $dates = [];
+        foreach ( $queryMonths as $actualData ){
+            $dates+= [$cont => $actualData['date']];
+            $cont++;
+        }
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
         // Valores iniciales por día
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0];
         // Inicializo variable
         $data=[0=>$initialValues,1=>$initialValues,2=>$initialValues];
-        // Listado de meses
-        $months=['201501', '201502', '201503', '201504', '201505','201506','201507','201508','201509','201510','201511','201512'];
         // Listado de días
         $days=['monday', 'tuesday', 'wednesday', 'thursday', 'friday','saturday','sunday'];
         foreach ( $queryData as $actualData ){
@@ -150,10 +175,11 @@ class ChartController extends AbstractController
         $cont=0;
 
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
             'selectedDate'=>$date,
             'charts'=>$charts,
-            'months'=>$months,
+            'months'=>$dates,
+            'zipcodes'=>$zipcodes,
         ]);
     }
 
@@ -163,6 +189,8 @@ class ChartController extends AbstractController
     public function chart_hour_data(TranslatorInterface $translator,string $zipcode,string $date,string $day)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
+
         //Necesario para recoger las categorías de un determinado código postal ya que solo tendra algunas categorías de negocio
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && strlen($date) == 6 && strlen($day) <= 9){
             // Hace falta poner :category_code para que lo trate como string
@@ -171,6 +199,20 @@ class ChartController extends AbstractController
             JOIN day_data.zipcode zipcode JOIN day_data.hourData hour_data WHERE zipcode.zipcode='.$zipcode. ' AND day_data.date=:date AND day_data.day=:day')->setParameters(['date'=>$date,'day'=>$day])->getResult();
         }else{
             throw $this->createNotFoundException('Código postal o categoría no disponible');
+        }
+        // TODO Crear funciones para encapsular funciones recurrentes
+        $cont = 0;
+        $dates = [];
+        foreach ( $queryMonths as $actualData ){
+            $dates+= [$cont => $actualData['date']];
+            $cont++;
+        }
+
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
         }
         // Valores iniciales por día
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0,13=>0,14=>0,15=>0,16=>0,17=>0,18=>0,19=>0,20=>0,21=>0,22=>0,23=>0];
@@ -196,11 +238,13 @@ class ChartController extends AbstractController
         $cont=0;
 
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
-            'date'=>$date,
+            'selectedZipcode'=>$zipcode,
             'selectedDay'=>$day,
+            'selectedDate'=>$date,
             'charts'=>$charts,
             'days'=>$days,
+            'zipcodes'=>$zipcodes,
+            'months'=>$dates,
         ]);
     }
 
@@ -210,6 +254,7 @@ class ChartController extends AbstractController
     public function chart_destination_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && strlen($date) == 6){
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,destination_data.destinationZipcode,destination_data.avg,destination_data.merchants,destination_data.cards,destination.date FROM App\Entity\DestinationData destination_data 
             JOIN destination_data.destination destination JOIN destination.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND destination.date ='.$date.' AND destination_data.destinationZipcode NOT IN (:others,:filtered)')->setParameters(['others'=>'others','filtered'=>'filtered'])->getResult();
@@ -232,9 +277,19 @@ class ChartController extends AbstractController
         }else{
             throw $this->createNotFoundException('Código postal no disponible');
         }
-        
-        // Listado de meses
-        $months=['201501', '201502', '201503', '201504', '201505','201506','201507','201508','201509','201510','201511','201512'];
+        $cont = 0;
+        $dates = [];
+        foreach ( $queryMonths as $actualData ){
+            $dates+= [$cont => $actualData['date']];
+            $cont++;
+        }
+
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0];
         // Inicializo variable
@@ -260,9 +315,11 @@ class ChartController extends AbstractController
         $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 destinos: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 destinos: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
+            'selectedDate'=>$date,
             'charts'=>$charts,
-            'months'=>$months,
+            'months'=>$dates,
+            'zipcodes'=>$zipcodes,
         ]);
     }
 
@@ -272,6 +329,7 @@ class ChartController extends AbstractController
     public function chart_origin_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && strlen($date) == 6){
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,origin_data.originZipcode,origin_data.avg,origin_data.merchants,origin_data.cards,origin_data.date FROM App\Entity\OriginData origin_data 
             JOIN origin_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND origin_data.date ='.$date.' AND origin_data.originZipcode NOT IN (:others,:filtered,:U)')->setParameters(['others'=>'others','filtered'=>'filtered','U'=>'U'])->getResult();
@@ -293,9 +351,19 @@ class ChartController extends AbstractController
         }else{
             throw $this->createNotFoundException('Código postal no disponible');
         }
-        
-        // Listado de meses
-        $months=['201501', '201502', '201503', '201504', '201505','201506','201507','201508','201509','201510','201511','201512'];
+        $cont = 0;
+        $dates = [];
+        foreach ( $queryMonths as $actualData ){
+            $dates+= [$cont => $actualData['date']];
+            $cont++;
+        }
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+ 
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0];
         // Inicializo variable
@@ -321,9 +389,11 @@ class ChartController extends AbstractController
         $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 orígenes: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 orígenes: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
+            'selectedDate'=>$date,
             'charts'=>$charts,
-            'months'=>$months,
+            'months'=>$dates,
+            'zipcodes'=>$zipcodes,
         ]);
     }
 
@@ -333,6 +403,7 @@ class ChartController extends AbstractController
     public function chart_origin_age_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && strlen($date) == 6){
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,origin_age_data.originZipcode,origin_age_data.age,origin_age_data.avg,origin_age_data.merchants,origin_age_data.cards,origin_age_data.date FROM App\Entity\OriginAgeData origin_age_data 
             JOIN origin_age_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND origin_age_data.date ='.$date.' AND origin_age_data.age NOT IN (:Unknown,:filtered) AND origin_age_data.originZipcode NOT IN (:others,:filtered,:U)')->setParameters(['Unknown'=>'Unknown','others'=>'others','filtered'=>'filtered','U'=>'U'])->getResult();
@@ -352,9 +423,19 @@ class ChartController extends AbstractController
         }else{
             throw $this->createNotFoundException('Código postal no disponible');
         }
-        
-        // Listado de meses
-        $months=['201501', '201502', '201503', '201504', '201505','201506','201507','201508','201509','201510','201511','201512'];
+        $cont = 0;
+        $dates = [];
+        foreach ( $queryMonths as $actualData ){
+            $dates+= [$cont => $actualData['date']];
+            $cont++;
+        }
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
+
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0];
         // Inicializo variable
@@ -380,9 +461,11 @@ class ChartController extends AbstractController
         $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 orígenes por edad: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 orígenes por edad: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
+            'selectedDate'=>$date,
             'charts'=>$charts,
-            'months'=>$months,
+            'months'=>$dates,
+            'zipcodes'=>$zipcodes,
         ]);
     }
 
@@ -392,6 +475,7 @@ class ChartController extends AbstractController
     public function chart_origin_gender_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode) && strlen($date) == 6){
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,origin_age_data.originZipcode,origin_age_data.age,origin_gender_data.gender,origin_gender_data.avg,origin_gender_data.merchants,origin_gender_data.cards,origin_age_data.date FROM App\Entity\OriginGenderData origin_gender_data 
             JOIN origin_gender_data.originAgeData origin_age_data JOIN origin_age_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND origin_age_data.date ='.$date.' AND origin_age_data.age NOT IN (:Unknown,:filtered) AND origin_age_data.originZipcode NOT IN (:others,:filtered,:U) AND origin_gender_data.gender != :filtered')->setParameters(['Unknown'=>'Unknown','others'=>'others','filtered'=>'filtered','U'=>'U'])->getResult();
@@ -411,9 +495,18 @@ class ChartController extends AbstractController
         }else{
             throw $this->createNotFoundException('Código postal no disponible');
         }
-        
-        // Listado de meses
-        $months=['201501', '201502', '201503', '201504', '201505','201506','201507','201508','201509','201510','201511','201512'];
+        $cont = 0;
+        $dates = [];
+        foreach ( $queryMonths as $actualData ){
+            $dates+= [$cont => $actualData['date']];
+            $cont++;
+        }
+        $cont = 0;
+        $zipcodes = [];
+        foreach ( $queryZipCode as $actualData ){
+            $zipcodes+= [$cont => $actualData['zipcode']];
+            $cont++;
+        }
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0];
         // Inicializo variable
@@ -439,9 +532,11 @@ class ChartController extends AbstractController
         $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
-            'zipcode'=>$zipcode,
+            'selectedZipcode'=>$zipcode,
+            'selectedDate'=>$date,
             'charts'=>$charts,
-            'months'=>$months,
+            'months'=>$dates,
+            'zipcodes'=>$zipcodes,
         ]);
     }
 }

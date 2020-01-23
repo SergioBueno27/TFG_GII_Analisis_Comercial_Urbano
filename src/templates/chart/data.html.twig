@@ -10,7 +10,33 @@
 	
 {% endblock %}
 {% block containers %}
-
+{% if app.request.get('_route')[0:14] == 'chart_category' %}
+    <div class="container">
+        <div class="margin_top">Seleccione código de categoría</div>
+            <div class=" margin_bottom">
+                <select onchange="getCategories()" name="category" id="category" class="container-element">
+                    {% for category in categories %}
+                        {% if category == selectedCategory %}
+                            <option value ="{{ category }}" selected = "selected">{{ category }}</option>
+                        {% else %}
+                            <option value = "{{ category }}" >{{ category }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select> 
+            </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        function getCategories() {
+            value = document.getElementById("category").value;
+            //Recojo la ruta actual para hacer la redirección
+            let url = "{{ path(app.request.attributes.get('_route'), {'zipcode': zipcode,'category_code': 'value'})|escape('js') }}";
+            url = url.replace("value", value);
+            window.location.href = url;
+        }
+    </script>
+{% elseif app.request.get('_route')[0:9] == 'chart_day'  %}
+<div></div>
+{% endif %}
 {% for cont, chart in charts %}
     <div class="container">
         <div class="white_container">
@@ -18,8 +44,8 @@
         </div> 
     </div>
     <script type="text/javascript" charset="utf-8">
-    var ctx = document.getElementById('chart{{ cont }}').getContext('2d');
-    var chart = new Chart(ctx, JSON.parse("{{ charts[cont][cont]|escape('js') }}"));
+        var ctx = document.getElementById('chart{{ cont }}').getContext('2d');
+        var chart = new Chart(ctx, JSON.parse("{{ charts[cont][cont]|escape('js') }}"));
     </script>
 {% endfor %}
 {% endblock %}

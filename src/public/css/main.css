@@ -13,7 +13,7 @@ html {
 
 /* clase css principal */
 body {
-  font-family: "Serif", "serif", "sans-serif";
+  font-family: "Serif", serif, sans-serif;
   font-size: 1em;
   color: #ffffff; }
 

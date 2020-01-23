@@ -16,6 +16,8 @@
 	</head>
 	{% block body %}
 		<body>
+			<!-- Tener en cuenta que el valor inicial de código postal habrá que cambiarlo en caso de ser necesario -->
+			{% set baseZipcode = 28001 %}
 			<div class="main">
 				{% block header %}
 					<div id="header">
@@ -42,14 +44,15 @@
 											<a class="mdi mdi-database-plus" href="{{path('admin')}}">Extraer y subir a base de datos</a>
 										{% endif %}
 								{% endif %}
-								<a href="{{ path('basic_data_zipcode', {'zipcode': 28001}) }}">Datos básicos</a>
-								<a href="{{ path('category_data_zipcode', {'zipcode': 28001}) }}">Datos por categoría</a>
-								<a href="{{ path('day_data_zipcode', {'zipcode': 28001}) }}">Datos por día</a>
-								<a href="{{ path('hour_data_zipcode', {'zipcode': 28001}) }}">Datos por hora</a>
-								<a href="{{ path('destination_data_zipcode', {'zipcode': 28001}) }}">Datos por destino</a>
-								<a href="{{ path('origin_data_zipcode', {'zipcode': 28001}) }}">Datos por origen</a>
-								<a href="{{ path('origin_age_data_zipcode', {'zipcode': 28001}) }}">Datos por origen y edad</a>
-								<a href="{{ path('origin_gender_data_zipcode', {'zipcode': 28001}) }}">Datos por origen y género</a>
+								
+								<a href="{{ path('basic_data_zipcode', {'zipcode': baseZipcode}) }}">Datos básicos</a>
+								<a href="{{ path('category_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por categoría</a>
+								<a href="{{ path('day_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por día</a>
+								<a href="{{ path('hour_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por hora</a>
+								<a href="{{ path('destination_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por destino</a>
+								<a href="{{ path('origin_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por origen</a>
+								<a href="{{ path('origin_age_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por origen y edad</a>
+								<a href="{{ path('origin_gender_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por origen y género</a>
 							</div>
 						</div>
 					{% endblock %}
@@ -62,7 +65,9 @@
 				</div>
 			{% endblock %}
 			{% block containers %}{% endblock %}
-			{% block javascript %}{% endblock %}
+			{% block javascript %}
+
+			{% endblock %}
 		</body>
 	</body>
 </html></div>

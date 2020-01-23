@@ -28,7 +28,7 @@ class GridController extends AbstractController
         // var_dump($queryData[0]);
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "date", "field" => "date"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "peak_txs_day", "field" => "peak_txs_day"], $cont++ => ["headerName" => "peak_txs_hour", "field" => "peak_txs_hour"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "valley_txs_day", "field" => "valley_txs_day"], $cont++ => ["headerName" => "valley_txs_hour", "field" => "valley_txs_hour"], $cont++ => ["headerName" => "max", "field" => "max"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -63,7 +63,7 @@ class GridController extends AbstractController
         FROM App\Entity\Zipcode zipcode JOIN zipcode.basicData basic_data')->getResult();
         // var_dump($queryData[0]);
         $cont = 0;
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "date", "field" => "date"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "peak_txs_day", "field" => "peak_txs_day"], $cont++ => ["headerName" => "peak_txs_hour", "field" => "peak_txs_hour"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "valley_txs_day", "field" => "valley_txs_day"], $cont++ => ["headerName" => "valley_txs_hour", "field" => "valley_txs_hour"], $cont++ => ["headerName" => "max", "field" => "max"]];  
         $data = [];
         $cont = 0;
@@ -95,7 +95,7 @@ class GridController extends AbstractController
         
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "code", "field" => "code"], $cont++ => ["headerName" => "description", "field" => "description"], $cont++ => ["headerName" => "date", "field" => "date"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -129,7 +129,7 @@ class GridController extends AbstractController
         JOIN zipcode.categoryData category_data JOIN category_data.category category')->getResult();
         // var_dump($queryData[0]);
         $cont = 0;
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "code", "field" => "code"], $cont++ => ["headerName" => "description", "field" => "description"], $cont++ => ["headerName" => "date", "field" => "date"]];
         $data = [];
         $cont = 0;
@@ -161,7 +161,7 @@ class GridController extends AbstractController
         
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "day", "field" => "day"], $cont++ => ["headerName" => "max", "field" => "max"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "mode", "field" => "mode"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "cards", "field" => "cards"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -196,7 +196,7 @@ class GridController extends AbstractController
         // var_dump($queryData[0]);
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "day", "field" => "day"], $cont++ => ["headerName" => "max", "field" => "max"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "mode", "field" => "mode"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "txs", "field" => "txs"], $cont++ => ["headerName" => "cards", "field" => "cards"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
@@ -224,7 +224,7 @@ class GridController extends AbstractController
         }
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "id_day", "field" => "id_day"],$cont++ => ["headerName" => "day", "field" => "day"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "hour", "field" => "hour"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "max", "field" => "max"], $cont++ => ["headerName" => "mode", "field" => "mode"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -258,7 +258,7 @@ class GridController extends AbstractController
         // var_dump($queryData[0]);
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "id_day", "field" => "id_day"],$cont++ => ["headerName" => "day", "field" => "day"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "hour", "field" => "hour"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "max", "field" => "max"], $cont++ => ["headerName" => "mode", "field" => "mode"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
@@ -287,7 +287,7 @@ class GridController extends AbstractController
 
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "destinationZipcode", "field" => "destinationZipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "txs", "field" => "txs"],$cont++ => ["headerName" => "merchants", "field" => "merchants"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -320,8 +320,8 @@ class GridController extends AbstractController
         // var_dump($queryData[0]);
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "id_day", "field" => "id_day"],$cont++ => ["headerName" => "day", "field" => "day"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"], $cont++ => ["headerName" => "avg", "field" => "avg"], $cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "hour", "field" => "hour"], $cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "min", "field" => "min"], $cont++ => ["headerName" => "max", "field" => "max"], $cont++ => ["headerName" => "mode", "field" => "mode"], $cont++ => ["headerName" => "std", "field" => "std"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
@@ -350,7 +350,7 @@ class GridController extends AbstractController
 
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -384,7 +384,7 @@ class GridController extends AbstractController
         // exit;
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
@@ -414,7 +414,7 @@ class GridController extends AbstractController
         
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -448,7 +448,7 @@ class GridController extends AbstractController
         // exit;
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
@@ -479,7 +479,7 @@ class GridController extends AbstractController
         
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "gender", "field" => "gender"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $zipcodes = [];
         $cont = 0;
@@ -513,7 +513,7 @@ class GridController extends AbstractController
         // exit;
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
-        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false],"columnDefs" => "columnDefs","rowData" => "rowData"];
+        $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){

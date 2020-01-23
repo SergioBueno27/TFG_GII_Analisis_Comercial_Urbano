@@ -4,9 +4,6 @@
 
 {% block containers %}
 <!-- Tener en cuenta que los valores iniciales habrá que cambiarlos en caso de ser necesario -->
-{% set baseCategory = 'es_auto' %}
-{% set baseDate = '201501' %}
-{% set baseDay = 'monday' %}
 
 {% if  app.request.get('_route')[0:4] != 'all_' %}
 <div class="container">
@@ -68,18 +65,6 @@
 </div>
 <div class="container">
 	<button class="container-element margin_top margin_bottom" onclick="onBtnExport()">Descargar tabla como fichero csv</button>
-</div>
-
-<div class="container margin_top margin_bottom">
-	{% if  app.request.get('_route')[0:8] == 'category' %}
-		<a class= "margin_top margin_bottom" href="{{path('chart_'~app.request.attributes.get('_route'),{'zipcode': selectedZipcode, 'category_code': baseCategory})}}">
-			<button class="container-element">Mostrar gráficos asociados</button>
-		</a>
-	{% elseif app.request.get('_route')[0:3] == 'day' %}
-		<a class= "margin_top margin_bottom" href="{{path('chart_'~app.request.attributes.get('_route'),{'zipcode': selectedZipcode, 'date': baseDate})}}">
-			<button class="container-element">Mostrar gráficos asociados</button>
-		</a>
-	{% endif %}
 </div>
 {% if is_granted('ROLE_ADMIN') %}
 	{% if  app.request.get('_route')[0:4] != 'all_' %}

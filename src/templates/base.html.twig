@@ -18,6 +18,9 @@
 		<body>
 			<!-- Tener en cuenta que el valor inicial de código postal habrá que cambiarlo en caso de ser necesario -->
 			{% set baseZipcode = 28001 %}
+			{% set baseCategory = 'es_auto' %}
+			{% set baseDate = '201501' %}
+			{% set baseDay = 'monday' %}
 			<div class="main">
 				{% block header %}
 					<div id="header">
@@ -45,14 +48,14 @@
 										{% endif %}
 								{% endif %}
 								
-								<a href="{{ path('basic_data_zipcode', {'zipcode': baseZipcode}) }}">Datos básicos</a>
-								<a href="{{ path('category_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por categoría</a>
-								<a href="{{ path('day_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por día</a>
-								<a href="{{ path('hour_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por hora</a>
-								<a href="{{ path('destination_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por destino</a>
-								<a href="{{ path('origin_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por origen</a>
-								<a href="{{ path('origin_age_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por origen y edad</a>
-								<a href="{{ path('origin_gender_data_zipcode', {'zipcode': baseZipcode}) }}">Datos por origen y género</a>
+								<a href="{{ path('chart_basic_data_zipcode', {'zipcode': baseZipcode}) }}">Datos básicos</a>
+								<a href="{{ path('chart_category_data_zipcode', {'zipcode': baseZipcode,'category_code': baseCategory}) }}">Datos por categoría</a>
+								<a href="{{ path('chart_day_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por día</a>
+								<a href="{{ path('chart_hour_data_zipcode', {'zipcode': baseZipcode,'date': baseDate,'day': baseDay}) }}">Datos por hora</a>
+								<a href="{{ path('chart_destination_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por destino</a>
+								<a href="{{ path('chart_origin_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por origen</a>
+								<a href="{{ path('chart_origin_age_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por origen y edad</a>
+								<a href="{{ path('chart_origin_gender_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por origen y género</a>
 							</div>
 						</div>
 					{% endblock %}

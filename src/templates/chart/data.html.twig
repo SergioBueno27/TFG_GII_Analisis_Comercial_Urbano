@@ -35,7 +35,55 @@
         }
     </script>
 {% elseif app.request.get('_route')[0:9] == 'chart_day'  %}
-<div></div>
+    <div class="container">
+        {# TODO Añadir el año también por si en un futuro se añaden años #}
+        <div class="margin_top">Seleccione mes</div>
+            <div class=" margin_bottom">
+                <select onchange="getMonths()" name="month" id="month" class="container-element">
+                    {% for month in months %}
+                        {% if month == selectedDate %}
+                            <option value ="{{ month }}" selected = "selected">{{ month|trans }}</option>
+                        {% else %}
+                            <option value = "{{ month }}" >{{ month|trans }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select> 
+            </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        function getMonths() {
+            value = document.getElementById("month").value;
+            //Recojo la ruta actual para hacer la redirección
+            let url = "{{ path(app.request.attributes.get('_route'), {'zipcode': zipcode,'date': 'value'})|escape('js') }}";
+            url = url.replace("value", value);
+            window.location.href = url;
+        }
+    </script>
+{% elseif app.request.get('_route')[0:10] == 'chart_hour'%}
+    <div class="container">
+        {# TODO Añadir el año también por si en un futuro se añaden años #}
+        <div class="margin_top">Seleccione día</div>
+            <div class=" margin_bottom">
+                <select onchange="getDays()" name="day" id="day" class="container-element">
+                    {% for day in days %}
+                        {% if day == selectedDay %}
+                            <option value ="{{ day }}" selected = "selected">{{ day|trans }}</option>
+                        {% else %}
+                            <option value = "{{ day }}" >{{ day|trans }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select> 
+            </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        function getDays() {
+            value = document.getElementById("day").value;
+            //Recojo la ruta actual para hacer la redirección
+            let url = "{{ path(app.request.attributes.get('_route'), {'zipcode': zipcode,'date': date,'day':'value'})|escape('js') }}";
+            url = url.replace("value", value);
+            window.location.href = url;
+        }
+    </script>
 {% endif %}
 {% for cont, chart in charts %}
     <div class="container">
@@ -48,4 +96,10 @@
         var chart = new Chart(ctx, JSON.parse("{{ charts[cont][cont]|escape('js') }}"));
     </script>
 {% endfor %}
+
+<div class="container margin_top margin_bottom">
+    <a class= "margin_top margin_bottom" href="{{path(app.request.attributes.get('_route')[6:],{'zipcode': zipcode})}}">
+        <button class="container-element">Mostrar tabla asociada a los datos</button>
+    </a>
+</div>
 {% endblock %}

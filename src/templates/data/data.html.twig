@@ -64,15 +64,42 @@
 	</div>
 </div>
 <div class="container">
-	<button class="container-element margin_top margin_bottom" onclick="onBtnExport()">Descargar tabla como fichero csv</button>
+	<a class="margin_top margin_bottom button" onclick="onBtnExport()">Descargar tabla como fichero csv</a>
 </div>
 {% if is_granted('ROLE_ADMIN') %}
 	{% if  app.request.get('_route')[0:4] != 'all_' %}
-	<div class="container">
-		<a class= "margin_top margin_bottom" href="{{path('all_'~app.request.attributes.get('_route'))}}">
-			<button class="container-element">Mostrar todos los datos</button>
-		</a >
-	</div>
+
+		<script type="text/javascript" charset="utf-8">
+			addEventListener("load",function(){
+				document.querySelectorAll('.longTime').forEach(longTime => {
+					longTime.addEventListener('click',event =>{
+						event.preventDefault();
+						Swal.fire({
+						icon: "info",
+						text: "La operación puede tardar entre 1-5 minutos se paciente",
+						showCancelButton: true,
+						cancelButtonColor: "#DD6B55",
+						confirmButtonText: "Si",
+						cancelButtonText: "No",
+						closeOnConfirm: false
+					}).then((result) => {
+					if (result.value) {
+						window.location.href=longTime;
+					}
+					});
+						
+					})
+				});
+			});
+					
+				
+			
+		</script>
+		<div class="container">
+			<a class= "margin_top margin_bottom container-element button longTime" href="{{path('all_'~app.request.attributes.get('_route'))}}">Mostrar todos los datos</a >
+		</div>
 	{% endif %}
 {% endif %}
+{% endblock %}
+{% block javascript %}
 {% endblock %}

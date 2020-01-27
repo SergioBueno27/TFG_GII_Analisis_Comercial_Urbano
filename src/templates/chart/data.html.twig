@@ -215,8 +215,7 @@
 {% endfor %}
 
 <div class="container margin_top margin_bottom">
-    <a class= "margin_top margin_bottom" href="{{path(app.request.attributes.get('_route')[6:],{'zipcode': selectedZipcode})}}">
-        <button class="container-element">Mostrar tabla asociada a los datos</button>
+    <a class= "margin_top margin_bottom button" href="{{path(app.request.attributes.get('_route')[6:],{'zipcode': selectedZipcode})}}"> Mostrar tabla asociada a los datos
     </a>
 </div>
 {% endblock %}

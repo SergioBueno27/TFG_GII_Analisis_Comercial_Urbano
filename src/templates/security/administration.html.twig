@@ -19,17 +19,15 @@
 			<div class="alert margin_top">{{ status_merchants }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top margin_bottom" href="{{path('merchantData')}}">
-			<button class="container-element">Extraer y subir mercaderes</button>
-		</a>
+		<a class="margin_top margin_bottom button" href="{{path('merchantData')}}">Extraer y subir mercaderes</a>
 	</div>
 	<div class="container">
 		{% if status_basic %}
 			<div class="alert margin_top">{{ status_basic }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top margin_bottom" href="{{ path('basicData')}}">
-			<button class="container-element">Extraer y subir datos básicos</button>
+		<a class="margin_top margin_bottom button" href="{{ path('basicData')}}">Extraer y subir datos básicos
+			
 		</a>
 	</div>
 	<div class="container">
@@ -37,14 +35,14 @@
 			<div class="alert margin_top">{{ status_category }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top" href="{{ path('categoryData')}}">
-			<button class="container-element">Extraer datos por categoría</button>
+		<a class="margin_top button longTime" href="{{ path('categoryData')}}">
+			Extraer datos por categoría
 		</a>
 		{% if status_upload_category %}
 			<div class="margin_top">{{ status_upload_category }}</div>
 		{% endif %}
-		<a class="margin_bottom margin_top" href="{{ path('uploadCategoryData')}}">
-			<button class="container-element">Subir category_data a base de datos</button>
+		<a class="margin_bottom margin_top button" href="{{ path('uploadCategoryData')}}">
+			Subir category_data a base de datos
 		</a>
 	</div>
 	<div class="container">
@@ -52,17 +50,17 @@
 			<div class="alert margin_top">{{ status_day_hour }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top" href="{{ path('consumptionData')}}">
-			<button class="container-element">Extraer datos por días y horas</button>
+		<a class="margin_top button longTime" href="{{ path('consumptionData')}}">
+			Extraer datos por días y horas
 		</a>
 		{% if status_upload_day_hour %}
 			<div class="margin_top">{{ status_upload_day_hour }}</div>
 		{% endif %}
-		<a class="margin_top" href="{{ path('uploadDayData')}}">
-			<button class="container-element">Subir day_data a base de datos</button>
+		<a class="margin_top button" href="{{ path('uploadDayData')}}">
+			Subir day_data a base de datos
 		</a>
-		<a class="margin_bottom margin_top" href="{{ path('uploadHourData')}}">
-			<button class="container-element">Subir hour_data a base de datos</button>
+		<a class="margin_bottom margin_top button" href="{{ path('uploadHourData')}}">
+			Subir hour_data a base de datos
 		</a>
 	</div>
 	<div class="container">
@@ -70,14 +68,14 @@
 			<div class="alert margin_top">{{ status_destination }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top" href="{{ path('destinationData')}}">
-			<button class="container-element">Extraer datos por destino</button>
+		<a class="margin_top button longTime" href="{{ path('destinationData')}}">
+			Extraer datos por destino
 		</a>
 		{% if status_upload_destination %}
 			<div class="margin_top">{{ status_upload_destination }}</div>
 		{% endif %}
-		<a class="margin_bottom margin_top" href="{{ path('uploadDestinationData')}}">
-			<button class="container-element">Subir datos por destino</button>
+		<a class="margin_bottom margin_top button" href="{{ path('uploadDestinationData')}}">
+			Subir datos por destino
 		</a>
 	</div>
 
@@ -86,14 +84,14 @@
 			<div class="alert margin_top">{{ status_origin }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top" href="{{ path('originData')}}">
-			<button class="container-element">Extraer datos por origen</button>
+		<a class="margin_top button longTime" href="{{ path('originData')}}">
+			Extraer datos por origen
 		</a>
 		{% if status_upload_origin %}
 			<div class="margin_top">{{ status_upload_origin }}</div>
 		{% endif %}
-		<a class="margin_bottom margin_top" href="{{ path('uploadOriginData')}}">
-			<button class="container-element">Subir datos por origen</button>
+		<a class="margin_bottom margin_top button" href="{{ path('uploadOriginData')}}">
+			Subir datos por origen
 		</a>
 	</div>
 
@@ -102,15 +100,43 @@
 			<div class="alert margin_top">{{ status_origin }}
 				busque causa del error e intente otra vez</div>
 		{% endif %}
-		<a class="margin_top" href="{{ path('originAgeGenderData')}}">
-			<button class="container-element">Extraer datos por origen, edad y género</button>
+		<a class="margin_top button longTime" href="{{ path('originAgeGenderData')}}">
+			Extraer datos por origen, edad y género
 		</a>
 		{% if status_upload_origin_age_gender %}
 			<div class="margin_top">{{ status_upload_origin_age_gender }}</div>
 		{% endif %}
-		<a class="margin_bottom margin_top" href="{{ path('uploadOriginAgeGenderData')}}">
-			<button class="container-element">Subir datos por origen, edad y género</button>
+		<a class="margin_bottom margin_top button" href="{{ path('uploadOriginAgeGenderData')}}">
+			Subir datos por origen, edad y género
 		</a>
 	</div>
 
+{% endblock %}
+{% block javascript%}
+<script type="text/javascript" charset="utf-8">
+	addEventListener("load",function(){
+		document.querySelectorAll('.longTime').forEach(longTime => {
+			longTime.addEventListener('click',event =>{
+				event.preventDefault();
+				Swal.fire({
+				icon: "info",
+				text: "La operación puede tardar entre 1-10 minutos se paciente",
+				showCancelButton: true,
+				cancelButtonColor: "#DD6B55",
+				confirmButtonText: "Si",
+				cancelButtonText: "No",
+				closeOnConfirm: false
+			}).then((result) => {
+			if (result.value) {
+				window.location.href=longTime;
+			}
+			});
+				
+			})
+		});
+	});
+			
+		
+	
+</script>
 {% endblock %}

@@ -188,3 +188,15 @@ h1>a,h4>a {
   background-color: $color-primary;
   color: $color-black;
 }
+// Añado botón a través de a
+a.button {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  cursor: pointer;
+  text-decoration: none;
+  color: $color-primary-dark;
+  font-size: 1em;
+  width: 300px;
+  text-align: center;
+}

@@ -146,3 +146,14 @@ h1 > a, h4 > a {
 .flex_menu h3 {
   background-color: #3a6073;
   color: #000000; }
+
+a.button {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+  cursor: pointer;
+  text-decoration: none;
+  color: #16222a;
+  font-size: 1em;
+  width: 300px;
+  text-align: center; }

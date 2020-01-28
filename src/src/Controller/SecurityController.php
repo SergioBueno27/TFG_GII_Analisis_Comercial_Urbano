@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,8 @@ class SecurityController extends AbstractController
     // Constructor con las variables iniciales
     function __construct() {
         // Lenguajes disponibles en la aplicación
-        $this->languages = ['es','en'];
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
     }
     /**
      * @Route("/", name="main")

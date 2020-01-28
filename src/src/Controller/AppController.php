@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BasicData;
 use App\Entity\ZipCode;
 
@@ -11,16 +13,24 @@ set_time_limit(0);
 ini_set('memory_limit', '-1');
 class AppController extends AbstractController
 {
+    private $languages;
+
+    // Constructor con las variables iniciales
+    function __construct() {
+        // Lenguajes disponibles en la aplicación
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
+    }  
 
     /**
      * @Route("/{_locale}/home", name="home")
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login',['_locale']);
         }
-        return $this->render('base.html.twig');
+        return $this->render('base.html.twig',['languages' => $this->languages , 'selectedLanguage' => $request->getLocale()]);
     }
 
     /**

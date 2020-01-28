@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
@@ -21,8 +22,10 @@ class RegistrationController extends AbstractController
     // Constructor con las variables iniciales
     function __construct() {
         // Lenguajes disponibles en la aplicación
-        $this->languages = ['es','en'];
-    }
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
+    }   
+
     /**
      * @Route("/{_locale}/register", name="app_register")
      */

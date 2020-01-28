@@ -35,9 +35,28 @@
 							{% endblock %}
 						</div>
 						<div class="flex_derecha_arriba">
+							{{ 'Idioma' | trans }}
+							<select onchange="getLanguages()" name="language" id="language" class="container-element">
+								{% for language in languages %}
+									{% if language == selectedLanguage %}
+										<option value ="{{ language }}" selected = "selected">{{ language | trans }}</option>
+									{% else %}
+										<option value = "{{ language }}" >{{ language | trans }}</option>
+									{% endif %}
+								{% endfor %}
+							</select> 
+							, 
 							{{ 'Usuario' | trans}}:
 							{{ app.user.username }},
-
+							<script type="text/javascript" charset="utf-8">
+								function getLanguages() {
+									value = document.getElementById("language").value;
+									//Recojo la ruta actual para hacer la redirección
+									let url = "{{ path('app_login',{'_locale': 'value' })|escape('js') }}";
+									url = url.replace("value", value);
+									window.location.href = url;
+								}
+							</script>
 							<a id="exit" title="{{ 'Exit' | trans}}" href="{{ path('app_logout') }}" class="mdi mdi-exit-run"></a>
 						</div>
 						

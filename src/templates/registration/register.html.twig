@@ -1,35 +1,56 @@
 {% block title %}
-	<title>Análisis Comercial Urbano-Registration</title>
+	<title>{{ 'Análisis Comercial Urbano' | trans}}-Registration</title>
 {% endblock %}
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('/css/login.css') }}">
 {% endblock %}
 {% block body %}
 	<div class="container">
+		<div id="right-self">
+			{{ 'Idioma' | trans }}
+			<select onchange="getLanguages()" name="language" id="language" class="container-element">
+				{% for language in languages %}
+					{% if language == selectedLanguage %}
+						<option value ="{{ language }}" selected = "selected">{{ language | trans }}</option>
+					{% else %}
+						<option value = "{{ language }}" >{{ language | trans }}</option>
+					{% endif %}
+				{% endfor %}
+			</select> 
+		</div>
+		<script type="text/javascript" charset="utf-8">
+			function getLanguages() {
+				value = document.getElementById("language").value;
+				//Recojo la ruta actual para hacer la redirección
+				let url = "{{ path('app_login',{'_locale': 'value' })|escape('js') }}";
+				url = url.replace("value", value);
+				window.location.href = url;
+			}
+		</script>
 		{{ form_start(registrationForm) }}
 		<div class="content">
 			<div id="titulo">
 				<h1>
-					<span class="mdi mdi-finance">Análisis comercial urbano - Register</span>
+					<span class="mdi mdi-finance">{{ 'Análisis Comercial Urbano' | trans }} - Register</span>
 				</h1>
 			</div>
 
 			{{ form_label(registrationForm.email) }}
 			<div></div>
-			{{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Introduce Email'}})}}
+			{{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Introduce Email' | trans }})}}
 			<div></div>
-			Contraseña
+			{{ 'Password' | trans }}
 			<div></div>
 			{{ form_errors(registrationForm.plainPassword.first) }}
-			{{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Introduce Contraseña'}}) }}
-			{{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Repite Contraseña'}}) }}
+			{{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Introduce Contraseña' | trans }}) }}
+			{{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Repite Contraseña' | trans }}) }}
 			<div></div>
 			{{ form_label(registrationForm.agreeTerms) }}
 			{{ form_widget(registrationForm.agreeTerms) }}
 			<div></div>
-			<button class="btn">Registrarse</button>
+			<button class="btn">{{ 'Registrarse' | trans}}</button>
 			<a href="{{ path('app_login') }}">
-				<button class="btn btn-lg btn-primary" type="button">Loguearse</button>
+				<button class="btn btn-lg btn-primary" type="button">{{ 'Loguearse' | trans}}</button>
 			</a>
 			{{ form_end(registrationForm) }}
 		</div>

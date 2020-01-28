@@ -13,7 +13,7 @@ class AppController extends AbstractController
 {
 
     /**
-     * @Route("/{_locale}", name="home")
+     * @Route("/{_locale}/home", name="home")
      */
     public function index()
     {

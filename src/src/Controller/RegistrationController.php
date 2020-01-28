@@ -16,8 +16,15 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 class RegistrationController extends AbstractController
 {
+    private $languages;
+
+    // Constructor con las variables iniciales
+    function __construct() {
+        // Lenguajes disponibles en la aplicación
+        $this->languages = ['es','en'];
+    }
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/{_locale}/register", name="app_register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
     {
@@ -48,6 +55,8 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 }

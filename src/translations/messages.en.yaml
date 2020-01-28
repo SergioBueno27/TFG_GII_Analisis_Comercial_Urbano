@@ -20,3 +20,62 @@ thursday: Thursday
 friday: Friday
 saturday: Saturday
 sunday: Sunday
+
+Idioma: Language
+es: Spanish
+en: English
+
+Análisis Comercial Urbano: Urban Comercial Analysis
+Usuario: User
+Extraer y subir a base de datos: Extract and upload to database
+Datos básicos: Basic data
+Datos por categoría: Category data
+Datos por día: Day data
+Datos por hora: Hour data
+Datos por destino: Destination data
+Datos por origen: Origin data
+Datos por origen y edad: Origin and age data
+Datos por origen y género: Origin and gender data
+Atrás: Back
+Exit: Exit
+
+Error con email o contraseña: Error with email or password
+Password: Password
+Recordarme: Remember me
+Loguearse: Login
+Registrarse: Register
+
+busque causa del error e intente otra vez: find cause of error and try again
+Extraer y subir mercaderes: Extract and upload merchants
+Extraer y subir datos básicos: Extract and upload basic data
+Extraer datos por categoría: Extract and upload category data
+Subir category_data a base de datos: Upload category_data to database
+Extraer datos por días y horas: Extract day and hour data
+Subir day_data a base de datos: Upload day_data to database
+Subir hour_data a base de datos: Upload hour_data to database
+Extraer datos por destino: Extract destination data
+Subir datos por destino: Upload destination data
+Extraer datos por origen: Extract origin data
+Subir datos por origen: Upload origin data
+Extraer datos por origen, edad y género: Extract origin, age and gender data
+Subir datos por origen, edad y género: Upload origin, age and gender data
+La operación puede tardar entre 1-10 minutos se paciente: It may take between 1-10 minutes please be patient
+Si: Yes
+No: No
+
+Seleccione código postal: Choose zipcode
+Mostrar tabla asociada a los datos: Show grid associated with this data
+Seleccione código de categoría: Choose category code
+Seleccione mes: Choose month
+Seleccione día: Choose day
+
+Descargar tabla como fichero csv: Download grid as csv
+Mostrar todos los datos: Show all data
+La operación puede tardar entre 1-5 minutos se paciente: It may take between 1-10 minutes please be patient
+
+Media uso de tarjeta por Código postal: Average of card use by zipcode
+Número de mercaderes por Código postal: Number of merchants by zipcode
+Número de transacciones con tarjeta: Number of transactions with card
+y categoría: and category
+Número de mercaderes: Number of merchants
+Transacciones con tarjeta por Código postal: Card transactions by zipcode

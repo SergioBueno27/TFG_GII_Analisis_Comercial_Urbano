@@ -31,3 +31,6 @@ body {
 
 .alert {
   color: #f71c2e; }
+
+#right-self {
+  align-self: flex-end; }

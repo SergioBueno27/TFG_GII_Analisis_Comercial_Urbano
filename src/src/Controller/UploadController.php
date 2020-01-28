@@ -12,7 +12,7 @@ ini_set('memory_limit', '-1');
 class UploadController extends AbstractController
 {
 /**
- * @Route("/upload_category_data", name="uploadCategoryData")
+ * @Route("/{_locale}/upload_category_data", name="uploadCategoryData")
  */
     public function uploadCategoryData()
     {
@@ -57,7 +57,7 @@ class UploadController extends AbstractController
     }
 
 /**
- * @Route("/upload_day_data", name="uploadDayData")
+ * @Route("/{_locale}/upload_day_data", name="uploadDayData")
  */
     public function uploadDaysData()
     {
@@ -100,7 +100,7 @@ class UploadController extends AbstractController
     }
 
 /**
- * @Route("/upload_hour_data", name="uploadHourData")
+ * @Route("/{_locale}/upload_hour_data", name="uploadHourData")
  */
     public function uploadHoursData()
     {
@@ -140,7 +140,7 @@ class UploadController extends AbstractController
     }
 
     /**
-     * @Route("/upload_destination_data", name="uploadDestinationData")
+     * @Route("/{_locale}/upload_destination_data", name="uploadDestinationData")
      */
     public function uploadDestinationData()
     {
@@ -204,7 +204,7 @@ class UploadController extends AbstractController
     }
 
     /**
-     * @Route("/upload_origin_data", name="uploadOriginData")
+     * @Route("/{_locale}/upload_origin_data", name="uploadOriginData")
      */
     public function uploadOriginData()
     {
@@ -248,7 +248,7 @@ class UploadController extends AbstractController
     }
 
     /**
-     * @Route("/upload_origin_age_gender_data", name="uploadOriginAgeGenderData")
+     * @Route("/{_locale}/upload_origin_age_gender_data", name="uploadOriginAgeGenderData")
      */
     public function uploadOriginAgeGenderData()
     {

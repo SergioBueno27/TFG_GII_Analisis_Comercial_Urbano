@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
-{% block title %}Análisis comercial urbano-Admin
+{% block title %}{{ 'Análisis Comercial Urbano' | trans}}-Admin
 {% endblock %}
 {% block afterMenu %}
 <h4>
 	<a href="javascript: history.go(-1)">
-		<span class="mdi mdi-arrow-left">Atrás</span>
+		<span class="mdi mdi-arrow-left">{{ 'Atrás' | trans}}</span>
 	</a>
 </h4>
 {% endblock %}
@@ -17,97 +17,97 @@
 	<div class="container">
 		{% if status_merchants %}
 			<div class="alert margin_top">{{ status_merchants }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
-		<a class="margin_top margin_bottom button" href="{{path('merchantData')}}">Extraer y subir mercaderes</a>
+		<a class="margin_top margin_bottom button" href="{{path('merchantData')}}"> {{ 'Extraer y subir mercaderes' | trans}}</a>
 	</div>
 	<div class="container">
 		{% if status_basic %}
 			<div class="alert margin_top">{{ status_basic }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
-		<a class="margin_top margin_bottom button" href="{{ path('basicData')}}">Extraer y subir datos básicos
+		<a class="margin_top margin_bottom button" href="{{ path('basicData')}}">{{ 'Extraer y subir datos básicos' | trans}}
 			
 		</a>
 	</div>
 	<div class="container">
 		{% if status_category %}
 			<div class="alert margin_top">{{ status_category }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
 		<a class="margin_top button longTime" href="{{ path('categoryData')}}">
-			Extraer datos por categoría
+			{{ 'Extraer datos por categoría' | trans}}
 		</a>
 		{% if status_upload_category %}
 			<div class="margin_top">{{ status_upload_category }}</div>
 		{% endif %}
 		<a class="margin_bottom margin_top button" href="{{ path('uploadCategoryData')}}">
-			Subir category_data a base de datos
+			{{ 'Subir category_data a base de datos' | trans}}
 		</a>
 	</div>
 	<div class="container">
 		{% if status_day_hour %}
 			<div class="alert margin_top">{{ status_day_hour }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
 		<a class="margin_top button longTime" href="{{ path('consumptionData')}}">
-			Extraer datos por días y horas
+			{{ 'Extraer datos por días y horas' | trans}}
 		</a>
 		{% if status_upload_day_hour %}
 			<div class="margin_top">{{ status_upload_day_hour }}</div>
 		{% endif %}
 		<a class="margin_top button" href="{{ path('uploadDayData')}}">
-			Subir day_data a base de datos
+			{{ 'Subir day_data a base de datos' | trans}}
 		</a>
 		<a class="margin_bottom margin_top button" href="{{ path('uploadHourData')}}">
-			Subir hour_data a base de datos
+			{{ 'Subir hour_data a base de datos' | trans}}
 		</a>
 	</div>
 	<div class="container">
 		{% if status_destination %}
 			<div class="alert margin_top">{{ status_destination }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
 		<a class="margin_top button longTime" href="{{ path('destinationData')}}">
-			Extraer datos por destino
+			{{ 'Extraer datos por destino' | trans}}
 		</a>
 		{% if status_upload_destination %}
 			<div class="margin_top">{{ status_upload_destination }}</div>
 		{% endif %}
 		<a class="margin_bottom margin_top button" href="{{ path('uploadDestinationData')}}">
-			Subir datos por destino
+			{{ 'Subir datos por destino' | trans}}
 		</a>
 	</div>
 
 	<div class="container">
 		{% if status_origin %}
 			<div class="alert margin_top">{{ status_origin }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
 		<a class="margin_top button longTime" href="{{ path('originData')}}">
-			Extraer datos por origen
+			{{ 'Extraer datos por origen' | trans}}
 		</a>
 		{% if status_upload_origin %}
 			<div class="margin_top">{{ status_upload_origin }}</div>
 		{% endif %}
 		<a class="margin_bottom margin_top button" href="{{ path('uploadOriginData')}}">
-			Subir datos por origen
+			{{ 'Subir datos por origen' | trans}}
 		</a>
 	</div>
 
 	<div class="container">
 		{% if status_origin_age_gender %}
 			<div class="alert margin_top">{{ status_origin }}
-				busque causa del error e intente otra vez</div>
+				{{ 'busque causa del error e intente otra vez' | trans}}</div>
 		{% endif %}
 		<a class="margin_top button longTime" href="{{ path('originAgeGenderData')}}">
-			Extraer datos por origen, edad y género
+			{{ 'Extraer datos por origen, edad y género' | trans}}
 		</a>
 		{% if status_upload_origin_age_gender %}
 			<div class="margin_top">{{ status_upload_origin_age_gender }}</div>
 		{% endif %}
 		<a class="margin_bottom margin_top button" href="{{ path('uploadOriginAgeGenderData')}}">
-			Subir datos por origen, edad y género
+			{{ 'Subir datos por origen, edad y género' | trans}}
 		</a>
 	</div>
 
@@ -120,11 +120,11 @@
 				event.preventDefault();
 				Swal.fire({
 				icon: "info",
-				text: "La operación puede tardar entre 1-10 minutos se paciente",
+				text: "{{ 'La operación puede tardar entre 1-10 minutos se paciente' | trans}}",
 				showCancelButton: true,
 				cancelButtonColor: "#DD6B55",
-				confirmButtonText: "Si",
-				cancelButtonText: "No",
+				confirmButtonText: "{{ 'Si' | trans}}",
+				cancelButtonText: "{{ 'No' | trans}}",
 				closeOnConfirm: false
 			}).then((result) => {
 			if (result.value) {

@@ -5,7 +5,7 @@
 		<meta charset="UTF-8">
 		<link rel="icon" href="{{ asset('/icon/favicon.ico') }}"/>
 		<title>
-			{% block title %}Análisis Comercial Urbano
+			{% block title %}{{ 'Análisis Comercial Urbano' | trans}}
 			{% endblock %}
 		</title>
 		{% block stylesheets %}
@@ -29,40 +29,40 @@
 							{% block linkHeader %}
 							<h1>
 								<a href="{{path('home')}}">
-									<span class="mdi mdi-finance">Análisis comercial urbano</span>
+									<span class="mdi mdi-finance">{{ 'Análisis Comercial Urbano' | trans}}</span>
 								</a>
 							</h1>
 							{% endblock %}
 						</div>
 						<div class="flex_derecha_arriba">
-							Usuario:
+							{{ 'Usuario' | trans}}:
 							{{ app.user.username }},
 
-							<a id="exit" title="Exit" href="{{ path('app_logout') }}" class="mdi mdi-exit-run"></a>
+							<a id="exit" title="{{ 'Exit' | trans}}" href="{{ path('app_logout') }}" class="mdi mdi-exit-run"></a>
 						</div>
 						
 						<div id="menu">
 							<div class="flex_menu">
 								{% if app.user %}
 										{% if is_granted('ROLE_ADMIN') %}
-											<a class="mdi mdi-database-plus" href="{{path('admin')}}">Extraer y subir a base de datos</a>
+											<a class="mdi mdi-database-plus" href="{{path('admin')}}">{{ 'Extraer y subir a base de datos' | trans}}</a>
 										{% endif %}
 								{% endif %}
 								
-								<a href="{{ path('chart_basic_data_zipcode', {'zipcode': baseZipcode}) }}">Datos básicos</a>
-								<a href="{{ path('chart_category_data_zipcode', {'zipcode': baseZipcode,'category_code': baseCategory}) }}">Datos por categoría</a>
-								<a href="{{ path('chart_day_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por día</a>
-								<a href="{{ path('chart_hour_data_zipcode', {'zipcode': baseZipcode,'date': baseDate,'day': baseDay}) }}">Datos por hora</a>
-								<a href="{{ path('chart_destination_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por destino</a>
-								<a href="{{ path('chart_origin_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por origen</a>
-								<a href="{{ path('chart_origin_age_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por origen y edad</a>
-								<a href="{{ path('chart_origin_gender_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">Datos por origen y género</a>
+								<a href="{{ path('chart_basic_data_zipcode', {'zipcode': baseZipcode}) }}">{{ 'Datos básicos' | trans}}</a>
+								<a href="{{ path('chart_category_data_zipcode', {'zipcode': baseZipcode,'category_code': baseCategory}) }}">{{ 'Datos por categoría' | trans}}</a>
+								<a href="{{ path('chart_day_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por día' | trans}}</a>
+								<a href="{{ path('chart_hour_data_zipcode', {'zipcode': baseZipcode,'date': baseDate,'day': baseDay}) }}">{{ 'Datos por hora' | trans}}</a>
+								<a href="{{ path('chart_destination_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por destino' | trans}}</a>
+								<a href="{{ path('chart_origin_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen' | trans}}</a>
+								<a href="{{ path('chart_origin_age_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen y edad' | trans}}</a>
+								<a href="{{ path('chart_origin_gender_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen y género' | trans}}</a>
 							</div>
 						</div>
 					{% endblock %}
 					{% block afterMenu %}<h4>
 						<a href="javascript: history.go(-1)">
-							<span class="mdi mdi-arrow-left">Atrás</span>
+							<span class="mdi mdi-arrow-left">{{ 'Atrás' | trans}}</span>
 						</a>
 					</h4>
 					{% endblock %}

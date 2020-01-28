@@ -20,3 +20,62 @@ thursday: Jueves
 friday: Viernes
 saturday: Sábado
 sunday: Domingo
+
+Idioma: Idioma
+es: Español
+en: Inglés
+
+Análisis Comercial Urbano: Análisis Comercial Urbano
+Usuario: Usuario
+Extraer y subir a base de datos: Extraer y subir a base de datos
+Datos básicos: Datos básicos
+Datos por categoría: Datos por categoría
+Datos por día: Datos por día
+Datos por hora: Datos por hora
+Datos por destino: Datos por destino
+Datos por origen: Datos por origen
+Datos por origen y edad: Datos por origen y edad
+Datos por origen y género: Datos por origen y género
+Atrás: Atrás
+Exit: Salir
+
+Error con email o contraseña: Error con email o contraseña
+Password: Contraseña
+Recordarme: Recordarme
+Loguearse: Loguearse
+Registrarse: Registrarse
+
+busque causa del error e intente otra vez: busque causa del error e intente otra vez
+Extraer y subir mercaderes: Extraer y subir mercaderes
+Extraer y subir datos básicos: Extraer y subir datos básicos
+Extraer datos por categoría: Extraer datos por categoría
+Subir category_data a base de datos: Subir category_data a base de datos
+Extraer datos por días y horas: Extraer datos por días y horas
+Subir day_data a base de datos: Subir day_data a base de datos
+Subir hour_data a base de datos: Subir hour_data a base de datos
+Extraer datos por destino: Extraer datos por destino
+Subir datos por destino: Subir datos por destino
+Extraer datos por origen: Extraer datos por origen
+Subir datos por origen: Subir datos por origen
+Extraer datos por origen, edad y género: Extraer datos por origen, edad y género
+Subir datos por origen, edad y género: Subir datos por origen, edad y género
+La operación puede tardar entre 1-10 minutos se paciente: La operación puede tardar entre 1-10 minutos se paciente
+Si: Si
+No: No
+
+Seleccione código postal: Seleccione código postal
+Mostrar tabla asociada a los datos: Mostrar tabla asociada a los datos
+Seleccione código de categoría: Seleccione código de categoría
+Seleccione mes: Seleccione mes
+Seleccione día: Seleccione día
+
+Descargar tabla como fichero csv: Descargar tabla como fichero csv
+Mostrar todos los datos: Mostrar todos los datos
+La operación puede tardar entre 1-5 minutos se paciente: La operación puede tardar entre 1-5 minutos se paciente
+
+Media uso de tarjeta por Código postal: Media uso de tarjeta por Código postal
+Número de mercaderes por Código postal: Número de mercaderes por Código postal
+Número de transacciones con tarjeta: Número de transacciones con tarjeta
+y categoría: y categoría
+Número de mercaderes: Número de mercaderes
+Transacciones con tarjeta por Código postal: Transacciones con tarjeta por Código postal

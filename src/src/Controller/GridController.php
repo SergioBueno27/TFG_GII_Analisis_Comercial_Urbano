@@ -14,7 +14,7 @@ class GridController extends AbstractController
 {
     
     /**
-     * @Route("/basic_data/{zipcode}", name="basic_data_zipcode")
+     * @Route("/{_locale}/basic_data/{zipcode}", name="basic_data_zipcode")
      */
     public function basic_data_zipcode(string $zipcode)
     {
@@ -53,7 +53,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/all_basic_data_zipcode", name="all_basic_data_zipcode")
+     * @Route("/{_locale}/all_basic_data_zipcode", name="all_basic_data_zipcode")
      */
     public function all_basic_data_zipcode()
     {
@@ -80,7 +80,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/category_data/{zipcode}", name="category_data_zipcode")
+     * @Route("/{_locale}/category_data/{zipcode}", name="category_data_zipcode")
      */
     public function category_data_zipcode(string $zipcode)
     {
@@ -120,7 +120,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/all_category_data_zipcode", name="all_category_data_zipcode")
+     * @Route("/{_locale}/all_category_data_zipcode", name="all_category_data_zipcode")
      */
     public function all_category_data_zipcode()
     {
@@ -146,7 +146,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/day_data/{zipcode}", name="day_data_zipcode")
+     * @Route("/{_locale}/day_data/{zipcode}", name="day_data_zipcode")
      */
     public function day_data_zipcode(string $zipcode)
     {
@@ -186,7 +186,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/all_day_data_zipcode", name="all_day_data_zipcode")
+     * @Route("/{_locale}/all_day_data_zipcode", name="all_day_data_zipcode")
      */
     public function all_day_data_zipcode()
     {
@@ -211,7 +211,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/hour_data/{zipcode}", name="hour_data_zipcode")
+     * @Route("/{_locale}/hour_data/{zipcode}", name="hour_data_zipcode")
      */
     public function hour_data_zipcode(string $zipcode)
     {
@@ -249,7 +249,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/all_hour_data_zipcode", name="all_hour_data_zipcode")
+     * @Route("/{_locale}/all_hour_data_zipcode", name="all_hour_data_zipcode")
      */
     public function all_hour_data_zipcode()
     {
@@ -274,7 +274,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/destination_data/{zipcode}", name="destination_data_zipcode")
+     * @Route("/{_locale}/destination_data/{zipcode}", name="destination_data_zipcode")
      */
     public function destination_data_zipcode(string $zipcode)
     {
@@ -312,7 +312,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/all_destination_data_zipcode", name="all_destination_data_zipcode")
+     * @Route("/{_locale}/all_destination_data_zipcode", name="all_destination_data_zipcode")
      */
     public function all_destination_data_zipcode()
     {
@@ -337,7 +337,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/origin_data/{zipcode}", name="origin_data_zipcode")
+     * @Route("/{_locale}/origin_data/{zipcode}", name="origin_data_zipcode")
      */
     public function origin_data_zipcode(string $zipcode)
     {
@@ -375,7 +375,7 @@ class GridController extends AbstractController
     }
 
     /**
-     * @Route("/all_origin_data_zipcode", name="all_origin_data_zipcode")
+     * @Route("/{_locale}/all_origin_data_zipcode", name="all_origin_data_zipcode")
      */
     public function all_origin_data_zipcode()
     {
@@ -401,7 +401,7 @@ class GridController extends AbstractController
     }
 
         /**
-     * @Route("/origin_age_data/{zipcode}", name="origin_age_data_zipcode")
+     * @Route("/{_locale}/origin_age_data/{zipcode}", name="origin_age_data_zipcode")
      */
     public function origin_age_data_zipcode(string $zipcode)
     {
@@ -439,7 +439,7 @@ class GridController extends AbstractController
     }
 
         /**
-     * @Route("/all_origin_age_data_zipcode", name="all_origin_age_data_zipcode")
+     * @Route("/{_locale}/all_origin_age_data_zipcode", name="all_origin_age_data_zipcode")
      */
     public function all_origin_age_data_zipcode()
     {
@@ -466,7 +466,7 @@ class GridController extends AbstractController
     }
 
             /**
-     * @Route("/origin_gender_data/{zipcode}", name="origin_gender_data_zipcode")
+     * @Route("/{_locale}/origin_gender_data/{zipcode}", name="origin_gender_data_zipcode")
      */
     public function origin_gender_data_zipcode(string $zipcode)
     {
@@ -504,7 +504,7 @@ class GridController extends AbstractController
     }
 
         /**
-     * @Route("/all_origin_gender_data_zipcode", name="all_origin_gender_data_zipcode")
+     * @Route("/{_locale}/all_origin_gender_data_zipcode", name="all_origin_gender_data_zipcode")
      */
     public function all_origin_gender_data_zipcode()
     {

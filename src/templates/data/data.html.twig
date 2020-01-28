@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Análisis comercial urbano-Data
+{% block title %}{{ 'Análisis Comercial Urbano' | trans }}-Data
 {% endblock %}
 
 {% block containers %}
@@ -7,7 +7,7 @@
 
 {% if  app.request.get('_route')[0:4] != 'all_' %}
 <div class="container">
-	<div class="margin_top">Seleccione código postal</div>
+	<div class="margin_top">{{ 'Seleccione código postal' | trans}}</div>
 	<div class=" margin_bottom">
 		<select onchange="getZipcodeData()" name="zipcode" id="zipcode" class="container-element">
 			{% for zipcode in zipcodes %}
@@ -64,7 +64,7 @@
 	</div>
 </div>
 <div class="container">
-	<a class="margin_top margin_bottom button" onclick="onBtnExport()">Descargar tabla como fichero csv</a>
+	<a class="margin_top margin_bottom button" onclick="onBtnExport()">{{ 'Descargar tabla como fichero csv' | trans }}</a>
 </div>
 {% if is_granted('ROLE_ADMIN') %}
 	{% if  app.request.get('_route')[0:4] != 'all_' %}
@@ -76,11 +76,11 @@
 						event.preventDefault();
 						Swal.fire({
 						icon: "info",
-						text: "La operación puede tardar entre 1-5 minutos se paciente",
+						text: "{{ 'La operación puede tardar entre 1-5 minutos se paciente' | trans }}",
 						showCancelButton: true,
 						cancelButtonColor: "#DD6B55",
-						confirmButtonText: "Si",
-						cancelButtonText: "No",
+						confirmButtonText: "{{ 'Si' | trans }}",
+						cancelButtonText: "{{ 'No' | trans }}",
 						closeOnConfirm: false
 					}).then((result) => {
 					if (result.value) {
@@ -96,7 +96,7 @@
 			
 		</script>
 		<div class="container">
-			<a class= "margin_top margin_bottom container-element button longTime" href="{{path('all_'~app.request.attributes.get('_route'))}}">Mostrar todos los datos</a >
+			<a class= "margin_top margin_bottom container-element button longTime" href="{{path('all_'~app.request.attributes.get('_route'))}}">{{ 'Mostrar todos los datos' | trans }}</a >
 		</div>
 	{% endif %}
 {% endif %}

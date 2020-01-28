@@ -46,4 +46,5 @@ security:
     access_control:
         - { path: ^/extract_*, roles: ROLE_ADMIN }
         - { path: ^/upload_*, roles: ROLE_ADMIN }
-        #  - { path: ^/*, roles: ROLE_USER }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/*, roles: ROLE_USER }

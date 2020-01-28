@@ -60,7 +60,7 @@ class ChartController extends AbstractController
     }
     
     /**
-     * @Route("/chart_basic_data/{zipcode}", name="chart_basic_data_zipcode")
+     * @Route("/{_locale}/chart_basic_data/{zipcode}", name="chart_basic_data_zipcode")
      */
     public function chart_basic_data(TranslatorInterface $translator,string $zipcode)
     {
@@ -87,9 +87,9 @@ class ChartController extends AbstractController
         $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>'Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$months,'datasets'=>[['label'=>'Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>'Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$months,'datasets'=>[['label'=>$translator->trans('Número de mercaderes por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>$translator->trans('Número de transacciones con tarjeta'),'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
             'selectedZipcode'=>$zipcode,
             'charts'=>$charts,
@@ -97,7 +97,7 @@ class ChartController extends AbstractController
         ]);
     }
      /**
-     * @Route("/chart_category_data/{zipcode}/{category_code}", name="chart_category_data_zipcode")
+     * @Route("/{_locale}/chart_category_data/{zipcode}/{category_code}", name="chart_category_data_zipcode")
      */
     public function chart_category_data(TranslatorInterface $translator,string $zipcode,string $category_code)
     {
@@ -112,7 +112,7 @@ class ChartController extends AbstractController
             category_data.txs,zipcode.zipcode,category.code,category.description FROM App\Entity\Category category
             JOIN category.categoryData category_data JOIN category_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode. ' AND category.code=:category_code')->setParameters(['category_code'=>$category_code])->getResult();
         }else{
-            throw $this->createNotFoundException('Código postal o categoría no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0];
@@ -128,9 +128,9 @@ class ChartController extends AbstractController
         $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>'Media uso de tarjeta por Código postal: '.$zipcode.' y categoría: '.$category_code,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$months,'datasets'=>[['label'=>'Mercaderes por Código postal: '.$zipcode.' y categoría: '.$category_code,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true,'text'=>'Número de mercaderes']]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>'Transacciones con tarjeta por Código postal: '.$zipcode.' y categoría: '.$category_code,'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode.' '.$translator->trans('y categoría').' '.$category_code,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$months,'datasets'=>[['label'=>$translator->trans('Número de mercaderes por Código postal').' '.$zipcode.' '.$translator->trans('y categoría').' '.$category_code,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true,'text'=>$translator->trans('Número de mercaderes')]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$months,'datasets'=>[['label'=>$translator->trans('Transacciones con tarjeta por Código postal').' '.$zipcode.' '.$translator->trans('y categoría').' '.$category_code,'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         $cont=0;
         $categories=[];
         foreach ( $queryCategories as $actualData ){
@@ -147,7 +147,7 @@ class ChartController extends AbstractController
     }
 
      /**
-     * @Route("/chart_day_data/{zipcode}/{date}", name="chart_day_data_zipcode")
+     * @Route("/{_locale}/chart_day_data/{zipcode}/{date}", name="chart_day_data_zipcode")
      */
     public function chart_day_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
@@ -161,7 +161,7 @@ class ChartController extends AbstractController
             day_data.txs,zipcode.zipcode FROM App\Entity\DayData day_data
             JOIN day_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode. ' AND day_data.date=:date ')->setParameters(['date'=>$date])->getResult();
         }else{
-            throw $this->createNotFoundException('Código postal o categoría no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
         // Valores iniciales por día
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0];
@@ -197,7 +197,7 @@ class ChartController extends AbstractController
     }
 
          /**
-     * @Route("/chart_hour_data/{zipcode}/{date}/{day}", name="chart_hour_data_zipcode")
+     * @Route("/{_locale}/chart_hour_data/{zipcode}/{date}/{day}", name="chart_hour_data_zipcode")
      */
     public function chart_hour_data(TranslatorInterface $translator,string $zipcode,string $date,string $day)
     {
@@ -211,7 +211,7 @@ class ChartController extends AbstractController
             hour_data.txs,zipcode.zipcode FROM App\Entity\DayData day_data
             JOIN day_data.zipcode zipcode JOIN day_data.hourData hour_data WHERE zipcode.zipcode='.$zipcode. ' AND day_data.date=:date AND day_data.day=:day')->setParameters(['date'=>$date,'day'=>$day])->getResult();
         }else{
-            throw $this->createNotFoundException('Código postal o categoría no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
         // Valores iniciales por día
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0,10=>0,11=>0,12=>0,13=>0,14=>0,15=>0,16=>0,17=>0,18=>0,19=>0,20=>0,21=>0,22=>0,23=>0];
@@ -245,7 +245,7 @@ class ChartController extends AbstractController
     }
 
     /**
-     * @Route("/chart_destination_data/{zipcode}/{date}", name="chart_destination_data_zipcode")
+     * @Route("/{_locale}/chart_destination_data/{zipcode}/{date}", name="chart_destination_data_zipcode")
      */
     public function chart_destination_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
@@ -292,6 +292,7 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['destinationZipcode'];
         }
+        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 destinos: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
@@ -307,7 +308,7 @@ class ChartController extends AbstractController
     }
 
     /**
-     * @Route("/chart_origin_data/{zipcode}/{date}", name="chart_origin_data_zipcode")
+     * @Route("/{_locale}/chart_origin_data/{zipcode}/{date}", name="chart_origin_data_zipcode")
      */
     public function chart_origin_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
@@ -354,6 +355,7 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['originZipcode'];
         }
+        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
@@ -369,7 +371,7 @@ class ChartController extends AbstractController
     }
 
     /**
-     * @Route("/chart_origin_age_data/{zipcode}/{date}", name="chart_origin_age_data_zipcode")
+     * @Route("/{_locale}/chart_origin_age_data/{zipcode}/{date}", name="chart_origin_age_data_zipcode")
      */
     public function chart_origin_age_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
@@ -414,6 +416,7 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['originZipcode'].' '.$queryAvgData[$i]['age'];
         }
+        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes por edad: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
@@ -429,7 +432,7 @@ class ChartController extends AbstractController
     }
 
     /**
-     * @Route("/chart_origin_gender_data/{zipcode}/{date}", name="chart_origin_gender_data_zipcode")
+     * @Route("/{_locale}/chart_origin_gender_data/{zipcode}/{date}", name="chart_origin_gender_data_zipcode")
      */
     public function chart_origin_gender_data(TranslatorInterface $translator,string $zipcode,string $date)
     {
@@ -474,6 +477,7 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['originZipcode'].' '.$queryAvgData[$i]['age'].' '.$queryAvgData[$i]['gender'];
         }
+        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];

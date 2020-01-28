@@ -1,5 +1,5 @@
 <title>
-	{% block title %}Análisis Comercial Urbano-Login
+	{% block title %}{{ 'Análisis Comercial Urbano' | trans}}-Login
 	{% endblock %}
 </title>
 {% block stylesheets %}
@@ -9,36 +9,57 @@
 {% block menu %}{% endblock %}
 {% block body %}
 	<div class="container">
+		<div id="right-self">
+			{{ 'Idioma' | trans }}
+			<select onchange="getLanguages()" name="language" id="language" class="container-element">
+				{% for language in languages %}
+					{% if language == selectedLanguage %}
+						<option value ="{{ language }}" selected = "selected">{{ language | trans }}</option>
+					{% else %}
+						<option value = "{{ language }}" >{{ language | trans }}</option>
+					{% endif %}
+				{% endfor %}
+			</select> 
+		</div>
+		<script type="text/javascript" charset="utf-8">
+			function getLanguages() {
+				value = document.getElementById("language").value;
+				//Recojo la ruta actual para hacer la redirección
+				let url = "{{ path('app_login',{'_locale': 'value' })|escape('js') }}";
+				url = url.replace("value", value);
+				window.location.href = url;
+			}
+		</script>
 
 		<form method="post">
 			{% if error %}
-				<div class="alert alert-danger">Error con email o contraseña</div>
+				<div class="alert alert-danger"> {{ 'Error con email o contraseña' | trans}}</div>
 			{% endif %}
 			<div class="content">
 				<div id="titulo">
 					<h1>
-						<span class="mdi mdi-finance">Análisis comercial urbano - Login</span>
+						<span class="mdi mdi-finance">{{ 'Análisis Comercial Urbano' | trans}} - Login</span>
 					</h1>
 				</div>
 				<label for="inputEmail" class="sr-only">Email</label>
 				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-				<label for="inputPassword" class="sr-only">Password</label>
-				<input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+				<label for="inputPassword" class="sr-only">{{ 'Password' | trans}}</label>
+				<input type="password" name="password" id="inputPassword" class="form-control" placeholder="{{ 'Password' | trans}}" required>
 
 				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 			</div>
 			<div class="checkbox mb-3">
 				<label>
 					<input type="checkbox" id="remember_me" name="_remember_me" checked>
-					Recordarme
+					{{ 'Recordarme' | trans}}
 				</label>
 			</div>
 
 			<button class="btn btn-lg btn-primary" type="submit">
-				Loguearse
+				{{ 'Loguearse' | trans}}
 			</button>
 			<a href="{{ path('app_register') }}">
-				<button class="btn btn-lg btn-primary" type="button">Registrarse</button>
+				<button class="btn btn-lg btn-primary" type="button">{{ 'Registrarse' | trans}}</button>
 			</a>
 		</form>
 

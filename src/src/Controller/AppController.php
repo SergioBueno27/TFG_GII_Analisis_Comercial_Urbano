@@ -13,16 +13,18 @@ class AppController extends AbstractController
 {
 
     /**
-     * @Route("/home", name="home")
+     * @Route("/{_locale}", name="home")
      */
     public function index()
     {
-
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login',['_locale']);
+        }
         return $this->render('base.html.twig');
     }
 
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/{_locale}/admin", name="admin")
      */
     public function admin()
     {
@@ -42,4 +44,5 @@ class AppController extends AbstractController
             'status_upload_origin_age_gender' => "0",
         ]);
     }
+
 }

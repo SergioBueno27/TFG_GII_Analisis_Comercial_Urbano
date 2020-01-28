@@ -24,7 +24,7 @@ class ExtractController extends AbstractController
     private $intervalDate = "min_date=201501&max_date=201512";
     private $cont = 2;
     /**
-     * @Route("/extract_merchants", name="merchantData")
+     * @Route("/{_locale}/extract_merchants", name="merchantData")
      */
     public function dataMerchants()
     {
@@ -228,7 +228,7 @@ class ExtractController extends AbstractController
     }
 
     /**
-     * @Route("/extract_data", name="basicData")
+     * @Route("/{_locale}/extract_data", name="basicData")
      */
     public function dataBasic()
     {
@@ -374,7 +374,7 @@ class ExtractController extends AbstractController
     }
 
     /**
-     * @Route("/extract_category_data", name="categoryData")
+     * @Route("/{_locale}/extract_category_data", name="categoryData")
      */
     public function dataCategory()
     {
@@ -488,7 +488,7 @@ class ExtractController extends AbstractController
     }
 
     /**
-     * @Route("/extract_consumption_data", name="consumptionData")
+     * @Route("/{_locale}/extract_consumption_data", name="consumptionData")
      */
     public function dataConsumption()
     {
@@ -612,7 +612,7 @@ class ExtractController extends AbstractController
     }
 
     /**
-     * @Route("/extract_destination_data", name="destinationData")
+     * @Route("/{_locale}/extract_destination_data", name="destinationData")
      */
     public function dataDestination()
     {
@@ -726,7 +726,7 @@ class ExtractController extends AbstractController
     }
 
     /**
-     * @Route("/extract_origin_data", name="originData")
+     * @Route("/{_locale}/extract_origin_data", name="originData")
      */
     public function dataOrigin()
     {
@@ -838,7 +838,7 @@ class ExtractController extends AbstractController
     }
 
     /**
-     * @Route("/extract_origin_age_gender_data", name="originAgeGenderData")
+     * @Route("/{_locale}/extract_origin_age_gender_data", name="originAgeGenderData")
      */
     public function dataOriginAgeGender()
     {

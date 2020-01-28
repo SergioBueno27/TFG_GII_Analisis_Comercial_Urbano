@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
-{% block title %}Análisis comercial urbano-Data
+{% block title %}{{ 'Análisis Comercial Urbano' | trans}}-Data
 {% endblock %}
 {% block afterMenu %}
 <h4>
 	<a href="javascript: history.go(-1)">
-		<span class="mdi mdi-arrow-left">Atrás</span>
+		<span class="mdi mdi-arrow-left">{{ 'Atrás' | trans}}</span>
 	</a>
 </h4>
 	
@@ -12,7 +12,7 @@
 {% block containers %}
 {% if  app.request.get('_route')[0:11] == 'chart_basic' %}
 <div class="container">
-	<div class="margin_top">Seleccione código postal</div>
+	<div class="margin_top">{{ 'Seleccione código postal' | trans}}</div>
 	<div class=" margin_bottom">
 		<select onchange="getZipcodeData()" name="zipcode" id="zipcode" class="container-element">
 			{% for zipcode in zipcodes %}
@@ -36,7 +36,7 @@
 </script>
 {% elseif app.request.get('_route')[0:14] == 'chart_category' %}
 <div class="container">
-	<div class="margin_top">Seleccione código postal</div>
+	<div class="margin_top">{{ 'Seleccione código postal' | trans}}</div>
 	<div class=" margin_bottom">
 		<select onchange="getZipcodeData()" name="zipcode" id="zipcode" class="container-element">
 			{% for zipcode in zipcodes %}
@@ -59,7 +59,7 @@
     }
 </script>
     <div class="container">
-        <div class="margin_top">Seleccione código de categoría</div>
+        <div class="margin_top">{{ 'Seleccione código de categoría' | trans}}</div>
             <div class=" margin_bottom">
                 <select onchange="getCategories()" name="category" id="category" class="container-element">
                     {% for category in categories %}
@@ -83,7 +83,7 @@
     </script>
 {% elseif app.request.get('_route')[0:10] == 'chart_hour'%}
     <div class="container">
-        <div class="margin_top">Seleccione código postal</div>
+        <div class="margin_top">{{ 'Seleccione código postal' | trans}}</div>
         <div class=" margin_bottom">
             <select onchange="getZipcodeData()" name="zipcode" id="zipcode" class="container-element">
                 {% for zipcode in zipcodes %}
@@ -107,14 +107,14 @@
     </script>
         <div class="container">
             {# TODO Añadir el año también por si en un futuro se añaden años #}
-            <div class="margin_top">Seleccione mes</div>
+            <div class="margin_top">{{ 'Seleccione mes' | trans}}</div>
                 <div class=" margin_bottom">
                     <select onchange="getMonths()" name="month" id="month" class="container-element">
                         {% for month in months %}
                             {% if month == selectedDate %}
-                                <option value ="{{ month }}" selected = "selected">{{ month|trans }}</option>
+                                <option value ="{{ month }}" selected = "selected">{{ month | trans }}</option>
                             {% else %}
-                                <option value = "{{ month }}" >{{ month|trans }}</option>
+                                <option value = "{{ month }}" >{{ month | trans }}</option>
                             {% endif %}
                         {% endfor %}
                     </select> 
@@ -131,14 +131,14 @@
         </script>
     <div class="container">
         {# TODO Añadir el año también por si en un futuro se añaden años #}
-        <div class="margin_top">Seleccione día</div>
+        <div class="margin_top">{{ 'Seleccione día' | trans}}</div>
             <div class=" margin_bottom">
                 <select onchange="getDays()" name="day" id="day" class="container-element">
                     {% for day in days %}
                         {% if day == selectedDay %}
-                            <option value ="{{ day }}" selected = "selected">{{ day|trans }}</option>
+                            <option value ="{{ day }}" selected = "selected">{{ day | trans }}</option>
                         {% else %}
-                            <option value = "{{ day }}" >{{ day|trans }}</option>
+                            <option value = "{{ day }}" >{{ day | trans }}</option>
                         {% endif %}
                     {% endfor %}
                 </select> 
@@ -155,7 +155,7 @@
     </script>
 {% else %}
 <div class="container">
-	<div class="margin_top">Seleccione código postal</div>
+	<div class="margin_top">{{ 'Seleccione código postal' | trans}}</div>
 	<div class=" margin_bottom">
 		<select onchange="getZipcodeData()" name="zipcode" id="zipcode" class="container-element">
 			{% for zipcode in zipcodes %}
@@ -179,14 +179,14 @@
 </script>
     <div class="container">
         {# TODO Añadir el año también por si en un futuro se añaden años #}
-        <div class="margin_top">Seleccione mes</div>
+        <div class="margin_top">{{ 'Seleccione mes' | trans}}</div>
             <div class=" margin_bottom">
                 <select onchange="getMonths()" name="month" id="month" class="container-element">
                     {% for month in months %}
                         {% if month == selectedDate %}
-                            <option value ="{{ month }}" selected = "selected">{{ month|trans }}</option>
+                            <option value ="{{ month }}" selected = "selected">{{ month }}</option>
                         {% else %}
-                            <option value = "{{ month }}" >{{ month|trans }}</option>
+                            <option value = "{{ month }}" >{{ month }}</option>
                         {% endif %}
                     {% endfor %}
                 </select> 
@@ -215,7 +215,7 @@
 {% endfor %}
 
 <div class="container margin_top margin_bottom">
-    <a class= "margin_top margin_bottom button" href="{{path(app.request.attributes.get('_route')[6:],{'zipcode': selectedZipcode})}}"> Mostrar tabla asociada a los datos
+    <a class= "margin_top margin_bottom button" href="{{path(app.request.attributes.get('_route')[6:],{'zipcode': selectedZipcode})}}"> {{ 'Mostrar tabla asociada a los datos' | trans}}
     </a>
 </div>
 {% endblock %}

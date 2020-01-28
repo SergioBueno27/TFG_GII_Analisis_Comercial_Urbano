@@ -184,9 +184,9 @@
                 <select onchange="getMonths()" name="month" id="month" class="container-element">
                     {% for month in months %}
                         {% if month == selectedDate %}
-                            <option value ="{{ month }}" selected = "selected">{{ month }}</option>
+                            <option value ="{{ month }}" selected = "selected">{{ month | trans }}</option>
                         {% else %}
-                            <option value = "{{ month }}" >{{ month }}</option>
+                            <option value = "{{ month }}" >{{ month | trans }}</option>
                         {% endif %}
                     {% endfor %}
                 </select> 

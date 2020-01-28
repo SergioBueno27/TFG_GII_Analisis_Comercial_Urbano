@@ -179,7 +179,6 @@ class ChartController extends AbstractController
         for ( $i=0; $i < sizeof($this->days); $i++ ){
             $this->days[$i] = $translator->trans($this->days[$i]);
         }
-        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->days,'datasets'=>[['label'=>'Media uso de tarjeta por Código postal: '.$zipcode.' y mes: '.$translator->trans($date),'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
@@ -292,7 +291,6 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['destinationZipcode'];
         }
-        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 destinos: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
@@ -355,7 +353,6 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['originZipcode'];
         }
-        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
@@ -416,7 +413,6 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['originZipcode'].' '.$queryAvgData[$i]['age'];
         }
-        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes por edad: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
@@ -477,7 +473,6 @@ class ChartController extends AbstractController
             $data[2][$i]=$queryCardsData[$i]['cards'];
             $top[2][$i]=$queryCardsData[$i]['originZipcode'].' '.$queryAvgData[$i]['age'].' '.$queryAvgData[$i]['gender'];
         }
-        $months=$this->getTranslatedMonths($translator,$months);
         $cont=0;
         $charts = [];
         $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];

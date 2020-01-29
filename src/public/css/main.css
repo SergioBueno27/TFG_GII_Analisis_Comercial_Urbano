@@ -118,29 +118,46 @@ h1 > a, h4 > a {
   overflow: hidden;
   background-color: #69a2be; }
 
+.flex_derecha_arriba {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 1%; }
+  .flex_derecha_arriba select, .flex_derecha_arriba span {
+    margin: 1%; }
+
 .flex_menu a {
   float: left;
   color: #000000;
+  text-decoration: none;
   padding: 1% 1%;
-  text-decoration: underline;
   font-size: 1em;
   background-color: #69a2be;
   margin-right: 1%;
   width: 30%; }
 
-@media only screen and (max-width: 600px) {
+#exit {
+  align-self: flex-end; }
+
+@media only screen and (max-width: 850px) {
   .flex_menu a {
     float: left;
     color: #000000;
     padding: 1% 1%;
-    text-decoration: underline;
     font-size: 1em;
     background-color: #69a2be;
     margin-right: 1%;
-    width: 100%; } }
+    width: 100%; }
+  .flex_derecha_arriba {
+    width: 100%; }
+    .flex_derecha_arriba select, .flex_derecha_arriba span {
+      width: 100%; }
+    .flex_derecha_arriba a {
+      margin-right: 1%; } }
 
 .flex_menu a:hover {
   background-color: #16222a;
+  text-decoration: underline;
   color: #ffffff; }
 
 .flex_menu h3 {

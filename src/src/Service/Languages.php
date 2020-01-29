@@ -7,7 +7,7 @@ class Languages
     // Constructor con las variables iniciales
     public function __construct() {
         // Lenguajes disponibles en la aplicación
-        $this->langs = ['es','en'];
+        $this->langs = ['es','en','hr'];
     }
 
     public function getLangs() {

@@ -26,7 +26,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/basic_data/{zipcode}", name="basic_data_zipcode")
      */
-    public function basic_data_zipcode(string $zipcode)
+    public function basic_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         // Necesito cambiar el formato de código postal para que se pueda comparar con el valor devuelto
@@ -67,7 +67,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/all_basic_data_zipcode", name="all_basic_data_zipcode")
      */
-    public function all_basic_data_zipcode()
+    public function all_basic_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT basic_data.id,zipcode.zipcode,basic_data.avg,
         basic_data.cards,basic_data.date,basic_data.txs,basic_data.merchants,basic_data.min,basic_data.peak_txs_day,
@@ -96,7 +96,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/category_data/{zipcode}", name="category_data_zipcode")
      */
-    public function category_data_zipcode(string $zipcode)
+    public function category_data_zipcode(Request $request,string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -138,7 +138,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/all_category_data_zipcode", name="all_category_data_zipcode")
      */
-    public function all_category_data_zipcode()
+    public function all_category_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT category_data.id,category_data.avg,category_data.cards,category_data.merchants,
         category_data.txs,zipcode.zipcode,category.code,category.description,category_data.date FROM App\Entity\Zipcode zipcode 
@@ -166,7 +166,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/day_data/{zipcode}", name="day_data_zipcode")
      */
-    public function day_data_zipcode(string $zipcode)
+    public function day_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -208,7 +208,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/all_day_data_zipcode", name="all_day_data_zipcode")
      */
-    public function all_day_data_zipcode()
+    public function all_day_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT day_data.id,zipcode.zipcode,day_data.date,day_data.avg,day_data.day,
         day_data.max,day_data.min,day_data.merchants,day_data.mode,day_data.std,day_data.txs,day_data.cards FROM App\Entity\Zipcode zipcode 
@@ -235,7 +235,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/hour_data/{zipcode}", name="hour_data_zipcode")
      */
-    public function hour_data_zipcode(string $zipcode)
+    public function hour_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -275,7 +275,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/all_hour_data_zipcode", name="all_hour_data_zipcode")
      */
-    public function all_hour_data_zipcode()
+    public function all_hour_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT hour_data.id,day_data.id as id_day,day_data.day,day_data.date,zipcode.zipcode,hour_data.avg,hour_data.cards,hour_data.hour,hour_data.max,hour_data.merchants,hour_data.min,hour_data.mode,hour_data.std,hour_data.txs FROM App\Entity\Zipcode zipcode 
         JOIN zipcode.dayData day_data JOIN day_data.hourData hour_data')->getResult();
@@ -302,7 +302,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/destination_data/{zipcode}", name="destination_data_zipcode")
      */
-    public function destination_data_zipcode(string $zipcode)
+    public function destination_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -342,7 +342,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/all_destination_data_zipcode", name="all_destination_data_zipcode")
      */
-    public function all_destination_data_zipcode()
+    public function all_destination_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT destination_data.id,zipcode.zipcode,destinations.date,destination_data.destinationZipcode,destination_data.avg,destination_data.cards,destination_data.txs,destination_data.merchants FROM App\Entity\Zipcode zipcode  JOIN  zipcode.destinations destinations JOIN destinations.destinationData destination_data')->getResult();
         // var_dump($queryData[0]);
@@ -369,7 +369,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/origin_data/{zipcode}", name="origin_data_zipcode")
      */
-    public function origin_data_zipcode(string $zipcode)
+    public function origin_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -408,7 +408,7 @@ class GridController extends AbstractController
     /**
      * @Route("/{_locale}/all_origin_data_zipcode", name="all_origin_data_zipcode")
      */
-    public function all_origin_data_zipcode()
+    public function all_origin_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_data.id,zipcode.zipcode,origin_data.avg,origin_data.cards,origin_data.originZipcode,origin_data.merchants,origin_data.txs,origin_data.date FROM App\Entity\Zipcode zipcode JOIN zipcode.originData origin_data')->getResult();
         // var_dump($queryData);
@@ -435,7 +435,7 @@ class GridController extends AbstractController
         /**
      * @Route("/{_locale}/origin_age_data/{zipcode}", name="origin_age_data_zipcode")
      */
-    public function origin_age_data_zipcode(string $zipcode)
+    public function origin_age_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -474,7 +474,7 @@ class GridController extends AbstractController
         /**
      * @Route("/{_locale}/all_origin_age_data_zipcode", name="all_origin_age_data_zipcode")
      */
-    public function all_origin_age_data_zipcode()
+    public function all_origin_age_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_age_data.id,zipcode.zipcode,origin_age_data.avg,origin_age_data.cards,origin_age_data.age,origin_age_data.merchants,origin_age_data.txs,origin_age_data.date,origin_age_data.originZipcode FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data WHERE zipcode.zipcode='.$zipcode)->getResult();
         // var_dump($queryData);
@@ -502,7 +502,7 @@ class GridController extends AbstractController
             /**
      * @Route("/{_locale}/origin_gender_data/{zipcode}", name="origin_gender_data_zipcode")
      */
-    public function origin_gender_data_zipcode(string $zipcode)
+    public function origin_gender_data_zipcode(Request $request, string $zipcode)
     {
         $queryZipCode = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode FROM App\Entity\Zipcode zipcode ORDER BY zipcode.zipcode')->getResult();
         if (in_array([ 'zipcode' => intval($zipcode)],$queryZipCode)){
@@ -541,7 +541,7 @@ class GridController extends AbstractController
         /**
      * @Route("/{_locale}/all_origin_gender_data_zipcode", name="all_origin_gender_data_zipcode")
      */
-    public function all_origin_gender_data_zipcode()
+    public function all_origin_gender_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT genders.id,origin_age_data.date,zipcode.zipcode,origin_age_data.originZipcode,genders.avg,genders.cards,genders.gender,genders.merchants,genders.txs FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data JOIN origin_age_data.genders')->getResult();
         // var_dump($queryData);

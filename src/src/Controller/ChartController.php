@@ -74,7 +74,7 @@ class ChartController extends AbstractController
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT basic_data.avg,basic_data.merchants,basic_data.cards,basic_data.date FROM App\Entity\Zipcode zipcode 
             JOIN zipcode.basicData basic_data WHERE zipcode.zipcode='.$zipcode.' ORDER BY basic_data.date ASC')->getResult();
         }else{
-            throw $this->createNotFoundException('Código postal no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
         
         // Valores iniciales por mes
@@ -189,9 +189,9 @@ class ChartController extends AbstractController
         }
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->days,'datasets'=>[['label'=>'Media uso de tarjeta por Código postal: '.$zipcode.' y mes: '.$translator->trans($date),'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$this->days,'datasets'=>[['label'=>'Mercaderes por Código postal: '.$zipcode.' y mes: '.$translator->trans($date),'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true,'text'=>'Número de mercaderes']]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->days,'datasets'=>[['label'=>'Transacciones con tarjeta por Código postal: '.$zipcode.' y mes: '.$translator->trans($date),'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->days,'datasets'=>[['label'=>$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode.' '.$translator->trans('y mes').' '.$translator->trans($date),'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$this->days,'datasets'=>[['label'=>$translator->trans('Número de mercaderes por Código postal').' '.$zipcode.' '.$translator->trans('y mes').' '.$translator->trans($date),'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true,'text'=>'Número de mercaderes']]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->days,'datasets'=>[['label'=>$translator->trans('Transacciones con tarjeta por Código postal').' '.$zipcode.' '.$translator->trans('y mes').' '.$translator->trans($date),'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
         $cont=0;
 
         return $this->render('/chart/data.html.twig',[
@@ -237,9 +237,9 @@ class ChartController extends AbstractController
         
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->hours,'datasets'=>[['label'=>'Media uso de tarjeta por hora, Código postal: '.$zipcode.' y día: '.$translator->trans($day),'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$this->hours,'datasets'=>[['label'=>'Mercaderes por hora, Código postal: '.$zipcode.' y día: '.$translator->trans($day),'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true,'text'=>'Número de mercaderes']]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->hours,'datasets'=>[['label'=>'Transacciones con tarjeta por hora, Código postal: '.$zipcode.' y día: '.$translator->trans($day),'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->hours,'datasets'=>[['label'=>$translator->trans('Media uso de tarjeta por hora, Código postal').' '.$zipcode.' '.$translator->trans('y día').' '.$translator->trans($day),'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$this->hours,'datasets'=>[['label'=>$translator->trans('Mercaderes por hora, Código postal').' '.$zipcode.' '.$translator->trans('y día').' '.$translator->trans($day),'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true,'text'=>'Número de mercaderes']]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$this->hours,'datasets'=>[['label'=>$translator->trans('Transacciones con tarjeta por hora, Código postal').' '.$zipcode.' '.$translator->trans('y día').' '.$translator->trans($day),'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true,'text'=>'Prueba']]]]]])];
         $cont=0;
 
         return $this->render('/chart/data.html.twig',[
@@ -282,7 +282,7 @@ class ChartController extends AbstractController
             array_multisort($cards, SORT_DESC, $queryCardsData);
 
         }else{
-            throw $this->createNotFoundException('Código postal no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
         // Valores iniciales por mes
         $initialValues=[0=>0,1=>0,2=>0,3=>0,4=>0,5=>0,6=>0,7=>0,8=>0,9=>0];
@@ -305,9 +305,9 @@ class ChartController extends AbstractController
         }
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 destinos: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 destinos: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 destinos: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>$translator->trans('Top 10 destinos').': '.$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>$translator->trans('Top 10 destinos').': '.$translator->trans('Número de mercaderes por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>$translator->trans('Top 10 destinos').': '.$translator->trans('Número de transacciones con tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
             'selectedZipcode'=>$zipcode,
             'selectedDate'=>$date,
@@ -345,7 +345,7 @@ class ChartController extends AbstractController
             array_multisort($cards, SORT_DESC, $queryCardsData);
 
         }else{
-            throw $this->createNotFoundException('Código postal no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
 
         // Valores iniciales por mes
@@ -369,9 +369,9 @@ class ChartController extends AbstractController
         }
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 orígenes: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 orígenes: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').': '.$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').': '.$translator->trans('Número de mercaderes por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').': '.$translator->trans('Número de transacciones con tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
             'selectedZipcode'=>$zipcode,
             'selectedDate'=>$date,
@@ -407,7 +407,7 @@ class ChartController extends AbstractController
             array_multisort($cards, SORT_DESC, $queryCardsData);
 
         }else{
-            throw $this->createNotFoundException('Código postal no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
 
         // Valores iniciales por mes
@@ -431,9 +431,9 @@ class ChartController extends AbstractController
         }
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes por edad: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 orígenes por edad: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 orígenes por edad: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').' '. $translator->trans('por edad').': '.$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').' '. $translator->trans('por edad').': '.$translator->trans('Número de mercaderes por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').' '. $translator->trans('por edad').': '.$translator->trans('Número de transacciones con tarjeta').' '.$zipcode,'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
             'selectedZipcode'=>$zipcode,
             'selectedDate'=>$date,
@@ -469,7 +469,7 @@ class ChartController extends AbstractController
             array_multisort($cards, SORT_DESC, $queryCardsData);
 
         }else{
-            throw $this->createNotFoundException('Código postal no disponible');
+            throw $this->createNotFoundException($translator->trans('Código postal o categoría no disponible'));
         }
 
         // Valores iniciales por mes
@@ -493,9 +493,9 @@ class ChartController extends AbstractController
         }
         $cont=0;
         $charts = [];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Media uso de tarjeta por Código postal '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Número de mercaderes por Código postal '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
-        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>'Top 10 orígenes por edad y género: Número de transacciones con tarjeta','backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[0],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').' '. $translator->trans('por edad').' '.$translator->trans('y género').': '.$translator->trans('Media uso de tarjeta por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors[0],'borderColor'=>'#000000','data'=>$data[0],'options'=>['title'=>['display'=>true ]]]]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'bar','data'=>['labels'=>$top[1],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').' '. $translator->trans('por edad').' '.$translator->trans('y género').': '.$translator->trans('Número de mercaderes por Código postal').' '.$zipcode,'backgroundColor'=>$this->colors,'data'=>$data[1]]]],'options'=>['title'=>['display'=>true]]])];
+        $charts[] = [$cont++=>json_encode(['type'=>'line','data'=>['labels'=>$top[2],'datasets'=>[['label'=>$translator->trans('Top 10 orígenes').' '. $translator->trans('por edad').' '.$translator->trans('y género').': '.$translator->trans('Número de transacciones con tarjeta').' '.$zipcode,'backgroundColor'=>$this->colors[1],'borderColor'=>'#000000','data'=>$data[2],'options'=>['title'=>['display'=>true]]]]]])];
         return $this->render('/chart/data.html.twig',[
             'selectedZipcode'=>$zipcode,
             'selectedDate'=>$date,

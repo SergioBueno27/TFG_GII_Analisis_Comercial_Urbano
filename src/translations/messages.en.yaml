@@ -24,18 +24,19 @@ sunday: Sunday
 Idioma: Language
 es: Spanish
 en: English
+hr: Croatian
 
 Análisis Comercial Urbano: Urban Comercial Analysis
 Usuario: User
 Extraer y subir a base de datos: Extract and upload to database
 Datos básicos: Basic data
-Datos por categoría: Category data
-Datos por día: Day data
-Datos por hora: Hour data
-Datos por destino: Destination data
+Datos por categoría: Data by category
+Datos por día: Data by day
+Datos por hora: Data by hour
+Datos por destino: Data by destination
 Datos por origen: Origin data
-Datos por origen y edad: Origin and age data
-Datos por origen y género: Origin and gender data
+Datos por origen y edad: Data by origin and age
+Datos por origen y género: Data by origin and gender
 Atrás: Back
 Exit: Exit
 
@@ -98,6 +99,16 @@ Número de transacciones con tarjeta: Number of transactions with card
 y categoría: and category
 Número de mercaderes: Number of merchants
 Transacciones con tarjeta por Código postal: Card transactions by zipcode
+y mes: and month
+Media uso de tarjeta por hora, Código postal: Average of card use by hour, zipcode
+y día: and day
+Mercaderes por hora, Código postal: Merchants by hour, zipcode
+Transacciones con tarjeta por hora, Código postal: Card transactions by hour, zipcode
+Top 10 destinos: Top 10 destinations
+Número de transacciones con tarjeta por Código postal: Number of transactions with card by zipcode
+Top 10 orígenes: Top 10 origins
+por edad: by age
+y género: and gender
 
 Introduce Email: Enter Email
 Introduce Contraseña: Enter Password

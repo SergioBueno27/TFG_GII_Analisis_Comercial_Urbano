@@ -154,34 +154,54 @@ h1>a,h4>a {
   background-color: $color-primary-light;
 
 }
-
+.flex_derecha_arriba{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 1%;
+  select , span{
+    margin: 1%;
+  }
+}
 .flex_menu a {
   float: left;
   color: $color-black;
+  text-decoration: none;
   padding: 1% 1%;
-  text-decoration: underline;
   font-size: 1em;
   background-color: $color-primary-light;
   margin-right: 1%;
   width: 30%;
 
 }
-@media only screen and (max-width: 600px) {
+#exit{
+  align-self: flex-end;
+}
+@media only screen and (max-width: 850px) {
   .flex_menu a {
     float: left;
     color: $color-black;
     padding: 1% 1%;
-    text-decoration: underline;
     font-size: 1em;
     background-color: $color-primary-light;
     margin-right: 1%;
     width: 100%;
   
   }
+  .flex_derecha_arriba{
+    width: 100%;
+    select , span{
+      width: 100%;
+    }
+    a{
+      margin-right: 1%;
+    }
+  }
 }
 
 .flex_menu a:hover {
   background-color: $color-primary-dark;
+  text-decoration: underline;
   color: $color-white;
 }
 .flex_menu h3 {

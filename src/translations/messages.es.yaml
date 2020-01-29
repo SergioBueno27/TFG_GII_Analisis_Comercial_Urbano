@@ -24,6 +24,7 @@ sunday: Domingo
 Idioma: Idioma
 es: Español
 en: Inglés
+hr: Croata
 
 Análisis Comercial Urbano: Análisis Comercial Urbano
 Usuario: Usuario
@@ -98,6 +99,17 @@ Número de transacciones con tarjeta: Número de transacciones con tarjeta
 y categoría: y categoría
 Número de mercaderes: Número de mercaderes
 Transacciones con tarjeta por Código postal: Transacciones con tarjeta por Código postal
+y mes: y mes
+Media uso de tarjeta por hora, Código postal: Media uso de tarjeta por hora, Código postal
+y día: y día
+Mercaderes por hora, Código postal: Mercaderes por hora, Código postal
+Transacciones con tarjeta por hora, Código postal: Transacciones con tarjeta por hora, Código postal
+Top 10 destinos: Top 10 destinos
+Número de transacciones con tarjeta por Código postal: Número de transacciones con tarjeta por Código postal
+Top 10 orígenes: Top 10 orígenes
+por edad: by age
+y género: and gender
+
 
 Introduce Email: Introduce Email
 Introduce Contraseña: Introduce Contraseña

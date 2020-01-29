@@ -1,0 +1,227 @@
+# Months
+
+201501: 2015 Siječanj
+
+201502: 2015 Veljača
+
+201503: 2015 Ožujak
+
+201504: 2015 Travanj
+
+201505: 2015 Svibanj
+
+201506: 2015 Lipanj
+
+201507: 2015 Srpanj
+
+201508: 2015 Kolovoz
+
+201509: 2015 Rujan
+
+201510: 2015 Listopad
+
+201511: 2015 Studeni
+
+201512: 2015 Prosinac
+
+ 
+
+# Days
+
+monday: Ponedjeljak
+
+tuesday: Utorak
+
+wednesday: Srijeda
+
+thursday: Četvrtak
+
+friday: Petak
+
+saturday: Subota
+
+sunday: Nedjelja
+
+ 
+
+Idioma: Jezik
+
+es: Spanish
+
+en: English
+
+hr: Hrvatski
+
+ 
+
+Análisis Comercial Urbano: Urbana komercijalna analiza
+
+Usuario: Korisnik
+
+Extraer y subir a base de datos: Izvod i prijenos u bazu podataka
+
+Datos básicos: Osnovni podaci
+
+Datos por categoría: Kategorija podataka
+
+Datos por día: Podaci prema danu
+
+Datos por hora: Podaci prema satu
+
+Datos por destino: Podaci prema destinaciji
+
+Datos por origen: Podaci prema porijeklu
+
+Datos por origen y edad: Podaci prema porijeklu i dobi
+
+Datos por origen y género: Podaci prema porijeklu i rodu
+
+Atrás: Nazad
+
+Exit: Exit
+
+ 
+
+Error con email o contraseña: Greška u emailu ili lozinci
+
+Password: Lozinka
+
+Recordarme: Zapamti me
+
+Loguearse: Prijava
+
+Registrarse: Registracija
+
+ 
+
+busque causa del error e intente otra vez: nađi uzrok greške i pokušaj ponovno
+
+Extraer y subir mercaderes: Izvod i prijenos trgovaca
+
+Extraer y subir datos básicos: Izvod i prijenos osnovnih podataka
+
+Extraer datos por categoría: Izvod podataka prema kategoriji
+
+Subir category_data a base de datos: Prijenos category_data u bazu podataka
+
+Extraer datos por días y horas: Izvod podataka prema danu i satu
+
+Subir day_data a base de datos: Prijenos day_data u bazu podataka
+
+Subir hour_data a base de datos: Prijenos hour_data u bazu podataka
+
+Extraer datos por destino: Izvod podataka prema destinaciji
+
+Subir datos por destino: Prijenos podataka prema destinaciji
+
+Extraer datos por origen: Izvod podataka prema porijeklu
+
+Subir datos por origen: Prijenos podataka prema porijeklu
+
+Extraer datos por origen, edad y género: Izvod podataka prema porijeklu, dobi i rodu
+
+Subir datos por origen, edad y género: Prijenos podataka prema porijeklu, dobi i rodu
+
+La operación puede tardar entre 1-10 minutos se paciente: Ovo može potrajati od 1 do 10 minuta, molimo za strpljenje
+
+Si: Da
+
+No: Ne
+
+Recuerde que algunas operaciones pueden durar varios minutos: Ne zaboravite da neke operacije mogu potrajati nekoliko minuta
+
+Error en la consulta get_merchants: Greška u get_merchants upitu
+
+Error en la consulta refreshToken: Greška u refreshToken upitu
+
+Error en la consulta getToken: Greška u  getToken upitu
+
+Operación correcta: Uspješan upit
+
+Error en la consulta post_token: Greška u post_token upitu
+
+Error en la consulta getBasicData: Greška u getBasicData upitu
+
+Error en la consulta dataCategory: Greška u dataCategory upitu
+
+Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh): Ne zaboravite da prije prijenosa u bazu podataka premjestite CSV datoteke u mapu MYSQL (možete koristiti /scripts/copycsv.sh)
+
+Error en la consulta getCategoryData: Greška u getCategoryData upitu
+
+Error en la consulta dataConsumption: Greška u dataConsumption upitu
+
+Error en la consulta getConsumptionData: Greška u getConsumptionData upitu
+
+Error en la consulta dataDestination: Greška u dataDestination upitu
+
+Error en la consulta getDestinationData: Greška u getDestinationData upitu
+
+Error en la consulta dataOrigin: Greška u dataOrigin upitu
+
+Error en la consulta getOriginData: Greška u getOriginData upitu
+
+Error en la consulta dataOriginAgeGender: Greška u  dataOriginAgeGender upitu
+
+Error en la consulta getOriginAgeGenderData: Greška u getOriginAgeGenderData upitu
+
+
+
+Seleccione código postal: Odaberi poštanski broj
+
+Mostrar tabla asociada a los datos: Prikaži tablicu povezanu s podacima
+
+Seleccione código de categoría: Odaberi kod kategorije
+
+Seleccione mes: Odaberi mjesec
+
+Seleccione día: Odaberi dan
+
+ 
+
+Descargar tabla como fichero csv: Preuzmi tablicu kao csv
+
+Mostrar todos los datos: Prikaži sve podatke
+
+La operación puede tardar entre 1-5 minutos se paciente:  Ovo može potrajati od 1 do 10 minuta, molimo za strpljenje
+
+ 
+
+Media uso de tarjeta por Código postal: Prosjek upotrebe kartice putem poštanskog broja
+
+Número de mercaderes por Código postal: Broj trgovaca prema poštanskom broju
+
+Número de transacciones con tarjeta: Broj transakcija karticom
+
+y categoría: i kategorija
+
+Número de mercaderes: Broj trgovaca
+
+Transacciones con tarjeta por Código postal: Kartične transakcije prema poštanskom broju
+
+y mes: and month
+
+Media uso de tarjeta por hora, Código postal: Average of card use by hour, zipcode
+
+y día: i dan
+
+Mercaderes por hora, Código postal: Trgovci po satu, poštanski broj
+
+Transacciones con tarjeta por hora, Código postal: Kartične transakcije po satu, poštanski broj
+
+Top 10 destinos: Top 10 destinacija
+
+Número de transacciones con tarjeta por Código postal: Broj transakcija karticom prema poštanskom broju
+
+Top 10 orígenes: Top 10 porijekla
+
+por edad: prema dobi
+
+y género: prema rodu
+
+ 
+
+Introduce Email: Unesi email
+
+Introduce Contraseña: Unesi lozinku
+
+Repite Contraseña: Ponovi lozinku

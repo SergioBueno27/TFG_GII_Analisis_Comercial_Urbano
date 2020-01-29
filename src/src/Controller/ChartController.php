@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,11 +22,14 @@ class ChartController extends AbstractController
     private $days;
     private $hours;
 
+    private $languages;
     // Constructor con las variables iniciales
     function __construct() {
         $this->colors = ['#bde0ff','#ffddbd','#e4f1cb','#dbbdff','#bdf1ff','#ffbdfd','#dee5e1','#ffffe1','#4bce6c','#4d493e','#66b03c','#6d76ba','#bde0ff','#ffddbd','#e4f1cb','#dbbdff','#bdf1ff','#ffbdfd','#dee5e1','#ffffe1','#4bce6c','#4d493e','#66b03c','#6d76ba'];
         $this->days=['monday', 'tuesday', 'wednesday', 'thursday', 'friday','saturday','sunday'];
         $this->hours=['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
     }
     // Función que devuelva un array de meses traducido
     function getTranslatedMonths(TranslatorInterface $translator,Array $queryMonths){
@@ -62,7 +66,7 @@ class ChartController extends AbstractController
     /**
      * @Route("/{_locale}/chart_basic_data/{zipcode}", name="chart_basic_data_zipcode")
      */
-    public function chart_basic_data(TranslatorInterface $translator,string $zipcode)
+    public function chart_basic_data(Request $request,TranslatorInterface $translator,string $zipcode)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -94,12 +98,14 @@ class ChartController extends AbstractController
             'selectedZipcode'=>$zipcode,
             'charts'=>$charts,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
      /**
      * @Route("/{_locale}/chart_category_data/{zipcode}/{category_code}", name="chart_category_data_zipcode")
      */
-    public function chart_category_data(TranslatorInterface $translator,string $zipcode,string $category_code)
+    public function chart_category_data(Request $request,TranslatorInterface $translator,string $zipcode,string $category_code)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -143,13 +149,15 @@ class ChartController extends AbstractController
             'charts'=>$charts,
             'categories'=>$categories,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
      /**
      * @Route("/{_locale}/chart_day_data/{zipcode}/{date}", name="chart_day_data_zipcode")
      */
-    public function chart_day_data(TranslatorInterface $translator,string $zipcode,string $date)
+    public function chart_day_data(Request $request,TranslatorInterface $translator,string $zipcode,string $date)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -192,13 +200,15 @@ class ChartController extends AbstractController
             'charts'=>$charts,
             'months'=>$months,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
          /**
      * @Route("/{_locale}/chart_hour_data/{zipcode}/{date}/{day}", name="chart_hour_data_zipcode")
      */
-    public function chart_hour_data(TranslatorInterface $translator,string $zipcode,string $date,string $day)
+    public function chart_hour_data(Request $request,TranslatorInterface $translator,string $zipcode,string $date,string $day)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -240,13 +250,15 @@ class ChartController extends AbstractController
             'days'=>$this->days,
             'zipcodes'=>$zipcodes,
             'months'=>$months,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/chart_destination_data/{zipcode}/{date}", name="chart_destination_data_zipcode")
      */
-    public function chart_destination_data(TranslatorInterface $translator,string $zipcode,string $date)
+    public function chart_destination_data(Request $request,TranslatorInterface $translator,string $zipcode,string $date)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -302,13 +314,15 @@ class ChartController extends AbstractController
             'charts'=>$charts,
             'months'=>$months,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/chart_origin_data/{zipcode}/{date}", name="chart_origin_data_zipcode")
      */
-    public function chart_origin_data(TranslatorInterface $translator,string $zipcode,string $date)
+    public function chart_origin_data(Request $request,TranslatorInterface $translator,string $zipcode,string $date)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -364,13 +378,15 @@ class ChartController extends AbstractController
             'charts'=>$charts,
             'months'=>$months,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/chart_origin_age_data/{zipcode}/{date}", name="chart_origin_age_data_zipcode")
      */
-    public function chart_origin_age_data(TranslatorInterface $translator,string $zipcode,string $date)
+    public function chart_origin_age_data(Request $request,TranslatorInterface $translator,string $zipcode,string $date)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -424,13 +440,15 @@ class ChartController extends AbstractController
             'charts'=>$charts,
             'months'=>$months,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/chart_origin_gender_data/{zipcode}/{date}", name="chart_origin_gender_data_zipcode")
      */
-    public function chart_origin_gender_data(TranslatorInterface $translator,string $zipcode,string $date)
+    public function chart_origin_gender_data(Request $request,TranslatorInterface $translator,string $zipcode,string $date)
     {
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
@@ -484,6 +502,8 @@ class ChartController extends AbstractController
             'charts'=>$charts,
             'months'=>$months,
             'zipcodes'=>$zipcodes,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 }

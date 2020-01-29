@@ -62,6 +62,25 @@ Subir datos por origen, edad y género: Subir datos por origen, edad y género
 La operación puede tardar entre 1-10 minutos se paciente: La operación puede tardar entre 1-10 minutos se paciente
 Si: Si
 No: No
+Recuerde que algunas operaciones pueden durar varios minutos: Recuerde que algunas operaciones pueden durar varios minutos
+Error en la consulta get_merchants: Error en la consulta get_merchants
+Error en la consulta refreshToken: Error en la consulta refreshToken
+Error en la consulta getToken: Error en la consulta getToken
+Operación correcta: Operación correcta
+Error en la consulta post_token: Error en la consulta post_token
+Error en la consulta getBasicData: Error en la consulta getBasicData
+Error en la consulta dataCategory: Error en la consulta dataCategory
+Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh): Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)
+Error en la consulta getCategoryData: Error en la consulta getCategoryData
+Error en la consulta dataConsumption: Error en la consulta dataConsumption
+Error en la consulta getConsumptionData: Error en la consulta getConsumptionData
+Error en la consulta dataDestination: Error en la consulta dataDestination
+Error en la consulta getDestinationData: Error en la consulta getDestinationData
+Error en la consulta dataOrigin: Error en la consulta dataOrigin
+Error en la consulta getOriginData: Error en la consulta getOriginData
+Error en la consulta dataOriginAgeGender: Error en la consulta dataOriginAgeGender
+Error en la consulta getOriginAgeGenderData: Error en la consulta getOriginAgeGenderData
+
 
 Seleccione código postal: Seleccione código postal
 Mostrar tabla asociada a los datos: Mostrar tabla asociada a los datos

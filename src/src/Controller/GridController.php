@@ -1,17 +1,27 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\BasicData;
 use App\Entity\ZipCode;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 set_time_limit(0);
 ini_set('memory_limit', '-1');
 class GridController extends AbstractController
 {
+    private $languages;
+
+    // Constructor con las variables iniciales
+    function __construct() {
+        // Lenguajes disponibles en la aplicación
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
+    }  
     
     /**
      * @Route("/{_locale}/basic_data/{zipcode}", name="basic_data_zipcode")
@@ -48,6 +58,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
@@ -76,6 +88,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -115,6 +129,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
@@ -142,6 +158,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -181,6 +199,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
@@ -207,6 +227,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -244,6 +266,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
@@ -270,6 +294,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -307,6 +333,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
@@ -333,6 +361,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -370,7 +400,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
-
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -396,7 +427,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
-
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -434,7 +466,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
-
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -461,7 +494,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
-
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -499,7 +533,8 @@ class GridController extends AbstractController
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
             'selectedZipcode' => $zipcode,
-
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
@@ -525,7 +560,8 @@ class GridController extends AbstractController
             'data' => json_encode($data),
             'columnDefs' => json_encode($columnDefs),
             'gridOptions' => json_encode($gridOptions),
-
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 }

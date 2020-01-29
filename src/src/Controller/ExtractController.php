@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use App\Entity\BasicData;
 use App\Entity\Category;
@@ -9,12 +10,19 @@ use App\Entity\SubCategory;
 use App\Entity\Zipcode;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 set_time_limit(0);
 ini_set('memory_limit', '-1');
 class ExtractController extends AbstractController
 {
+    private $languages;
+
     //Este código proviene de BBVA tras registrarme en la página
     private $code = 'YXBwLmJidmEuQUNVOkxQWm9nNDJyRDNWcTI1eGN3ZVBmbkVzbHN4ZThnYlpjbFNiNDJrJERkTHl2YVYxZVRUdm5WbGlSeHFQaVR3SEw=';
 
@@ -23,10 +31,17 @@ class ExtractController extends AbstractController
 
     private $intervalDate = "min_date=201501&max_date=201512";
     private $cont = 2;
+
+    // Constructor con las variables iniciales
+    function __construct() {
+        // Lenguajes disponibles en la aplicación
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
+    } 
     /**
      * @Route("/{_locale}/extract_merchants", name="merchantData")
      */
-    public function dataMerchants()
+    public function dataMerchants(Request $request,TranslatorInterface $translator)
     {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
@@ -40,10 +55,10 @@ class ExtractController extends AbstractController
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
 
-        if ($statusCode = $response->getStatusCode() != 200) {
+        if ($response->getStatusCode() != 200) {
             return $this->render('/security/administration.html.twig', [
                 'status' => "0",
-                'status_merchants' => "Error en la consulta post_token: " . $statusCode = $response->getStatusCode(),
+                'status_merchants' => $translator->trans('Error en la consulta getToken').': '. $response->getStatusCode(),
                 'status_basic' => "0",
                 'status_category' => "0",
                 'status_upload_category' => "0",
@@ -55,6 +70,8 @@ class ExtractController extends AbstractController
                 'status_upload_origin' => "0",
                 'status_origin_age_gender' => "0",
                 'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
 
             ]);
 
@@ -67,12 +84,12 @@ class ExtractController extends AbstractController
             $expirationTime = time() + $expiresIn;
 
             //Recojo los mercaderes con sus categorías y subcategorías
-            $response = $this->getMerchants($client, $tokenType, $accessToken, $expirationTime);
+            $response = $this->getMerchants($request, $translator, $client, $tokenType, $accessToken, $expirationTime);
 
-            if ($statusCode = $response->getStatusCode() != 200) {
+            if ($response->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
-                    'status_merchants' => "Error en la consulta get_merchants: " . $statusCode = $response->getStatusCode(),
+                    'status_merchants' => $translator->trans('Error en la consulta get_merchants').': '. $response->getStatusCode(),
                     'status_basic' => "0",
                     'status_category' => "0",
                     'status_upload_category' => "0",
@@ -84,6 +101,8 @@ class ExtractController extends AbstractController
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
 
                 ]);
 
@@ -100,7 +119,7 @@ class ExtractController extends AbstractController
 
         }
         return $this->render('/security/administration.html.twig', [
-            'status' => "Operación correcta",
+            'status' => $translator->trans('Operación correcta'),
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -113,6 +132,8 @@ class ExtractController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
@@ -126,22 +147,18 @@ class ExtractController extends AbstractController
                 'Authorization' => 'Basic ' . $this->code,
             ],
         ]);
-        if ($statusCode = $response->getStatusCode() != 200) {
-            return $response;
-            
-        }
         return $response;
     }
 
-    private function refreshToken($client, &$tokenType, &$accessToken, &$expirationTime)
+    private function refreshToken($request, $translator, $client, &$tokenType, &$accessToken, &$expirationTime)
     {
         //Lo pongo a 100 segundos para tener margen que no expire el token
         if (($expirationTime - time()) < 100) {
             //Recojo el token inicial para las posteriores consultas
             $response = $this->getToken($client);
-            if ($statusCode = $response->getStatusCode() != 200) {
+            if ($response->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
-                    'status' => "Error en la consulta refresh_token: " . $statusCode = $response->getStatusCode(),
+                    'status' => $translator->trans('Error en la consulta refreshToken').': '. $response->getStatusCode(),
                     'status_merchants' => "0",
                     'status_basic' => "0",
                     'status_category' => "0",
@@ -154,6 +171,8 @@ class ExtractController extends AbstractController
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
 
                 ]);
 
@@ -169,9 +188,9 @@ class ExtractController extends AbstractController
 
     }
 
-    private function getMerchants($client, $tokenType, $accessToken, $expirationTime)
+    private function getMerchants($request, $translator, $client, $tokenType, $accessToken, $expirationTime)
     {
-        $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+        $this->refreshToken($request, $translator, $client, $tokenType, $accessToken, $expirationTime);
 
         $response = $client->request('GET', 'https://apis.bbva.com/paystats_sbx/4/info/merchants_categories', [
             'headers' => [
@@ -179,26 +198,7 @@ class ExtractController extends AbstractController
                 'Accept' => 'application/json',
             ],
         ]);
-        if ($statusCode = $response->getStatusCode() != 200) {
-            return $this->render('/security/administration.html.twig', [
-                'status' => "Error en la consulta refresh_token: " . $statusCode = $response->getStatusCode(),
-                'status_merchants' => "0",
-                'status_basic' => "0",
-                'status_category' => "0",
-                'status_upload_category' => "0",
-                'status_day_hour' => "0",
-                'status_upload_day_hour' => "0",
-                'status_destination' => "0",
-                'status_upload_destination' => "0",
-                'status_origin' => "0",
-                'status_upload_origin' => "0",
-                'status_origin_age_gender' => "0",
-                'status_upload_origin_age_gender' => "0",
-
-            ]);
-        } else {
-            return $response;
-        }
+        return $response;
     }
 
     private function sendMerchants($response, $entityManager)
@@ -230,7 +230,7 @@ class ExtractController extends AbstractController
     /**
      * @Route("/{_locale}/extract_data", name="basicData")
      */
-    public function dataBasic()
+    public function dataBasic(Request $request,TranslatorInterface $translator)
     {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
@@ -243,11 +243,11 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
-        if ($statusCode = $response->getStatusCode() != 200) {
+        if ($response->getStatusCode() != 200) {
             return $this->render('/security/administration.html.twig', [
                 'status' => "0",
                 'status_merchants' => "0",
-                'status_basic' => "Error en la consulta post_token: " . $statusCode = $response->getStatusCode(),
+                'status_basic' => $translator->trans('Error en la consulta post_token').': '. $response->getStatusCode(),
                 'status_category' => "0",
                 'status_upload_category' => "0",
                 'status_day_hour' => "0",
@@ -258,6 +258,8 @@ class ExtractController extends AbstractController
                 'status_upload_origin' => "0",
                 'status_origin_age_gender' => "0",
                 'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
 
             ]);
 
@@ -276,9 +278,9 @@ class ExtractController extends AbstractController
             //Para controlar cuando a expirado el token
             $expirationTime = time() + $expiresIn;
 
-            $this->getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+            $this->getBasicData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime);
             return $this->render('/security/administration.html.twig', [
-                'status' => "Operación correcta",
+                'status' => $translator->trans('Operación correcta'),
                 'status_merchants' => "0",
                 'status_basic' => "0",
                 'status_category' => "0",
@@ -291,11 +293,13 @@ class ExtractController extends AbstractController
                 'status_upload_origin' => "0",
                 'status_origin_age_gender' => "0",
                 'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
 
             ]);
         }
     }
-    private function getBasicData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    private function getBasicData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
@@ -305,7 +309,7 @@ class ExtractController extends AbstractController
         $this->cont = 5000;
         $responses = [];
         foreach ($zipcodes as $zipcode) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $this->refreshToken($request, $translator, $client, $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/basic_stats?". $this->intervalDate , [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
@@ -314,11 +318,11 @@ class ExtractController extends AbstractController
             ]);
         }
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+            if ($responses[$i]->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
                     'status_merchants' => "0",
-                    'status_basic' => "Error en la consulta get basic data: " . $statusCode = $responses[$i]->getStatusCode(),
+                    'status_basic' => $translator->trans('Error en la consulta getBasicData').': '. $responses[$i]->getStatusCode(),
                     'status_category' => "0",
                     'status_upload_category' => "0",
                     'status_day_hour' => "0",
@@ -329,6 +333,8 @@ class ExtractController extends AbstractController
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
                 ]);
                 
             } else {
@@ -376,7 +382,7 @@ class ExtractController extends AbstractController
     /**
      * @Route("/{_locale}/extract_category_data", name="categoryData")
      */
-    public function dataCategory()
+    public function dataCategory(Request $request,TranslatorInterface $translator)
     {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
@@ -389,6 +395,27 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
+        if ( $response->getStatusCode() != 200){
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => $translator->trans('Error en la consulta dataCategory').': '. $response->getStatusCode(),
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day_hour' => "0",
+                'status_destination' => "0",
+                'status_upload_destination' => "0",
+                'status_origin' => "0",
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => "0",
+                'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
+    
+            ]);
+        }
+
         $decodedResponse = $response->toArray();
         $tokenType = $decodedResponse['token_type'];
         $accessToken = $decodedResponse['access_token'];
@@ -396,13 +423,13 @@ class ExtractController extends AbstractController
         //Para controlar cuando a expirado el token
         $expirationTime = time() + $expiresIn;
 
-        $this->getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        $this->getCategoryData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime);
         return $this->render('/security/administration.html.twig', [
             'status' => "0",
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
-            'status_upload_category' => "Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)",
+            'status_upload_category' => $translator->trans('Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)'),
             'status_day_hour' => "0",
             'status_upload_day_hour' => "0",
             'status_destination' => "0",
@@ -411,11 +438,13 @@ class ExtractController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
 
         ]);
     }
 
-    private function getCategoryData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    private function getCategoryData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
@@ -427,7 +456,7 @@ class ExtractController extends AbstractController
         fputcsv($categoryFile, ["avg", "cards", "merchants", "txs", "category_id", "zipcode_id", "date"]);
         $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/category_distribution?". $this->intervalDate , [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
@@ -436,12 +465,12 @@ class ExtractController extends AbstractController
             ]);
         }
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+            if ($responses[$i]->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
                     'status_merchants' => "0",
                     'status_basic' => "0",
-                    'status_category' => "Error en la consulta get category data: " . $statusCode = $responses[$i]->getStatusCode(),
+                    'status_category' => $translator->trans('Error en la consulta getCategoryData').': '. $responses[$i]->getStatusCode() ,
                     'status_upload_category' => "0",
                     'status_day_hour' => "0",
                     'status_upload_day_hour' => "0",
@@ -451,6 +480,8 @@ class ExtractController extends AbstractController
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
                 ]);
                 
             } else {
@@ -490,7 +521,7 @@ class ExtractController extends AbstractController
     /**
      * @Route("/{_locale}/extract_consumption_data", name="consumptionData")
      */
-    public function dataConsumption()
+    public function dataConsumption(Request $request,TranslatorInterface $translator)
     {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
@@ -503,6 +534,26 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
+        if ( $response->getStatusCode() != 200){
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => $translator->trans('Error en la consulta dataConsumption').': '. $response->getStatusCode() ,
+                'status_upload_day_hour' => "0",
+                'status_destination' => "0",
+                'status_upload_destination' => "0",
+                'status_origin' => "0",
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => "0",
+                'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
+    
+            ]);
+        }
         $decodedResponse = $response->toArray();
         $tokenType = $decodedResponse['token_type'];
         $accessToken = $decodedResponse['access_token'];
@@ -510,7 +561,7 @@ class ExtractController extends AbstractController
         //Para controlar cuando a expirado el token
         $expirationTime = time() + $expiresIn;
 
-        $this->getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        $this->getConsumptionData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime);
         return $this->render('/security/administration.html.twig', [
             'status' => "0",
             'status_merchants' => "0",
@@ -518,17 +569,19 @@ class ExtractController extends AbstractController
             'status_category' => "0",
             'status_upload_category' => "0",
             'status_day_hour' => "0",
-            'status_upload_day_hour' => "Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)",
+            'status_upload_day_hour' => $translator->trans('Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)'),
             'status_destination' => "0",
             'status_upload_destination' => "0",
             'status_origin' => "0",
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
-    private function getConsumptionData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    private function getConsumptionData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
@@ -546,7 +599,7 @@ class ExtractController extends AbstractController
         fputcsv($hourFile, ["id", "day_data_id", "avg", "hour", "max", "min", "merchants", "mode", "std", "txs", "cards"]);
 
         foreach ($zipcodes as $zipcode) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/consumption_pattern?". $this->intervalDate , [
                 'headers' => [
@@ -558,15 +611,15 @@ class ExtractController extends AbstractController
         $idDay = 1;
         $idHour = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
-            if (200 !== $responses[$i]->getStatusCode()) {
+            $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
+            if ($response->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
                     'status_merchants' => "0",
                     'status_basic' => "0",
                     'status_category' => "0",
                     'status_upload_category' => "0",
-                    'status_day_hour' => "Error en la consulta get consumption_data en la respuesta número " . $i . ": Error " . $responses[$i]->getStatusCode() . " código postal: " . $zipcodes[$i]->getZipcode(),
+                    'status_day_hour' => $translator->trans('Error en la consulta getConsumptionData').': '. $response->getStatusCode(),
                     'status_upload_day_hour' => "0",
                     'status_destination' => "0",
                     'status_upload_destination' => "0",
@@ -574,6 +627,8 @@ class ExtractController extends AbstractController
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
                 ]);
         
             } else {
@@ -614,7 +669,7 @@ class ExtractController extends AbstractController
     /**
      * @Route("/{_locale}/extract_destination_data", name="destinationData")
      */
-    public function dataDestination()
+    public function dataDestination(Request $request,TranslatorInterface $translator)
     {
         /*
         /* Dados los clientes de un código postal, listado de otros códigos postales dónde compran
@@ -631,6 +686,26 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
+        if ( $response->getStatusCode() != 200){
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day_hour' => "0",
+                'status_destination' => $translator->trans('Error en la consulta dataDestination').': '. $response->getStatusCode(),
+                'status_upload_destination' => "0",
+                'status_origin' => "0",
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => "0",
+                'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
+    
+            ]);
+        }
         $decodedResponse = $response->toArray();
         $tokenType = $decodedResponse['token_type'];
         $accessToken = $decodedResponse['access_token'];
@@ -638,7 +713,7 @@ class ExtractController extends AbstractController
         //Para controlar cuando a expirado el token
         $expirationTime = time() + $expiresIn;
 
-        $this->getDestinationData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        $this->getDestinationData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime);
         return $this->render('/security/administration.html.twig', [
             'status' => "0",
             'status_merchants' => "0",
@@ -648,15 +723,17 @@ class ExtractController extends AbstractController
             'status_day_hour' => "0",
             'status_upload_day_hour' => "0",
             'status_destination' => "0",
-            'status_upload_destination' => "Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)",
+            'status_upload_destination' => $translator->trans('Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)'),
             'status_origin' => "0",
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
-    private function getDestinationData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    private function getDestinationData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
@@ -668,7 +745,7 @@ class ExtractController extends AbstractController
         fputcsv($destinationDataFile, ["destination_id", "avg", "cards", "txs", "merchants", "destination_zipcode"]);
         $this->cont = 5000;
         foreach ($zipcodes as $zipcode) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/destination_distribution?". $this->intervalDate ."&destination_type=zipcodes", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
@@ -678,8 +755,7 @@ class ExtractController extends AbstractController
         }
         $idDestination = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
-                echo "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode();
+            if ($responses[$i]->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
                     'status_merchants' => "0",
@@ -688,12 +764,14 @@ class ExtractController extends AbstractController
                     'status_upload_category' => "0",
                     'status_day_hour' => "0",
                     'status_upload_day_hour' => "0",
-                    'status_destination' => "Error en la consulta get destination data: " . $statusCode = $responses[$i]->getStatusCode(),
+                    'status_destination' => $translator->trans('Error en la consulta getDestinationData').': '. $responses[$i]->getStatusCode(),
                     'status_upload_destination' => "0",
                     'status_origin' => "0",
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
                 ]);
                 
             } else {
@@ -728,7 +806,7 @@ class ExtractController extends AbstractController
     /**
      * @Route("/{_locale}/extract_origin_data", name="originData")
      */
-    public function dataOrigin()
+    public function dataOrigin(Request $request,TranslatorInterface $translator)
     {
         /*
         /* Dado un código postal, listado de clientes por código postal, que compran en el código postal proporcionado.
@@ -746,18 +824,34 @@ class ExtractController extends AbstractController
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
 
-        if ($statusCode = $response->getStatusCode() != 200) {
-            echo "Error en la consulta post_token: " . $statusCode = $response->getStatusCode();
-        } else {
-            $decodedResponse = $response->toArray();
-            $tokenType = $decodedResponse['token_type'];
-            $accessToken = $decodedResponse['access_token'];
-            $expiresIn = $decodedResponse['expires_in'];
-            //Para controlar cuando a expirado el token
-            $expirationTime = time() + $expiresIn;
-
-            $this->getOriginData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        if ($response->getStatusCode() != 200) {
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day_hour' => "0",
+                'status_destination' => "0",
+                'status_upload_destination' => "0",
+                'status_origin' => $translator->trans('Error en la consulta dataOrigin').': '. $response->getStatusCode(),
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => "0",
+                'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
+    
+            ]);
         }
+        $decodedResponse = $response->toArray();
+        $tokenType = $decodedResponse['token_type'];
+        $accessToken = $decodedResponse['access_token'];
+        $expiresIn = $decodedResponse['expires_in'];
+        //Para controlar cuando a expirado el token
+        $expirationTime = time() + $expiresIn;
+
+        $this->getOriginData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime);
         return $this->render('/security/administration.html.twig', [
             'status' => "0",
             'status_merchants' => "0",
@@ -769,14 +863,16 @@ class ExtractController extends AbstractController
             'status_destination' => "0",
             'status_upload_destination' => "0",
             'status_origin' => "0",
-            'status_upload_origin' => "Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)",
+            'status_upload_origin' => $translator->trans('Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)'),
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
         
     }
 
-    private function getOriginData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    private function getOriginData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
@@ -785,7 +881,7 @@ class ExtractController extends AbstractController
         $originFile = fopen('../csv/origin.csv', 'w');
         fputcsv($originFile, ["zipcode_id", "avg", "cards", "origin_zipcode", "merchants", "txs", "date"]);
         foreach ($zipcodes as $zipcode) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?". $this->intervalDate ."&origin_type=zipcodes", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
@@ -794,7 +890,7 @@ class ExtractController extends AbstractController
             ]);
         }
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+            if ($responses[$i]->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
                     'status_merchants' => "0",
@@ -805,10 +901,12 @@ class ExtractController extends AbstractController
                     'status_upload_day_hour' => "0",
                     'status_destination' => "0",
                     'status_upload_destination' => "0",
-                    'status_origin' => "Error en la consulta get origin data: " . $statusCode = $responses[$i]->getStatusCode(),
+                    'status_origin' => $translator->trans('Error en la consulta getOriginData').': '. $responses[$i]->getStatusCode(),
                     'status_upload_origin' => "0",
                     'status_origin_age_gender' => "0",
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
                 ]);
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];
@@ -840,7 +938,7 @@ class ExtractController extends AbstractController
     /**
      * @Route("/{_locale}/extract_origin_age_gender_data", name="originAgeGenderData")
      */
-    public function dataOriginAgeGender()
+    public function dataOriginAgeGender(Request $request,TranslatorInterface $translator)
     {
         /*
         /* Dado un código postal, listado de clientes por código postal, que compran en el código postal proporcionado.
@@ -857,6 +955,26 @@ class ExtractController extends AbstractController
 
         //Recojo el token inicial para las posteriores consultas
         $response = $this->getToken($client);
+        if ($response->getStatusCode() != 200) {
+            return $this->render('/security/administration.html.twig', [
+                'status' => "0",
+                'status_merchants' => "0",
+                'status_basic' => "0",
+                'status_category' => "0",
+                'status_upload_category' => "0",
+                'status_day_hour' => "0",
+                'status_upload_day_hour' => "0",
+                'status_destination' => "0",
+                'status_upload_destination' => "0",
+                'status_origin' => "0",
+                'status_upload_origin' => "0",
+                'status_origin_age_gender' => $translator->trans('Error en la consulta dataOriginAgeGender').': '. $response->getStatusCode(),
+                'status_upload_origin_age_gender' => "0",
+                'languages' => $this->languages , 
+                'selectedLanguage' => $request->getLocale()
+    
+            ]);
+        }
         $decodedResponse = $response->toArray();
         $tokenType = $decodedResponse['token_type'];
         $accessToken = $decodedResponse['access_token'];
@@ -864,7 +982,7 @@ class ExtractController extends AbstractController
         //Para controlar cuando a expirado el token
         $expirationTime = time() + $expiresIn;
 
-        $this->getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime);
+        $this->getOriginAgeGenderData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime);
         return $this->render('/security/administration.html.twig', [
             'status' => "0",
             'status_merchants' => "0",
@@ -878,12 +996,14 @@ class ExtractController extends AbstractController
             'status_origin' => "0",
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
-            'status_upload_origin_age_gender' => "Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)",
+            'status_upload_origin_age_gender' => $translator->trans('Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh)'),
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
         
     }
 
-    private function getOriginAgeGenderData($client, $tokenType, $accessToken, $entityManager, $expirationTime)
+    private function getOriginAgeGenderData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
         $zipcodes = $this->getDoctrine()
             ->getRepository(Zipcode::class)
@@ -894,7 +1014,7 @@ class ExtractController extends AbstractController
         fputcsv($originAgeDataFile, ["id", "avg", "cards", "age", "merchants", "txs", "zipcode_id", "date", "origin_zipcode"]);
         fputcsv($originGenderDataFile, ["origin_age_data_id", "avg", "cards", "gender", "merchants", "txs"]);
         foreach ($zipcodes as $zipcode) {
-            $this->refreshToken($client, $tokenType, $accessToken, $expirationTime);
+            $this->refreshToken($request, $translator, $client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?". $this->intervalDate ."&origin_type=zipcodes&expand=ages.genders", [
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
@@ -904,7 +1024,7 @@ class ExtractController extends AbstractController
         }
         $idAge = 1;
         for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            if ($statusCode = $responses[$i]->getStatusCode() != 200) {
+            if ($responses[$i]->getStatusCode() != 200) {
                 return $this->render('/security/administration.html.twig', [
                     'status' => "0",
                     'status_merchants' => "0",
@@ -917,8 +1037,10 @@ class ExtractController extends AbstractController
                     'status_upload_destination' => "0",
                     'status_origin' => "0",
                     'status_upload_origin' => "0",
-                    'status_origin_age_gender' => "Error en la consulta get origin age gender data: " . $statusCode = $responses[$i]->getStatusCode(),
+                    'status_origin_age_gender' => $translator->trans('Error en la consulta getOriginAgeGenderData').': '. $responses[$i]->getStatusCode(),
                     'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
                 ]);
             } else {
                 $decodedResponseData = $responses[$i]->toArray()['data'];

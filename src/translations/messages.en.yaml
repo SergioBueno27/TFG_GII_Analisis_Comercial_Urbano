@@ -48,7 +48,7 @@ Registrarse: Register
 busque causa del error e intente otra vez: find cause of error and try again
 Extraer y subir mercaderes: Extract and upload merchants
 Extraer y subir datos básicos: Extract and upload basic data
-Extraer datos por categoría: Extract and upload category data
+Extraer datos por categoría: Extract category data
 Subir category_data a base de datos: Upload category_data to database
 Extraer datos por días y horas: Extract day and hour data
 Subir day_data a base de datos: Upload day_data to database
@@ -62,6 +62,25 @@ Subir datos por origen, edad y género: Upload origin, age and gender data
 La operación puede tardar entre 1-10 minutos se paciente: It may take between 1-10 minutes please be patient
 Si: Yes
 No: No
+Recuerde que algunas operaciones pueden durar varios minutos: Remember than some queries can take several minutes to finish
+Error en la consulta get_merchants: Error in get_merchants query
+Error en la consulta refreshToken: Error in refreshToken query
+Error en la consulta getToken: Error in getToken query
+Operación correcta: Successful query
+Error en la consulta post_token: Error in post_token query
+Error en la consulta getBasicData: Error in getBasicData query
+Error en la consulta dataCategory: Error in dataCategory query
+Recuerde mover los ficheros csv a la carpeta MYSQL antes de subir a base de datos (se puede usar /scripts/copycsv.sh): Remember to move csv files to MYSQL folder before upload it to the database(you can find the script at /scripts/copycsv.sh)
+Error en la consulta getCategoryData: Error in getCategoryData query
+Error en la consulta dataConsumption: Error in dataConsumption query
+Error en la consulta getConsumptionData: Error in getConsumptionData query
+Error en la consulta dataDestination: Error in dataDestination query
+Error en la consulta getDestinationData: Error in getDestinationData query
+Error en la consulta dataOrigin: Error in dataOrigin query
+Error en la consulta getOriginData: Error in getOriginData query
+Error en la consulta dataOriginAgeGender: Error in dataOriginAgeGender query
+Error en la consulta getOriginAgeGenderData: Error in getOriginAgeGenderData query
+
 
 Seleccione código postal: Choose zipcode
 Mostrar tabla asociada a los datos: Show grid associated with this data

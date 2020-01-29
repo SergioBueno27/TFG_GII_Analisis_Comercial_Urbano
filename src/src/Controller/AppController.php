@@ -36,10 +36,10 @@ class AppController extends AbstractController
     /**
      * @Route("/{_locale}/admin", name="admin")
      */
-    public function admin()
+    public function admin(Request $request)
     {
         return $this->render('/security/administration.html.twig', [
-            'status' => "Recuerde que algunas operaciones pueden durar varios minutos",
+            'status' =>  $translator->trans('Recuerde que algunas operaciones pueden durar varios minutos'),
             'status_merchants' => "0",
             'status_basic' => "0",
             'status_category' => "0",
@@ -52,6 +52,8 @@ class AppController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 

@@ -3,15 +3,15 @@ $ag-secondary-foreground-color-opacity: 1 !default;
 $ag-disabled-foreground-color-opacity: 1 !default;
 
 // theme shortcuts
-$ag-default-background: #3a6073 !default;
+$ag-default-background: #636363 !default;
 $ag-foreground-color: #F5F5F5 !default;
 
-$ag-chrome-background: darken(#3a6073,3) !default;
-$ag-active: #00B0FF !default;
-$ag-border-color: #16222a !default;
+$ag-chrome-background: #004481 !default;
+$ag-active: #F5F5F5 !default;
+$ag-border-color: #F5F5F5 !default;
 $ag-icon-color: #ecf0f1 !default;
-$ag-alt-background: #16222a !default;
-$ag-odd-row-background-color: #3a6073 !default;
+$ag-alt-background: #1D73B2 !default;
+$ag-odd-row-background-color: #636363 !default;
 
 // Derived from above
 $ag-foreground-color: rgba($ag-foreground-color, $ag-foreground-opacity) !default; // foreground

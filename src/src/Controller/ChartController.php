@@ -21,13 +21,15 @@ class ChartController extends AbstractController
     private $colors;
     private $days;
     private $hours;
-
     private $languages;
+    private $backgroundColor;
+    
     // Constructor con las variables iniciales
     function __construct() {
         $this->colors = ['#bde0ff','#ffddbd','#e4f1cb','#dbbdff','#bdf1ff','#ffbdfd','#dee5e1','#ffffe1','#4bce6c','#4d493e','#66b03c','#6d76ba','#bde0ff','#ffddbd','#e4f1cb','#dbbdff','#bdf1ff','#ffbdfd','#dee5e1','#ffffe1','#4bce6c','#4d493e','#66b03c','#6d76ba'];
         $this->days=['monday', 'tuesday', 'wednesday', 'thursday', 'friday','saturday','sunday'];
         $this->hours=['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
+        $this->backgroundColor=#cecece;
         $languages = new Languages();
         $this->languages=$languages->getLangs();
     }

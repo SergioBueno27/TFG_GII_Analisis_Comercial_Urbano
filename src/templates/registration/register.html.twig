@@ -34,20 +34,26 @@
 					<span class="mdi mdi-finance">{{ 'Análisis Comercial Urbano' | trans }} - Register</span>
 				</h1>
 			</div>
-
-			{{ form_label(registrationForm.email) }}
-			<div></div>
-			{{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Introduce Email' | trans }})}}
-			<div></div>
-			{{ 'Password' | trans }}
-			<div></div>
-			{{ form_errors(registrationForm.plainPassword.first) }}
-			{{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Introduce Contraseña' | trans }}) }}
-			{{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Repite Contraseña' | trans }}) }}
-			<div></div>
-			{{ form_label(registrationForm.agreeTerms) }}
-			{{ form_widget(registrationForm.agreeTerms) }}
-			<div></div>
+			<div class= "margin-bottom">
+				{{ form_label(registrationForm.email) }}
+			</div>
+			<div class= "margin-bottom">
+				{{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Introduce Email' | trans ,'class':"form-control"}})}}
+			</div>
+			<div class= "margin-bottom">
+				{{ 'Password' | trans }}
+			</div>
+			<div class= "margin-bottom">
+				{{ form_errors(registrationForm.plainPassword.first) }}
+			</div>
+			<div class= "margin-bottom">
+				{{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Introduce Contraseña' | trans,'class':"form-control margin-bottom" }}) }}
+				{{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Repite Contraseña' | trans,'class':"form-control" }}) }}
+			</div>
+			<div class= "margin-bottom">
+				{{ form_label(registrationForm.agreeTerms) }}
+				{{ form_widget(registrationForm.agreeTerms) }}
+			</div>
 			<button class="btn">{{ 'Registrarse' | trans}}</button>
 			<a href="{{ path('app_login') }}">
 				<button class="btn btn-lg btn-primary" type="button">{{ 'Loguearse' | trans}}</button>

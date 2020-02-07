@@ -35,9 +35,10 @@
 							{% endblock %}
 						</div>
 						<div class="flex_derecha_arriba">
-							<a id="exit" title="{{ 'Exit' | trans}}" href="{{ path('app_logout') }}" class="mdi mdi-exit-run"></a>
-							<span>{{ 'Idioma' | trans }}</span>
-							<select onchange="getLanguages()" name="language" id="language" class="container-element">
+							<span title="User" class="mdi mdi-account icon center"></span>
+							<span class="center">{{ app.user.username }}</span>
+							<span title="Language" class="mdi mdi-web icon center"></span>
+							<select onchange="getLanguages()" name="language" id="language" class="container-element center">
 								{% for language in languages %}
 									{% if language == selectedLanguage %}
 										<option value ="{{ language }}" selected = "selected">{{ language | trans }}</option>
@@ -46,7 +47,9 @@
 									{% endif %}
 								{% endfor %}
 							</select> 
-							<span>{{ 'Usuario' | trans}}: {{ app.user.username }}</span>
+							<a title="{{ 'Exit' | trans}}" href="{{ path('app_logout') }}" class="mdi mdi-exit-run icon center"></a>
+							
+							
 							<script type="text/javascript" charset="utf-8">
 								function getLanguages() {
 									value = document.getElementById("language").value;
@@ -57,7 +60,6 @@
 								}
 							</script>
 						</div>
-						
 						<div id="menu">
 							<div class="flex_menu">
 								{% if app.user %}

@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\BasicData;
 use App\Entity\ZipCode;
 
+
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 set_time_limit(0);
 ini_set('memory_limit', '-1');
 class AppController extends AbstractController
@@ -36,7 +41,7 @@ class AppController extends AbstractController
     /**
      * @Route("/{_locale}/admin", name="admin")
      */
-    public function admin(Request $request)
+    public function admin(TranslatorInterface $translator,Request $request)
     {
         return $this->render('/security/administration.html.twig', [
             'status' =>  $translator->trans('Recuerde que algunas operaciones pueden durar varios minutos'),

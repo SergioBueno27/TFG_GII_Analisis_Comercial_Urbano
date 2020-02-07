@@ -32,23 +32,22 @@
 		</script>
 
 		<form method="post">
-			{% if error %}
-				<div class="alert alert-danger"> {{ 'Error con email o contraseña' | trans}}</div>
-			{% endif %}
 			<div class="content">
 				<div id="titulo">
 					<h1>
 						<span class="mdi mdi-finance">{{ 'Análisis Comercial Urbano' | trans}} - Login</span>
 					</h1>
 				</div>
-				<label for="inputEmail" class="sr-only">Email</label>
-				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-				<label for="inputPassword" class="sr-only">{{ 'Password' | trans}}</label>
-				<input type="password" name="password" id="inputPassword" class="form-control" placeholder="{{ 'Password' | trans}}" required>
-
+				{% if error %}
+				<div class="alert alert-danger margin-bottom"> {{ 'Error con email o contraseña' | trans}}</div>
+				{% endif %}
+				<label for="inputEmail" class="sr-only margin-bottom">Email</label>
+				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control margin-bottom" placeholder="Email" required autofocus>
+				<label for="inputPassword" class="sr-only margin-bottom">{{ 'Password' | trans}}</label>
+				<input type="password" name="password" id="inputPassword" class="form-control margin-bottom" placeholder="{{ 'Password' | trans}}" required>
 				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 			</div>
-			<div class="checkbox mb-3">
+			<div class="checkbox mb-3 margin-bottom">
 				<label>
 					<input type="checkbox" id="remember_me" name="_remember_me" checked>
 					{{ 'Recordarme' | trans}}

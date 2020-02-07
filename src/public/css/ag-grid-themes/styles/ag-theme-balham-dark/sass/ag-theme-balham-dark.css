@@ -545,7 +545,7 @@
     .ag-theme-balham-dark .ag-horizontal-right-spacer.ag-scroller-corner {
       border-left: none; }
   .ag-theme-balham-dark .ag-row-hover {
-    background-color: #1D73B2; }
+    background-color: #9c9c9c; }
   .ag-theme-balham-dark .ag-numeric-cell {
     text-align: right; }
   .ag-theme-balham-dark .ag-header-cell-label .ag-header-icon {
@@ -612,7 +612,7 @@
       margin-top: 4px;
       width: 100%; }
     .ag-theme-balham-dark .ag-menu .ag-menu-option-active {
-      background-color: #1D73B2; }
+      background-color: #9c9c9c; }
     .ag-theme-balham-dark .ag-menu .ag-menu-option-disabled {
       opacity: 0.5; }
     .ag-theme-balham-dark .ag-menu .ag-menu-option-text {
@@ -1008,7 +1008,7 @@
       cursor: default;
       height: 28px; }
       .ag-theme-balham-dark .ag-rich-select .ag-virtual-list-item:hover {
-        background-color: #1D73B2; }
+        background-color: #9c9c9c; }
     .ag-theme-balham-dark .ag-rich-select .ag-rich-select-row {
       padding-left: 12px; }
     .ag-theme-balham-dark .ag-rich-select .ag-rich-select-row-selected {
@@ -1054,7 +1054,7 @@
     .ag-theme-balham-dark .ag-column-drop-horizontal .ag-column-drop-empty-message {
       opacity: 1; }
   .ag-theme-balham-dark .ag-column-drop-cell {
-    background: #1D73B2;
+    background: #9c9c9c;
     border-radius: 16px;
     min-height: 16px;
     padding: 0 2px; }
@@ -1282,7 +1282,7 @@
     .ag-theme-balham-dark .ag-color-picker > .ag-wrapper button {
       background-color: #636363; }
     .ag-theme-balham-dark .ag-color-picker > .ag-wrapper button:hover {
-      background-color: #1D73B2; }
+      background-color: #9c9c9c; }
   .ag-theme-balham-dark .ag-dialog.ag-color-dialog {
     border-radius: 5px; }
   .ag-theme-balham-dark .ag-color-panel {
@@ -1779,8 +1779,8 @@
     content: ""; }
   .ag-theme-balham-dark input,
   .ag-theme-balham-dark select {
-    background-color: #000;
-    color: #000; }
+    background-color: #1D73B2;
+    color: #fff; }
   .ag-theme-balham-dark .ag-filter-toolpanel-body {
     background-color: #fff; }
   .ag-theme-balham-dark .ag-angle-select .ag-angle-select-field .ag-parent-circle {

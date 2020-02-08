@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\BasicData;
 use App\Entity\ZipCode;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 set_time_limit(0);
@@ -411,15 +412,14 @@ class GridController extends AbstractController
     public function all_origin_data_zipcode(Request $request)
     {
         $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_data.id,zipcode.zipcode,origin_data.avg,origin_data.cards,origin_data.originZipcode,origin_data.merchants,origin_data.txs,origin_data.date FROM App\Entity\Zipcode zipcode JOIN zipcode.originData origin_data')->getResult();
-        // var_dump($queryData);
-        // exit;
         $cont = 0;
         $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
         $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
-            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $data[] = $actualData;
+            // $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
             $cont++;
         }
         
@@ -476,7 +476,7 @@ class GridController extends AbstractController
      */
     public function all_origin_age_data_zipcode(Request $request)
     {
-        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_age_data.id,zipcode.zipcode,origin_age_data.avg,origin_age_data.cards,origin_age_data.age,origin_age_data.merchants,origin_age_data.txs,origin_age_data.date,origin_age_data.originZipcode FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data WHERE zipcode.zipcode='.$zipcode)->getResult();
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT origin_age_data.id,zipcode.zipcode,origin_age_data.avg,origin_age_data.cards,origin_age_data.age,origin_age_data.merchants,origin_age_data.txs,origin_age_data.date,origin_age_data.originZipcode FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data')->getResult();
         // var_dump($queryData);
         // exit;
         $cont = 0;
@@ -543,16 +543,14 @@ class GridController extends AbstractController
      */
     public function all_origin_gender_data_zipcode(Request $request)
     {
-        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT genders.id,origin_age_data.date,zipcode.zipcode,origin_age_data.originZipcode,genders.avg,genders.cards,genders.gender,genders.merchants,genders.txs FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data JOIN origin_age_data.genders')->getResult();
-        // var_dump($queryData);
-        // exit;
+        $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT genders.id,origin_age_data.date,zipcode.zipcode,origin_age_data.originZipcode,genders.avg,genders.cards,genders.gender,genders.merchants,genders.txs FROM App\Entity\Zipcode zipcode JOIN zipcode.originAgeData origin_age_data JOIN origin_age_data.genders genders')->getResult();
         $cont = 0;
-        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "age", "field" => "age"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
+        $columnDefs = [$cont++ => ["headerName" => "id", "field" => "id"],$cont++ => ["headerName" => "zipcode", "field" => "zipcode"],$cont++ => ["headerName" => "date", "field" => "date"],$cont++ => ["headerName" => "gender", "field" => "gender"],$cont++ => ["headerName" => "avg", "field" => "avg"],$cont++ => ["headerName" => "cards", "field" => "cards"],$cont++ => ["headerName" => "originZipcode", "field" => "originZipcode"],$cont++ => ["headerName" => "merchants", "field" => "merchants"], $cont++ => ["headerName" => "txs", "field" => "txs"]];  
         $gridOptions = ["defaultColDef"=>["sortable"=>true,"pagination" => false, "filter" => true],"columnDefs" => "columnDefs","rowData" => "rowData"];
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
-            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'],"age" => $actualData['age'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'],"gender" => $actualData['gender'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
             $cont++;
         }
         

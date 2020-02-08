@@ -6,11 +6,11 @@
     "test": "tests"
   },
   "dependencies": {
-    "@mdi/font": "^4.7.95",
+    "@mdi/font": "^4.9.95",
     "ag-grid-community": "^22.1.1",
     "chart.js": "^2.9.3",
-    "select2": "^4.0.12",
-    "sweetalert2": "^9.7.0"
+    "select2": "^4.0.13",
+    "sweetalert2": "^9.7.2"
   },
   "devDependencies": {
     "del": "^5.1.0",

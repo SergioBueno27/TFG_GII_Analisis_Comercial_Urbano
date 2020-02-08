@@ -166,7 +166,10 @@ class ChartController extends AbstractController
         
         //Necesario para recoger las categorías de un determinado código postal ya que solo tendra algunas categorías de negocio
         if (in_array(intval($zipcode),$zipcodes) && strlen($date) == 6 ){
-            // Hace falta poner :category_code para que lo trate como string
+            // En caso que no exista el mes inicial, elijo el primer mes disponible
+            if(!in_array($date,$months)){
+                $date=$months[0];
+            }
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT day_data.date,day_data.day,day_data.avg,day_data.cards,day_data.merchants,
             day_data.txs,zipcode.zipcode FROM App\Entity\DayData day_data
             JOIN day_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode. ' AND day_data.date=:date ')->setParameters(['date'=>$date])->getResult();
@@ -217,7 +220,10 @@ class ChartController extends AbstractController
 
         //Necesario para recoger las categorías de un determinado código postal ya que solo tendra algunas categorías de negocio
         if (in_array(intval($zipcode),$zipcodes) && strlen($date) == 6 && strlen($day) <= 9){
-            // Hace falta poner :category_code para que lo trate como string
+            // En caso que no exista el mes inicial, elijo el primer mes disponible
+            if(!in_array($date,$months)){
+                $date=$months[0];
+            }
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT day_data.date,hour_data.hour,hour_data.avg,hour_data.cards,hour_data.merchants,
             hour_data.txs,zipcode.zipcode FROM App\Entity\DayData day_data
             JOIN day_data.zipcode zipcode JOIN day_data.hourData hour_data WHERE zipcode.zipcode='.$zipcode. ' AND day_data.date=:date AND day_data.day=:day')->setParameters(['date'=>$date,'day'=>$day])->getResult();
@@ -265,17 +271,18 @@ class ChartController extends AbstractController
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
         if (in_array(intval($zipcode),$zipcodes) && strlen($date) == 6){
+            // En caso que no exista el mes inicial, elijo el primer mes disponible
+            if(!in_array($date,$months)){
+                $date=$months[0];
+            }
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,destination_data.destinationZipcode,destination_data.avg,destination_data.merchants,destination_data.cards,destination.date FROM App\Entity\DestinationData destination_data 
             JOIN destination_data.destination destination JOIN destination.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND destination.date ='.$date.' AND destination_data.destinationZipcode NOT IN (:others,:filtered)')->setParameters(['others'=>'others','filtered'=>'filtered'])->getResult();
-            
             // Ordeno los datos recibidos para posteriormente mostrar los códigos postales más importantes
             foreach ($queryData as $key => $value) {
                 $avg[$key] = $value['avg'];
                 $merchants[$key] = $value['merchants'];
                 $cards[$key] = $value['cards'];
             }
-            // var_dump($queryData);
-            // exit;
             $queryAvgData = $queryData;
             $queryMerchantsData= $queryData;
             $queryCardsData= $queryData;
@@ -329,6 +336,10 @@ class ChartController extends AbstractController
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
         if (in_array(intval($zipcode),$zipcodes) && strlen($date) == 6){
+            // En caso que no exista el mes inicial, elijo el primer mes disponible
+            if(!in_array($date,$months)){
+                $date=$months[0];
+            }
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,origin_data.originZipcode,origin_data.avg,origin_data.merchants,origin_data.cards,origin_data.date FROM App\Entity\OriginData origin_data 
             JOIN origin_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND origin_data.date ='.$date.' AND origin_data.originZipcode NOT IN (:others,:filtered,:U)')->setParameters(['others'=>'others','filtered'=>'filtered','U'=>'U'])->getResult();
             // Ordeno los datos recibidos para posteriormente mostrar los códigos postales más importantes
@@ -337,6 +348,7 @@ class ChartController extends AbstractController
                 $merchants[$key] = $value['merchants'];
                 $cards[$key] = $value['cards'];
             }
+            // var_dump($avg);
             // var_dump($queryData);
             // exit;
             $queryAvgData = $queryData;
@@ -393,6 +405,10 @@ class ChartController extends AbstractController
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
         if (in_array(intval($zipcode),$zipcodes) && strlen($date) == 6){
+            // En caso que no exista el mes inicial, elijo el primer mes disponible
+            if(!in_array($date,$months)){
+                $date=$months[0];
+            }
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,origin_age_data.originZipcode,origin_age_data.age,origin_age_data.avg,origin_age_data.merchants,origin_age_data.cards,origin_age_data.date FROM App\Entity\OriginAgeData origin_age_data 
             JOIN origin_age_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND origin_age_data.date ='.$date.' AND origin_age_data.age NOT IN (:Unknown,:filtered) AND origin_age_data.originZipcode NOT IN (:others,:filtered,:U)')->setParameters(['Unknown'=>'Unknown','others'=>'others','filtered'=>'filtered','U'=>'U'])->getResult();
             // Ordeno los datos recibidos para posteriormente mostrar los códigos postales más importantes
@@ -455,6 +471,10 @@ class ChartController extends AbstractController
         $zipcodes = $this->getZipcodes();
         $months=$this->getMonths($zipcode);
         if (in_array(intval($zipcode),$zipcodes) && strlen($date) == 6){
+            // En caso que no exista el mes inicial, elijo el primer mes disponible
+            if(!in_array($date,$months)){
+                $date=$months[0];
+            }
             $queryData = $this->getDoctrine()->getManager()->createQuery('SELECT zipcode.zipcode,origin_age_data.originZipcode,origin_age_data.age,origin_gender_data.gender,origin_gender_data.avg,origin_gender_data.merchants,origin_gender_data.cards,origin_age_data.date FROM App\Entity\OriginGenderData origin_gender_data 
             JOIN origin_gender_data.originAgeData origin_age_data JOIN origin_age_data.zipcode zipcode WHERE zipcode.zipcode='.$zipcode.' AND origin_age_data.date ='.$date.' AND origin_age_data.age NOT IN (:Unknown,:filtered) AND origin_age_data.originZipcode NOT IN (:others,:filtered,:U) AND origin_gender_data.gender != :filtered')->setParameters(['Unknown'=>'Unknown','others'=>'others','filtered'=>'filtered','U'=>'U'])->getResult();
             // Ordeno los datos recibidos para posteriormente mostrar los códigos postales más importantes

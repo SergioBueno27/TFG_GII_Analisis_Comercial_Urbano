@@ -309,29 +309,6 @@ class ExtractController extends AbstractController
                 ],
             ]);
         }
-        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
-            if ($responses[$i]->getStatusCode() != 200) {
-                return $this->render('/security/administration.html.twig', [
-                    'status' => "0",
-                    'status_merchants' => "0",
-                    'status_basic' => $translator->trans('Error en la consulta getBasicData').': '. $responses[$i]->getStatusCode(),
-                    'status_category' => "0",
-                    'status_upload_category' => "0",
-                    'status_day_hour' => "0",
-                    'status_upload_day_hour' => "0",
-                    'status_destination' => "0",
-                    'status_upload_destination' => "0",
-                    'status_origin' => "0",
-                    'status_upload_origin' => "0",
-                    'status_origin_age_gender' => "0",
-                    'status_upload_origin_age_gender' => "0",
-                    'languages' => $this->languages , 
-                    'selectedLanguage' => $request->getLocale()
-                ]);
-                
-            }
-        }
-        
         //Si todas las peticiones son válidas elimino los datos
         $sql = 'DELETE FROM basic_data';
         $stmt = $conn->prepare($sql);

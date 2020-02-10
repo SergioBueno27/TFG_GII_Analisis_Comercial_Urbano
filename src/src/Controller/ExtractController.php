@@ -311,6 +311,7 @@ class ExtractController extends AbstractController
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($request, $translator, $client, $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/basic_stats?". $this->intervalDate , [
+                'buffer' => true,
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -458,6 +459,7 @@ class ExtractController extends AbstractController
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/category_distribution?". $this->intervalDate , [
+                'buffer' => true,
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -602,6 +604,7 @@ class ExtractController extends AbstractController
             $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             // Realizados cambios en fecha ojo
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/consumption_pattern?". $this->intervalDate , [
+                'buffer' => true,
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -747,6 +750,7 @@ class ExtractController extends AbstractController
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/destination_distribution?". $this->intervalDate ."&destination_type=zipcodes", [
+                'buffer' => true,
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -883,6 +887,7 @@ class ExtractController extends AbstractController
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($request, $translator,$client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?". $this->intervalDate ."&origin_type=zipcodes", [
+                'buffer' => true,
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',
@@ -1016,6 +1021,7 @@ class ExtractController extends AbstractController
         foreach ($zipcodes as $zipcode) {
             $this->refreshToken($request, $translator, $client , $tokenType, $accessToken, $expirationTime);
             $responses[] = $client->request('GET', $this->link . $zipcode->getZipcode() . "/origin_distribution?". $this->intervalDate ."&origin_type=zipcodes&expand=ages.genders", [
+                'buffer' => true,
                 'headers' => [
                     'Authorization' => $tokenType . ' ' . $accessToken,
                     'Accept' => 'application/json',

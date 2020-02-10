@@ -20,7 +20,7 @@ html {
 /* clase css principal */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 1.5em;
+  font-size: 1em;
   color: $color-white;
   margin: 0;
   padding: 0;
@@ -33,8 +33,20 @@ select{
 input{
   font-size: 1em;
 }
-button{
+.button{
+  background-color:$color-primary-dark;
+  color: $color-white;
   font-size: 1em;
+  text-align: center;
+  font-size: 1em;
+  width: 300px;
+  padding:0.5%;
+  text-decoration: none;
+  cursor:pointer;
+}
+.button:hover{
+  color: $color-white;
+  text-decoration: underline;
 }
 .navegacion{
   width:1000px;
@@ -91,7 +103,9 @@ canvas {
 .icon {
   font-size: 1.5em;
   color: $color-white;
-  
+}
+.mdi-exit-run{
+  cursor:pointer;
 }
 .center{
   align-self: center;
@@ -131,7 +145,7 @@ canvas {
 }
 
 .container-element {
-  width: 200px;
+  width: 300px;
 }
 
 .margin_top {
@@ -184,7 +198,7 @@ h1>a,h4>a {
 #exit{
   align-self: flex-end;
 }
-@media only screen and (max-width: 1360px) {
+@media only screen and (max-width: 1000px) {
   .flex_menu a {
     float: left;
     color: $color-white;
@@ -211,14 +225,3 @@ h1>a,h4>a {
   color: $color-black;
 }
 // Añado botón a través de a
-a.button {
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
-  cursor: pointer;
-  text-decoration: none;
-  color: $color-primary-dark;
-  font-size: 1em;
-  width: 300px;
-  text-align: center;
-}

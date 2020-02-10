@@ -1,22 +1,31 @@
 <?php
 
 namespace App\Controller;
+use App\Service\Languages;
 
 use App\Entity\Category;
 use App\Entity\CategoryData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 set_time_limit(0);
 ini_set('memory_limit', '-1');
 class UploadController extends AbstractController
 {
+    private $languages;
+
+    // Constructor con las variables iniciales
+    function __construct() {
+        // Lenguajes disponibles en la aplicación
+        $languages = new Languages();
+        $this->languages=$languages->getLangs();
+    }  
 /**
  * @Route("/{_locale}/upload_category_data", name="uploadCategoryData")
  */
-    public function uploadCategoryData()
+    public function uploadCategoryData(Request $request)
     {
-
         $entityManager = $this->getDoctrine()->getManager();
         //Conexión con la base de datos
         $conn = $entityManager->getConnection();
@@ -53,13 +62,15 @@ class UploadController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
 /**
  * @Route("/{_locale}/upload_day_data", name="uploadDayData")
  */
-    public function uploadDaysData()
+    public function uploadDaysData(Request $request)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -96,13 +107,15 @@ class UploadController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
 /**
  * @Route("/{_locale}/upload_hour_data", name="uploadHourData")
  */
-    public function uploadHoursData()
+    public function uploadHoursData(Request $request)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -136,13 +149,15 @@ class UploadController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/upload_destination_data", name="uploadDestinationData")
      */
-    public function uploadDestinationData()
+    public function uploadDestinationData(Request $request)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -200,13 +215,15 @@ class UploadController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/upload_origin_data", name="uploadOriginData")
      */
-    public function uploadOriginData()
+    public function uploadOriginData(Request $request)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -244,13 +261,15 @@ class UploadController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 
     /**
      * @Route("/{_locale}/upload_origin_age_gender_data", name="uploadOriginAgeGenderData")
      */
-    public function uploadOriginAgeGenderData()
+    public function uploadOriginAgeGenderData(Request $request)
     {
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -307,6 +326,8 @@ class UploadController extends AbstractController
             'status_upload_origin' => "0",
             'status_origin_age_gender' => "0",
             'status_upload_origin_age_gender' => "0",
+            'languages' => $this->languages , 
+            'selectedLanguage' => $request->getLocale()
         ]);
     }
 }

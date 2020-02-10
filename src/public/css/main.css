@@ -1,5 +1,7 @@
 @import url("../@mdi/font/css/materialdesignicons.min.css");
 @import url("../@mdi/font/css/materialdesignicons.min.css");
+@import url("../ag-grid-community/dist/styles/ag-grid.css");
+@import url("./ag-grid-themes/ag-theme-balham/sass/ag-theme-balham.css");
 html {
   min-height: 100%;
   background: none; }
@@ -7,7 +9,7 @@ html {
 /* clase css principal */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 1.5em;
+  font-size: 1em;
   color: #ffffff;
   margin: 0;
   padding: 0;
@@ -20,8 +22,20 @@ select {
 input {
   font-size: 1em; }
 
-button {
-  font-size: 1em; }
+.button {
+  background-color: #004481;
+  color: #ffffff;
+  font-size: 1em;
+  text-align: center;
+  font-size: 1em;
+  width: 300px;
+  padding: 0.5%;
+  text-decoration: none;
+  cursor: pointer; }
+
+.button:hover {
+  color: #ffffff;
+  text-decoration: underline; }
 
 .navegacion {
   width: 1000px;
@@ -71,6 +85,9 @@ canvas {
   font-size: 1.5em;
   color: #ffffff; }
 
+.mdi-exit-run {
+  cursor: pointer; }
+
 .center {
   align-self: center; }
 
@@ -104,7 +121,7 @@ canvas {
   width: 80%; }
 
 .container-element {
-  width: 200px; }
+  width: 300px; }
 
 .margin_top {
   margin-top: 1%; }
@@ -147,7 +164,7 @@ h1 > a, h4 > a {
 #exit {
   align-self: flex-end; }
 
-@media only screen and (max-width: 1360px) {
+@media only screen and (max-width: 1000px) {
   .flex_menu a {
     float: left;
     color: #ffffff;
@@ -167,14 +184,3 @@ h1 > a, h4 > a {
 .flex_menu h3 {
   background-color: #1D73B2;
   color: #000000; }
-
-a.button {
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
-  cursor: pointer;
-  text-decoration: none;
-  color: #004481;
-  font-size: 1em;
-  width: 300px;
-  text-align: center; }

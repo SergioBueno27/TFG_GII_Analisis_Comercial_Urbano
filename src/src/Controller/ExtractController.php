@@ -260,26 +260,6 @@ class ExtractController extends AbstractController
             ]);
 
         } else {
-            if($response->toArray() == null){
-                return $this->render('/security/administration.html.twig', [
-                    'status' => "0",
-                    'status_merchants' => "0",
-                    'status_basic' => $translator->trans('Error en la consulta post_token').': '. $response->getStatusCode(),
-                    'status_category' => "0",
-                    'status_upload_category' => "0",
-                    'status_day_hour' => "0",
-                    'status_upload_day_hour' => "0",
-                    'status_destination' => "0",
-                    'status_upload_destination' => "0",
-                    'status_origin' => "0",
-                    'status_upload_origin' => "0",
-                    'status_origin_age_gender' => "0",
-                    'status_upload_origin_age_gender' => "0",
-                    'languages' => $this->languages , 
-                    'selectedLanguage' => $request->getLocale()
-    
-                ]);
-            }
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];

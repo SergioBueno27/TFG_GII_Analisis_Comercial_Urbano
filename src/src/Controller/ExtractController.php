@@ -234,10 +234,6 @@ class ExtractController extends AbstractController
     {
         //Entity manager necesario para gestionar las peticiones
         $entityManager = $this->getDoctrine()->getManager();
-
-        //Conexión con la base de datos
-        $conn = $entityManager->getConnection();
-
         //Cliente HTTP para peticiones a la API BBVA
         $client = HttpClient::create();
 
@@ -264,13 +260,26 @@ class ExtractController extends AbstractController
             ]);
 
         } else {
-            //Primero elimino todo el contenido actual en base de datos para volver a rellenar
-            $sql = 'DELETE FROM basic_data';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
+            if($response->toArray() == null){
+                return $this->render('/security/administration.html.twig', [
+                    'status' => "0",
+                    'status_merchants' => "0",
+                    'status_basic' => $translator->trans('Error en la consulta post_token').': '. $response->getStatusCode(),
+                    'status_category' => "0",
+                    'status_upload_category' => "0",
+                    'status_day_hour' => "0",
+                    'status_upload_day_hour' => "0",
+                    'status_destination' => "0",
+                    'status_upload_destination' => "0",
+                    'status_origin' => "0",
+                    'status_upload_origin' => "0",
+                    'status_origin_age_gender' => "0",
+                    'status_upload_origin_age_gender' => "0",
+                    'languages' => $this->languages , 
+                    'selectedLanguage' => $request->getLocale()
+    
+                ]);
+            }
             $decodedResponse = $response->toArray();
             $tokenType = $decodedResponse['token_type'];
             $accessToken = $decodedResponse['access_token'];
@@ -301,6 +310,8 @@ class ExtractController extends AbstractController
     }
     private function getBasicData($request, $translator, $client, $tokenType, $accessToken, $entityManager, $expirationTime)
     {
+        //Conexión con la base de datos
+        $conn = $entityManager->getConnection();
         $sqlLogger = $entityManager->getConnection()->getConfiguration()->getSQLLogger();
         $entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         $zipcodes = $this->getDoctrine()
@@ -338,11 +349,21 @@ class ExtractController extends AbstractController
                     'selectedLanguage' => $request->getLocale()
                 ]);
                 
-            } else {
-                $decodedResponseData = $responses[$i]->toArray()['data'];
-                unset($responses[$i]);
-                $this->sendBasicData($decodedResponseData, $zipcodes[$i], $entityManager);
             }
+        }
+        
+        //Si todas las peticiones son válidas elimino los datos
+        $sql = 'DELETE FROM basic_data';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $sql = 'ALTER TABLE basic_data AUTO_INCREMENT=1;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        for ($i = 0, $count = count($zipcodes); $i < $count; $i++) {
+            $decodedResponseData = $responses[$i]->toArray()['data'];
+            unset($responses[$i]);
+            $this->sendBasicData($decodedResponseData, $zipcodes[$i], $entityManager);
         }
 
         //Una vez que he persistido todos los datos los integro en la base de datos

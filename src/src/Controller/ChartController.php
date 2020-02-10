@@ -45,7 +45,7 @@ class ChartController extends AbstractController
     }
     // Se selecciona por código postal en caso que no tenga informacion sobre algún mes no la muestro
     function getMonths(string $zipcode){
-        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT basic_data.date FROM App\Entity\BasicData basic_data JOIN basic_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
+        $queryMonths = $this->getDoctrine()->getManager()->createQuery('SELECT DISTINCT category_data.date FROM App\Entity\CategoryData category_data JOIN category_data.zipcode zipcode where zipcode.zipcode='.$zipcode)->getResult();
         $months = [];
         $cont = 0;
         foreach ( $queryMonths as $actualData ){

@@ -50,10 +50,6 @@
 				{{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Introduce Contraseña' | trans,'class':"form-control margin-bottom" }}) }}
 				{{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Repite Contraseña' | trans,'class':"form-control" }}) }}
 			</div>
-			<div class= "margin-bottom">
-				{{ form_label(registrationForm.agreeTerms) }}
-				{{ form_widget(registrationForm.agreeTerms) }}
-			</div>
 			<button class="btn">{{ 'Registrarse' | trans}}</button>
 			<a href="{{ path('app_login') }}">
 				<button class="btn btn-lg btn-primary" type="button">{{ 'Loguearse' | trans}}</button>

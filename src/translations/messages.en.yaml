@@ -116,3 +116,6 @@ Repite Contraseña: Repeat Password
 
 # Errores traducción
 <ul><li>The password fields must match.</li></ul>: The password fields must match.
+
+User: User
+Language: Language

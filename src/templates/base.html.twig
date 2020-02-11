@@ -35,9 +35,9 @@
 							{% endblock %}
 						</div>
 						<div class="flex_derecha_arriba">
-							<span title="User" class="mdi mdi-account icon center"></span>
+							<span title="{{'User' | trans}}" class="mdi mdi-account icon center"></span>
 							<span class="center">{{ app.user.username }}</span>
-							<span title="Language" class="mdi mdi-web icon center"></span>
+							<span title="{{'Language' | trans}}" class="mdi mdi-web icon center"></span>
 							<select onchange="getLanguages()" name="language" id="language" class="container-element center">
 								{% for language in languages %}
 									{% if language == selectedLanguage %}

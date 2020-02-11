@@ -22,7 +22,8 @@ select {
   font-size: 1em; }
 
 input {
-  font-size: 1em; }
+  font-size: 1em;
+  padding: 1%; }
 
 button {
   color: #004481;

@@ -68,14 +68,14 @@
 										{% endif %}
 								{% endif %}
 								
-								<a href="{{ path('chart_basic_data_zipcode', {'zipcode': baseZipcode}) }}">{{ 'Datos básicos' | trans}}</a>
-								<a href="{{ path('chart_category_data_zipcode', {'zipcode': baseZipcode,'category_code': baseCategory}) }}">{{ 'Datos por categoría' | trans}}</a>
-								<a href="{{ path('chart_day_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por día' | trans}}</a>
-								<a href="{{ path('chart_hour_data_zipcode', {'zipcode': baseZipcode,'date': baseDate,'day': baseDay}) }}">{{ 'Datos por hora' | trans}}</a>
-								<a href="{{ path('chart_destination_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por destino' | trans}}</a>
-								<a href="{{ path('chart_origin_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen' | trans}}</a>
-								<a href="{{ path('chart_origin_age_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen y edad' | trans}}</a>
-								<a href="{{ path('chart_origin_gender_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen y género' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_basic_data_zipcode', {'zipcode': baseZipcode}) }}">{{ 'Datos básicos' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_category_data_zipcode', {'zipcode': baseZipcode,'category_code': baseCategory}) }}">{{ 'Datos por categoría' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_day_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por día' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_hour_data_zipcode', {'zipcode': baseZipcode,'date': baseDate,'day': baseDay}) }}">{{ 'Datos por hora' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_destination_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por destino' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_origin_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_origin_age_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen y edad' | trans}}</a>
+								<a class="mdi mdi-chart-bar" href="{{ path('chart_origin_gender_data_zipcode', {'zipcode': baseZipcode,'date': baseDate}) }}">{{ 'Datos por origen y género' | trans}}</a>
 							</div>
 						</div>
 					{% endblock %}

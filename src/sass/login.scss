@@ -42,6 +42,8 @@ button{
   font-size: 1em;
   text-align: center;
   font-size: 1em;
+  width:200px;
+  height:50px;
 }
 button:hover{
   background-color:$color-primary;
@@ -51,7 +53,7 @@ button:hover{
 .container {
   background: $color-primary;
   border-radius: 5px;
-  width: 30%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   padding: 2%;
@@ -81,3 +83,5 @@ label{
 .margin-bottom{
   margin-bottom: 1%;
 }
+.margin-top {
+  margin-top: 1%; }

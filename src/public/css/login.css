@@ -28,7 +28,9 @@ button {
   color: #004481;
   font-size: 1em;
   text-align: center;
-  font-size: 1em; }
+  font-size: 1em;
+  width: 200px;
+  height: 50px; }
 
 button:hover {
   background-color: #1D73B2;
@@ -37,7 +39,7 @@ button:hover {
 .container {
   background: #1D73B2;
   border-radius: 5px;
-  width: 30%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   padding: 2%; }
@@ -62,3 +64,6 @@ label {
 
 .margin-bottom {
   margin-bottom: 1%; }
+
+.margin-top {
+  margin-top: 1%; }

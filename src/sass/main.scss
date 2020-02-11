@@ -199,6 +199,8 @@ h1>a,h4>a {
   align-self: flex-end;
 }
 @media only screen and (max-width: 1000px) {
+  body {
+    font-size: 2em; } 
   .flex_menu a {
     float: left;
     color: $color-white;

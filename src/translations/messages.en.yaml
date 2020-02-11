@@ -113,3 +113,6 @@ y género: and gender
 Introduce Email: Enter Email
 Introduce Contraseña: Enter Password
 Repite Contraseña: Repeat Password
+
+# Errores traducción
+<ul><li>The password fields must match.</li></ul>: The password fields must match.

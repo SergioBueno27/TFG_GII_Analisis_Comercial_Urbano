@@ -114,3 +114,6 @@ y género: and gender
 Introduce Email: Introduce Email
 Introduce Contraseña: Introduce Contraseña
 Repite Contraseña: Repite Contraseña
+
+# Errores traducción
+<ul><li>The password fields must match.</li></ul>: Las contraseñas deben coincidir.

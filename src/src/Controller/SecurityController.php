@@ -29,7 +29,8 @@ class SecurityController extends AbstractController
     public function root(Request $request,TranslatorInterface $translator,AuthenticationUtils $authenticationUtils): Response
     {
         // Recojo el lenguaje del navegador y lo uso como inicial
-        return $this->redirectToRoute('app_login',[ '_locale' => explode(';',(explode(',',$_SERVER["HTTP_ACCEPT_LANGUAGE"])[1]))[0]]);
+        return $this->redirectToRoute('app_login',[ '_locale' => explode(';',(explode('-',$_SERVER["HTTP_ACCEPT_LANGUAGE"])[0]))[0]]);
+
     }
     /**
      * @Route("/{_locale}/login", name="app_login")

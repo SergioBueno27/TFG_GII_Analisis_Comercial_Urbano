@@ -8,8 +8,9 @@ Symfony, PHP, aplicación web, tablas, gráficos, MYSQL, Business Intelligence.
 
 Abstract
 
-Urban commercial analysis using temporal series of credit cards arises with the idea that using Business Intelligence technologies, take data from the BBVA API to show with the help of tables and charts over a web application based in Symfony then, use the data provided  for an analysis and afterwards decide the strategy to follow, for example to start a business in a determined postal code knowing the possible competitors, business opportunities to improve the possibility of creating a profitable business.
+Urban commercial analysis using temporal series of credit cards arises with the idea that, using Business Intelligence technologies, taking data from the BBVA API use it to show with the help of tables and charts over a web application based in Symfony then, use the data provided  for an analysis and afterwards decide the strategy to follow, for example to start a business in a determined postal code knowing the possible competitors, business opportunities to improve the possibility of creating a profitable business.
 
 
 Keywords
 Symfony, PHP, web application, grids, charts, MYSQL, Business Intelligence.
+

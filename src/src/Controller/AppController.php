@@ -106,7 +106,7 @@ class AppController extends AbstractController
         foreach ($array as $key => $value){
             fwrite($file, $value." "."\"".$key."\""."\n");
         }
-        fwrite($file, "*Arcslist");
+        fwrite($file, "*Arcslist\n");
         foreach ($arrayData as $element){
             fwrite($file, $array[$element[0]]." ".$array[$element[1]]." ".$element[2]."\n");
         }

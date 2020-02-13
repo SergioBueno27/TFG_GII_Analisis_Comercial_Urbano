@@ -210,7 +210,12 @@
         var chart = new Chart(ctx, JSON.parse("{{ charts[cont][cont]|escape('js') }}"));
     </script>
 {% endfor %}
-
+{% if  app.request.get('_route')[0:22] == 'chart_destination_data' or app.request.get('_route')[0:17] == 'chart_origin_data' %}
+<div class="container margin_top margin_bottom">
+    <a class= "margin_top margin_bottom button" href="{{path('net',{'month': selectedDate})}}"> {{ 'Descargar fichero .net' | trans}}
+    </a>
+</div>
+{% endif %}
 <div class="container margin_top margin_bottom">
     <a class= "margin_top margin_bottom button" href="{{path(app.request.attributes.get('_route')[6:],{'zipcode': selectedZipcode})}}"> {{ 'Mostrar tabla asociada a los datos' | trans}}
     </a>

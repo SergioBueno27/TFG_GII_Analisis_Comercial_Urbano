@@ -418,8 +418,7 @@ class GridController extends AbstractController
         $data = [];
         $cont = 0;
         foreach ( $queryData as $actualData ){
-            $data[] = $actualData;
-            // $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
+            $data +=  [$cont => ["id" => $actualData['id'], "zipcode" => $actualData['zipcode'],"date" => $actualData['date'], "avg" => $actualData['avg'], "cards" => $actualData['cards'], "originZipcode" => $actualData['originZipcode'], "merchants" => $actualData['merchants'], "txs" => $actualData['txs']]];
             $cont++;
         }
         
